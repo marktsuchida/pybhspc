@@ -1,0 +1,23 @@
+# This file is part of pybhspc
+# Copyright 2024 Board of Regents of the University of Wisconsin System
+# SPDX-License-Identifier: MIT
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-yaml
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.3.0
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+      - id: ruff-format
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+  - repo: https://github.com/fsfe/reuse-tool
+    rev: v2.1.0
+    hooks:
+      - id: reuse

@@ -1,0 +1,33 @@
+# This file is part of pybhspc
+# Copyright 2024 Board of Regents of the University of Wisconsin System
+# SPDX-License-Identifier: MIT
+
+[project]
+name = "pybhspc"
+description = "Python bindings for the Becker-Hickl SPCM DLL"
+version = "0.1.0.dev0"
+requires-python = ">= 3.8"
+dependencies = [
+    "Cython",
+]
+
+[build-system]
+requires = ["setuptools", "Cython"]
+build-backend = "setuptools.build_meta"
+
+[project.optional-dependencies]
+testing = [
+    "pytest >= 8.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+select = ["E", "F", "UP", "B", "SIM", "I"]
+ignore = [
+    "E501", # Line too long
+]
