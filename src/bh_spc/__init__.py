@@ -11,6 +11,7 @@ __all__ = [
 ]
 
 import contextlib
+import functools
 import os
 import os.path
 import platform
@@ -24,6 +25,7 @@ if platform.machine() != "AMD64":
     raise RuntimeError("Only supported on Windows x64")
 
 
+@functools.cache
 def _spcm_dll_dir() -> str:
     candidates = []
     try:
@@ -50,12 +52,22 @@ def _spcm_dll_dir() -> str:
     )
 
 
-with os.add_dll_directory(_spcm_dll_dir()):
-    from . import spcm  # type: ignore
-
-
+@functools.cache
 def spcm_dll_version() -> tuple[int, int, int, int]:
     return _dll_file_version(os.path.join(_spcm_dll_dir(), "spcm64.dll"))
+
+
+# Reject ancient versions of the SPCM DLL. Structure layouts changed (and
+# functions were added) in 4.00 (Apr 2014). Not actually tested with 4.00.
+if spcm_dll_version() < (4, 0, 0, 0):
+    vers = ".".join(str(n) for n in spcm_dll_version())
+    raise RuntimeError(
+        f"Minimum version of spcm64.dll supported is 4.0 (found: {vers})"
+    )
+
+
+with os.add_dll_directory(_spcm_dll_dir()):
+    from . import spcm  # type: ignore
 
 
 def minimal_spcm_ini(mode: int = 0) -> str:
