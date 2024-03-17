@@ -16,6 +16,14 @@ requires = ["setuptools", "Cython"]
 build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
+# All development tools:
+dev = [
+    "nox",
+    "pytest",
+    "setuptools",
+    "wheel",  # Needed for 'pip install --no-build-isolation .'
+]
+# Minimal requirements for testing (in nox isolated environment):
 testing = [
     "pytest >= 8.0",
 ]
