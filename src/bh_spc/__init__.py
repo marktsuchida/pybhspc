@@ -4,6 +4,7 @@
 
 __all__ = [
     "spcm",
+    "spcm_dll_version",
     "minimal_spcm_ini",
     "ini_file",
     "dump_state",
@@ -16,6 +17,8 @@ import platform
 import tempfile
 import winreg
 from typing import Iterator
+
+from ._file_version import dll_file_version as _dll_file_version
 
 if platform.machine() != "AMD64":
     raise RuntimeError("Only supported on Windows x64")
@@ -49,6 +52,10 @@ def _spcm_dll_dir() -> str:
 
 with os.add_dll_directory(_spcm_dll_dir()):
     from . import spcm  # type: ignore
+
+
+def spcm_dll_version() -> tuple[int, int, int, int]:
+    return _dll_file_version(os.path.join(_spcm_dll_dir(), "spcm64.dll"))
 
 
 def minimal_spcm_ini(mode: int = 0) -> str:

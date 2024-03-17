@@ -11,4 +11,4 @@
 __pycache__/
 
 # Generated
-src/bh_spc/spcm.c
+src/bh_spc/*.c

@@ -38,7 +38,7 @@ def _spcm_dll_dir() -> str:
     return ret
 
 
-ext = Extension(
+spcm_ext = Extension(
     "bh_spc.spcm",
     ["src/bh_spc/spcm.pyx"],
     include_dirs=[_spcm_dll_dir()],
@@ -46,9 +46,15 @@ ext = Extension(
     libraries=["spcm64"],
 )
 
+file_version_ext = Extension(
+    "bh_spc._file_version",
+    ["src/bh_spc/_file_version.pyx"],
+    libraries=["Version"],
+)
+
 setup(
     name="pybhspc",
-    ext_modules=cythonize([ext]),
+    ext_modules=cythonize([spcm_ext, file_version_ext]),
     package_data={
         "bh_spc": ["*.pxd", "*.pyx"],
     },
