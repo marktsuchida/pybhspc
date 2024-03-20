@@ -70,6 +70,30 @@ cdef class ModInfo:
     def __cinit__(self):
         memset(&self.c, 0, sizeof(_spcm.SPCModInfo))
 
+    def __repr__(self) -> str:
+        return "<ModInfo({})>".format(
+            ", ".join(f"{f}={repr(getattr(self, f))}" for f in self._fields)
+        )
+
+    def as_dict(self) -> dict:
+        """
+        Return a dictionary containing the fields and values.
+
+        Returns
+        -------
+        dict
+            Every field and its value.
+        """
+        return {f: getattr(self, f) for f in self._fields}
+
+    _fields = [
+        "module_type",
+        "bus_number",
+        "slot_number",
+        "in_use",
+        "init",
+    ]
+
     @property
     def module_type(self) -> int:
         return self.c.module_type

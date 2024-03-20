@@ -9,6 +9,25 @@ import pytest
 from bh_spc import dump_state, ini_file, minimal_spcm_ini, spcm
 
 
+def test_mod_info_repr():
+    mi = spcm.ModInfo()
+    assert (
+        repr(mi)
+        == "<ModInfo(module_type=0, bus_number=0, slot_number=0, in_use=<InUseStatus.NOT_IN_USE: 0>, init=<InitStatus.OK: 0>)>"
+    )
+
+
+def test_mod_info_as_dict():
+    mi = spcm.ModInfo()
+    assert mi.as_dict() == {
+        "module_type": 0,
+        "bus_number": 0,
+        "slot_number": 0,
+        "in_use": spcm.InUseStatus(0),
+        "init": spcm.InitStatus(0),
+    }
+
+
 def test_spc_data_copy():
     d0 = spcm.SPCdata()
     assert d0.cfd_limit_low != 4.5  # Premise of test
