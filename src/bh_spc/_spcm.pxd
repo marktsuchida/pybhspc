@@ -83,6 +83,28 @@ cdef extern from "Spcm_def.h":
         # versions of the header that may add fields (and shrink 'reserve').
         # char reserve[56]
 
+    ctypedef struct SPC_Adjust_Para:
+        short vrt1
+        short vrt2
+        short vrt3
+        short dith_g
+        float gain_1
+        float gain_2
+        float gain_4
+        float gain_8
+        float tac_r0
+        float tac_r1
+        float tac_r2
+        float tac_r4
+        float tac_r8
+        short sync_div
+
+    ctypedef struct SPC_EEP_Data:
+        char[16] module_type
+        char[16] serial_no
+        char[16] date
+        SPC_Adjust_Para adj_para
+
     short SPC_get_error_string(
         short error_id, char *dest_string, short max_length
     )
@@ -101,3 +123,12 @@ cdef extern from "Spcm_def.h":
     short SPC_set_parameters(short mod_no, SPCdata *data)
     short SPC_get_parameter(short mod_no, short par_id, float *value)
     short SPC_set_parameter(short mod_no, short par_id, float value)
+
+    short SPC_get_eeprom_data(short mod_no, SPC_EEP_Data *eep_data)
+    # Omit SPC_write_eeprom_data(): It is dangerous, requires a secret key from
+    # the manufacturer, and is not usually something that ought to be done
+    # programmatically.
+    short SPC_get_adjust_parameters(short mod_no, SPC_Adjust_Para *adjpara)
+    # Omit SPC_set_adjust_parameters(), at least for now: Although it does not
+    # write to the EEPROM, its use is discouraged (and as far as I know, the
+    # meaning of the parameters is not documented).

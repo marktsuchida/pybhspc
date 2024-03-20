@@ -96,6 +96,33 @@ def test_spc_data_fields():
             assert float(d.as_dict()[f]) == 1.0
 
 
+def test_adjust_para_repr():
+    r = repr(spcm.SPC_Adjust_Para())
+    assert r.startswith("<SPC_Adjust_Para(")
+    assert r.endswith(")>")
+    assert ", vrt2=0, " in r
+
+
+def test_adjust_para_as_dict():
+    d = spcm.SPC_Adjust_Para().as_dict()
+    assert "vrt1" in d
+    assert d["vrt1"] == 0
+
+
+def test_eep_data_repr():
+    r = repr(spcm.SPC_EEP_Data())
+    assert r.startswith("<SPC_EEP_Data(")
+    assert r.endswith(")>")
+    assert ", serial_no='', " in r
+
+
+def test_eep_data_as_dict():
+    d = spcm.SPC_EEP_Data().as_dict()
+    assert "date" in d
+    assert d["date"] == ""
+    assert d["adj_para"].as_dict()["sync_div"] == 0
+
+
 def test_get_error_string():
     assert spcm.get_error_string(0) == "No error"
     assert "file" in spcm.get_error_string(-1).lower()
@@ -178,6 +205,20 @@ def test_get_version(ini150):
     # We assume simulated modules return 0 as version. Don't know if this is
     # always the case.
     assert spcm.get_version(0) == "0"
+
+
+# TODO get/set parameters
+
+
+def test_get_eeprom_data(ini150):
+    d = spcm.get_eeprom_data(0)
+    assert d.module_type == "SPC-150"
+
+
+def test_get_adjust_parameters(ini150):
+    ap = spcm.get_adjust_parameters(0)
+    d = spcm.get_eeprom_data(0)
+    assert ap.vrt1 == d.adj_para.vrt1
 
 
 def test_dump_state(ini150):

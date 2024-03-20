@@ -713,6 +713,150 @@ cdef class SPCdata:
         self.c.tdc_offset = v
 
 
+cdef class SPC_Adjust_Para:
+    cdef _spcm.SPC_Adjust_Para c
+
+    def __cinit__(self):
+        memset(&self.c, 0, sizeof(_spcm.SPC_Adjust_Para))
+
+    def __repr__(self) -> str:
+        return "<SPC_Adjust_Para({})>".format(
+            ", ".join(f"{f}={repr(getattr(self, f))}" for f in self._fields)
+        )
+
+    def as_dict(self) -> dict:
+        """
+        Return a dictionary containing the fields and values.
+
+        Returns
+        -------
+        dict
+            Every field and its value.
+        """
+        return {f: getattr(self, f) for f in self._fields}
+
+    _fields = [
+        "vrt1",
+        "vrt2",
+        "vrt3",
+        "dith_g",
+        "gain_1",
+        "gain_2",
+        "gain_4",
+        "gain_8",
+        "tac_r0",
+        "tac_r1",
+        "tac_r2",
+        "tac_r4",
+        "tac_r8",
+        "sync_div",
+    ]
+
+    @property
+    def vrt1(self) -> int:
+        return self.c.vrt1
+
+    @property
+    def vrt2(self) -> int:
+        return self.c.vrt2
+
+    @property
+    def vrt3(self) -> int:
+        return self.c.vrt3
+
+    @property
+    def dith_g(self) -> int:
+        return self.c.dith_g
+
+    @property
+    def gain_1(self) -> float:
+        return self.c.gain_1
+
+    @property
+    def gain_2(self) -> float:
+        return self.c.gain_2
+
+    @property
+    def gain_4(self) -> float:
+        return self.c.gain_4
+
+    @property
+    def gain_8(self) -> float:
+        return self.c.gain_8
+
+    @property
+    def tac_r0(self) -> float:
+        return self.c.tac_r0
+
+    @property
+    def tac_r1(self) -> float:
+        return self.c.tac_r1
+
+    @property
+    def tac_r2(self) -> float:
+        return self.c.tac_r2
+
+    @property
+    def tac_r4(self) -> float:
+        return self.c.tac_r4
+
+    @property
+    def tac_r8(self) -> float:
+        return self.c.tac_r8
+
+    @property
+    def sync_div(self) -> int:
+        return self.c.sync_div
+
+
+cdef class SPC_EEP_Data:
+    cdef _spcm.SPC_EEP_Data c
+
+    def __cinit__(self):
+        memset(&self.c, 0, sizeof(_spcm.SPC_EEP_Data))
+
+    def __repr__(self) -> str:
+        return "<SPC_EEP_Data({})>".format(
+            ", ".join(f"{f}={repr(getattr(self, f))}" for f in self._fields)
+        )
+
+    def as_dict(self) -> dict:
+        """
+        Return a dictionary containing the fields and values.
+
+        Returns
+        -------
+        dict
+            Every field and its value.
+        """
+        return {f: getattr(self, f) for f in self._fields}
+
+    _fields = [
+        "module_type",
+        "serial_no",
+        "date",
+        "adj_para",
+    ]
+
+    @property
+    def module_type(self) -> str:
+        return self.c.module_type.decode('ascii')
+
+    @property
+    def serial_no(self) -> str:
+        return self.c.serial_no.decode('ascii')
+
+    @property
+    def date(self) -> str:
+        return self.c.date.decode('ascii')
+
+    @property
+    def adj_para(self) -> SPC_Adjust_Para:
+        cdef SPC_Adjust_Para ret = SPC_Adjust_Para()
+        memcpy(&ret.c, &self.c.adj_para, sizeof(_spcm.SPC_Adjust_Para))
+        return ret
+
+
 def get_error_string(error_id: int) -> str:
     """
     Return the error message for the given SPCM error code.
@@ -934,3 +1078,51 @@ def get_parameter(mod_no: int, par_id: int) -> float | int:
 def set_parameter(mod_no: int, par_id: int, value: float | int) -> None:
     cdef float v = value
     _raise_spcm_error(_spcm.SPC_set_parameter(mod_no, par_id, value))
+
+
+def get_eeprom_data(mod_no: int) -> SPC_EEP_Data:
+    """
+    Get EEPROM data of an SPC module.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+
+    Returns
+    -------
+    SPC_EEP_Data
+        EEPROM data of the module.
+
+    Riases
+    ------
+    SPCMError
+        If there was an error.
+    """
+    cdef SPC_EEP_Data eep_data = SPC_EEP_Data()
+    _raise_spcm_error(_spcm.SPC_get_eeprom_data(mod_no, &eep_data.c))
+    return eep_data
+
+
+def get_adjust_parameters(mod_no: int) -> SPC_Adjust_Para:
+    """
+    Get adjustment parameters of an SPC module.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+
+    Returns
+    -------
+    SPC_Adjust_Para
+        Adjustment parameters of the module.
+
+    Riases
+    ------
+    SPCMError
+        If there was an error.
+    """
+    cdef SPC_Adjust_Para adjpara = SPC_Adjust_Para()
+    _raise_spcm_error(_spcm.SPC_get_adjust_parameters(mod_no, &adjpara.c))
+    return adjpara
