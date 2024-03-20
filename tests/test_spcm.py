@@ -2,10 +2,79 @@
 # Copyright 2024 Board of Regents of the University of Wisconsin System
 # SPDX-License-Identifier: MIT
 
+import copy
 import re
 
 import pytest
 from bh_spc import dump_state, ini_file, minimal_spcm_ini, spcm
+
+
+def test_spc_data_copy():
+    d0 = spcm.SPCdata()
+    assert d0.cfd_limit_low != 4.5  # Premise of test
+    d0.cfd_limit_low = 4.5
+    d1 = copy.copy(d0)
+    assert d1.cfd_limit_low == 4.5
+
+
+def test_spc_data_deep_copy():
+    d0 = spcm.SPCdata()
+    d0.cfd_limit_low = 4.5
+    d1 = copy.deepcopy(d0)
+    assert d1.cfd_limit_low == 4.5
+
+
+def test_spc_data_eq():
+    d0 = spcm.SPCdata()
+    d1 = spcm.SPCdata()
+    assert d0 == d1
+    d1.cfd_limit_low = 4.5
+    assert d0 != d1
+    d0.cfd_limit_low = 4.5
+    assert d0 == d1
+
+
+def test_spc_data_repr():
+    d = spcm.SPCdata()
+    d.sync_freq_div = 2
+    r = repr(d)
+    assert r.startswith("<SPCdata(")
+    assert r.endswith(")>")
+    assert ", sync_freq_div=2, " in r
+
+
+def test_spc_data_as_dict():
+    d = spcm.SPCdata()
+    d.sync_freq_div = 2
+    dct = d.as_dict()
+    assert "sync_freq_div" in dct
+    assert dct["sync_freq_div"] == 2
+
+
+def test_spc_data_diff_as_dict():
+    d0 = spcm.SPCdata()
+    d1 = spcm.SPCdata()
+    d1.sync_freq_div = 2
+    diff = d1.diff_as_dict(d0)
+    assert len(diff) == 1
+    assert diff["sync_freq_div"] == 2
+
+
+def test_spc_data_fields():
+    # Mostly test that we do not have any typos that cause the field getters
+    # and setters to not match.
+    for f in spcm.SPCdata._fields:
+        d = spcm.SPCdata()
+        if f == "tdc_offset":  # The only non-scalar field.
+            assert getattr(d, f) == (0.0, 0.0, 0.0, 0.0)
+            setattr(d, f, (1.0, 2.0, 3.0, 4.0))
+            assert getattr(d, f) == (1.0, 2.0, 3.0, 4.0)
+            assert d.as_dict()[f] == (1.0, 2.0, 3.0, 4.0)
+        else:
+            assert float(getattr(d, f)) == 0.0
+            setattr(d, f, 1)
+            assert float(getattr(d, f)) == 1.0
+            assert float(d.as_dict()[f]) == 1.0
 
 
 def test_get_error_string():

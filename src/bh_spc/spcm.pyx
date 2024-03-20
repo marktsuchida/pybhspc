@@ -9,9 +9,12 @@ from enum import Enum
 from collections.abc import Sequence
 
 from cpython cimport array
-from libc.string cimport memset, strlen
+from libc.string cimport memcmp, memcpy, memset, strlen
 
 from . cimport _spcm
+
+
+assert sizeof(_spcm.SPCdata) == 256  # TODO Move to wrapper def
 
 
 class SPCMError(RuntimeError):
@@ -62,30 +65,628 @@ class InUseStatus(Enum):
 
 
 cdef class ModInfo:
-    cdef _spcm.SPCModInfo c_mod_info
+    cdef _spcm.SPCModInfo c
 
     def __cinit__(self):
-        memset(&self.c_mod_info, 0, sizeof(_spcm.SPCModInfo))
+        memset(&self.c, 0, sizeof(_spcm.SPCModInfo))
 
     @property
     def module_type(self) -> int:
-        return self.c_mod_info.module_type
+        return self.c.module_type
 
     @property
     def bus_number(self) -> int:
-        return self.c_mod_info.bus_number
+        return self.c.bus_number
 
     @property
     def slot_number(self) -> int:
-        return self.c_mod_info.slot_number
+        return self.c.slot_number
 
     @property
     def in_use(self) -> InUseStatus:
-        return InUseStatus(self.c_mod_info.in_use)
+        return InUseStatus(self.c.in_use)
 
     @property
     def init(self) -> InitStatus:
-        return _make_init_status(self.c_mod_info.init)
+        return _make_init_status(self.c.init)
+
+    # Leave out base_adr. It is not valid on 64-bit.
+
+
+cdef class SPCdata:
+    cdef _spcm.SPCdata c
+
+    def __cinit__(self):
+        memset(&self.c, 0, sizeof(_spcm.SPCdata))
+
+    def __copy__(self) -> SPCdata:
+        cdef SPCdata cpy = SPCdata()
+        memcpy(&cpy.c, &self.c, sizeof(_spcm.SPCdata))
+        return cpy
+
+    def __deepcopy__(self, memo) -> SPCdata:
+        # There are no objects stored by reference.
+        return self.__copy__()
+
+    def __eq__(self, other) -> bool:
+        if type(other) is not type(self):
+            return False
+        cdef SPCdata o = other
+        # There will be some irregular behavior when the unexposed parts of the
+        # struct (base_addr, init, pci_card_no, and reserve) are not equal. But
+        # this should not cause problems because their values should be
+        # consistent if the SPCdata was originally obtained from
+        # SPC_get_parameters() after zero-initialization.
+        return memcmp(&o.c, &self.c, sizeof(_spcm.SPCdata)) == 0
+
+    def __repr__(self) -> str:
+        return "<SPCdata({})>".format(
+            ", ".join(
+                f"{f}={repr(getattr(self, f))}" for f in self._fields
+            )
+        )
+
+    def as_dict(self) -> dict:
+        """
+        Return a dictionary containing the fields and values.
+
+        Returns
+        -------
+        dict
+            Every field and its value.
+        """
+        return {f: getattr(self, f) for f in self._fields}
+
+    def diff_as_dict(self, other: SPCdata) -> dict:
+        """
+        Return a dictionary containing the fields and their values where they
+        differ from the given other instance.
+
+        Parameters
+        ----------
+        other : SPCdata
+            The instance to compare to.
+
+        Returns
+        -------
+        dict
+            Every field that differs from ``other`` and its value in this
+            instance.
+        """
+        ret = {}
+        for f in self._fields:
+            v = getattr(self, f)
+            if v != getattr(other, f):
+                ret[f] = v
+        return ret
+
+    # We omit the non-parameter fields of SPCdata: base_adr, init, pci_card_no,
+    # and test_eep. These fields are redundant and not useful here. None of
+    # them are writable. 'base_adr' is no longer used (in 64-bit, at least). If
+    # 'init' were not 0 (OK), SPC_get_parameters() would have failed anyway. If
+    # 'test_eep' were not 1, again, initialization would have failed and
+    # SPC_get_parameters() would therefore have failed. Finally, 'pci_card_no'
+    # is redundant with ModInfo.
+
+    # The rest of the fields are regular parameters and are in the same order
+    # as the C struct. These wrappers should be kept regular: all parameters
+    # of the same type should be wrapped in exactly the same way. Use editor
+    # macros to make uniform changes.
+
+    _fields = (
+        "cfd_limit_low",
+        "cfd_limit_high",
+        "cfd_zc_level",
+        "cfd_holdoff",
+        "sync_zc_level",
+        "sync_holdoff",
+        "sync_threshold",
+        "tac_range",
+        "sync_freq_div",
+        "tac_gain",
+        "tac_offset",
+        "tac_limit_low",
+        "tac_limit_high",
+        "adc_resolution",
+        "ext_latch_delay",
+        "collect_time",
+        "display_time",
+        "repeat_time",
+        "stop_on_time",
+        "stop_on_ovfl",
+        "dither_range",
+        "count_incr",
+        "mem_bank",
+        "dead_time_comp",
+        "scan_control",
+        "routing_mode",
+        "tac_enable_hold",
+        "mode",
+        "scan_size_x",
+        "scan_size_y",
+        "scan_rout_x",
+        "scan_rout_y",
+        "scan_flyback",
+        "scan_borders",
+        "scan_polarity",
+        "pixel_clock",
+        "line_compression",
+        "trigger",
+        "pixel_time",
+        "ext_pixclk_div",
+        "rate_count_time",
+        "macro_time_clk",
+        "add_select",
+        "adc_zoom",
+        "img_size_x",
+        "img_size_y",
+        "img_rout_x",
+        "img_rout_y",
+        "xy_gain",
+        "master_clock",
+        "adc_sample_delay",
+        "detector_type",
+        "chan_enable",
+        "chan_slope",
+        "chan_spec_no",
+        "tdc_control",
+        "tdc_offset",
+    )
+
+    @property
+    def cfd_limit_low(self) -> float:
+        return self.c.cfd_limit_low
+
+    @cfd_limit_low.setter
+    def cfd_limit_low(self, v: float) -> None:
+        self.c.cfd_limit_low = <float>v
+
+    @property
+    def cfd_limit_high(self) -> float:
+        return self.c.cfd_limit_high
+
+    @cfd_limit_high.setter
+    def cfd_limit_high(self, v: float) -> None:
+        self.c.cfd_limit_high = <float>v
+
+    @property
+    def cfd_zc_level(self) -> float:
+        return self.c.cfd_zc_level
+
+    @cfd_zc_level.setter
+    def cfd_zc_level(self, v: float) -> None:
+        self.c.cfd_zc_level = <float>v
+
+    @property
+    def cfd_holdoff(self) -> float:
+        return self.c.cfd_holdoff
+
+    @cfd_holdoff.setter
+    def cfd_holdoff(self, v: float) -> None:
+        self.c.cfd_holdoff = <float>v
+
+    @property
+    def sync_zc_level(self) -> float:
+        return self.c.sync_zc_level
+
+    @sync_zc_level.setter
+    def sync_zc_level(self, v: float) -> None:
+        self.c.sync_zc_level = <float>v
+
+    @property
+    def sync_holdoff(self) -> float:
+        return self.c.sync_holdoff
+
+    @sync_holdoff.setter
+    def sync_holdoff(self, v: float) -> None:
+        self.c.sync_holdoff = <float>v
+
+    @property
+    def sync_threshold(self) -> float:
+        return self.c.sync_threshold
+
+    @sync_threshold.setter
+    def sync_threshold(self, v: float) -> None:
+        self.c.sync_threshold = <float>v
+
+    @property
+    def tac_range(self) -> float:
+        return self.c.tac_range
+
+    @tac_range.setter
+    def tac_range(self, v: float) -> None:
+        self.c.tac_range = <float>v
+
+    @property
+    def sync_freq_div(self) -> int:
+        return self.c.sync_freq_div
+
+    @sync_freq_div.setter
+    def sync_freq_div(self, v: int) -> None:
+        self.c.sync_freq_div = v
+
+    @property
+    def tac_gain(self) -> int:
+        return self.c.tac_gain
+
+    @tac_gain.setter
+    def tac_gain(self, v: int) -> None:
+        self.c.tac_gain = v
+
+    @property
+    def tac_offset(self) -> float:
+        return self.c.tac_offset
+
+    @tac_offset.setter
+    def tac_offset(self, v: float) -> None:
+        self.c.tac_offset = <float>v
+
+    @property
+    def tac_limit_low(self) -> float:
+        return self.c.tac_limit_low
+
+    @tac_limit_low.setter
+    def tac_limit_low(self, v: float) -> None:
+        self.c.tac_limit_low = <float>v
+
+    @property
+    def tac_limit_high(self) -> float:
+        return self.c.tac_limit_high
+
+    @tac_limit_high.setter
+    def tac_limit_high(self, v: float) -> None:
+        self.c.tac_limit_high = <float>v
+
+    @property
+    def adc_resolution(self) -> int:
+        return self.c.adc_resolution
+
+    @adc_resolution.setter
+    def adc_resolution(self, v: int) -> None:
+        self.c.adc_resolution = v
+
+    @property
+    def ext_latch_delay(self) -> int:
+        return self.c.ext_latch_delay
+
+    @ext_latch_delay.setter
+    def ext_latch_delay(self, v: int) -> None:
+        self.c.ext_latch_delay = v
+
+    @property
+    def collect_time(self) -> float:
+        return self.c.collect_time
+
+    @collect_time.setter
+    def collect_time(self, v: float) -> None:
+        self.c.collect_time = <float>v
+
+    @property
+    def display_time(self) -> float:
+        return self.c.display_time
+
+    @display_time.setter
+    def display_time(self, v: float) -> None:
+        self.c.display_time = <float>v
+
+    @property
+    def repeat_time(self) -> float:
+        return self.c.repeat_time
+
+    @repeat_time.setter
+    def repeat_time(self, v: float) -> None:
+        self.c.repeat_time = <float>v
+
+    @property
+    def stop_on_time(self) -> int:
+        return self.c.stop_on_time
+
+    @stop_on_time.setter
+    def stop_on_time(self, v: int) -> None:
+        self.c.stop_on_time = v
+
+    @property
+    def stop_on_ovfl(self) -> int:
+        return self.c.stop_on_ovfl
+
+    @stop_on_ovfl.setter
+    def stop_on_ovfl(self, v: int) -> None:
+        self.c.stop_on_ovfl = v
+
+    @property
+    def dither_range(self) -> int:
+        return self.c.dither_range
+
+    @dither_range.setter
+    def dither_range(self, v: int) -> None:
+        self.c.dither_range = v
+
+    @property
+    def count_incr(self) -> int:
+        return self.c.count_incr
+
+    @count_incr.setter
+    def count_incr(self, v: int) -> None:
+        self.c.count_incr = v
+
+    @property
+    def mem_bank(self) -> int:
+        return self.c.mem_bank
+
+    @mem_bank.setter
+    def mem_bank(self, v: int) -> None:
+        self.c.mem_bank = v
+
+    @property
+    def dead_time_comp(self) -> int:
+        return self.c.dead_time_comp
+
+    @dead_time_comp.setter
+    def dead_time_comp(self, v: int) -> None:
+        self.c.dead_time_comp = v
+
+    @property
+    def scan_control(self) -> int:
+        return self.c.scan_control
+
+    @scan_control.setter
+    def scan_control(self, v: int) -> None:
+        self.c.scan_control = v
+
+    @property
+    def routing_mode(self) -> int:
+        return self.c.routing_mode
+
+    @routing_mode.setter
+    def routing_mode(self, v: int) -> None:
+        self.c.routing_mode = v
+
+    @property
+    def tac_enable_hold(self) -> float:
+        return self.c.tac_enable_hold
+
+    @tac_enable_hold.setter
+    def tac_enable_hold(self, v: float) -> None:
+        self.c.tac_enable_hold = <float>v
+
+    @property
+    def mode(self) -> int:
+        return self.c.mode
+
+    @mode.setter
+    def mode(self, v: int) -> None:
+        self.c.mode = v
+
+    @property
+    def scan_size_x(self) -> int:
+        return self.c.scan_size_x
+
+    @scan_size_x.setter
+    def scan_size_x(self, v: int) -> None:
+        self.c.scan_size_x = v
+
+    @property
+    def scan_size_y(self) -> int:
+        return self.c.scan_size_y
+
+    @scan_size_y.setter
+    def scan_size_y(self, v: int) -> None:
+        self.c.scan_size_y = v
+
+    @property
+    def scan_rout_x(self) -> int:
+        return self.c.scan_rout_x
+
+    @scan_rout_x.setter
+    def scan_rout_x(self, v: int) -> None:
+        self.c.scan_rout_x = v
+
+    @property
+    def scan_rout_y(self) -> int:
+        return self.c.scan_rout_y
+
+    @scan_rout_y.setter
+    def scan_rout_y(self, v: int) -> None:
+        self.c.scan_rout_y = v
+
+    @property
+    def scan_flyback(self) -> int:
+        return self.c.scan_flyback
+
+    @scan_flyback.setter
+    def scan_flyback(self, v: int) -> None:
+        self.c.scan_flyback = v
+
+    @property
+    def scan_borders(self) -> int:
+        return self.c.scan_borders
+
+    @scan_borders.setter
+    def scan_borders(self, v: int) -> None:
+        self.c.scan_borders = v
+
+    @property
+    def scan_polarity(self) -> int:
+        return self.c.scan_polarity
+
+    @scan_polarity.setter
+    def scan_polarity(self, v: int) -> None:
+        self.c.scan_polarity = v
+
+    @property
+    def pixel_clock(self) -> int:
+        return self.c.pixel_clock
+
+    @pixel_clock.setter
+    def pixel_clock(self, v: int) -> None:
+        self.c.pixel_clock = v
+
+    @property
+    def line_compression(self) -> int:
+        return self.c.line_compression
+
+    @line_compression.setter
+    def line_compression(self, v: int) -> None:
+        self.c.line_compression = v
+
+    @property
+    def trigger(self) -> int:
+        return self.c.trigger
+
+    @trigger.setter
+    def trigger(self, v: int) -> None:
+        self.c.trigger = v
+
+    @property
+    def pixel_time(self) -> float:
+        return self.c.pixel_time
+
+    @pixel_time.setter
+    def pixel_time(self, v: float) -> None:
+        self.c.pixel_time = <float>v
+
+    @property
+    def ext_pixclk_div(self) -> int:
+        return self.c.ext_pixclk_div
+
+    @ext_pixclk_div.setter
+    def ext_pixclk_div(self, v: int) -> None:
+        self.c.ext_pixclk_div = v
+
+    @property
+    def rate_count_time(self) -> float:
+        return self.c.rate_count_time
+
+    @rate_count_time.setter
+    def rate_count_time(self, v: float) -> None:
+        self.c.rate_count_time = <float>v
+
+    @property
+    def macro_time_clk(self) -> int:
+        return self.c.macro_time_clk
+
+    @macro_time_clk.setter
+    def macro_time_clk(self, v: int) -> None:
+        self.c.macro_time_clk = v
+
+    @property
+    def add_select(self) -> int:
+        return self.c.add_select
+
+    @add_select.setter
+    def add_select(self, v: int) -> None:
+        self.c.add_select = v
+
+    @property
+    def adc_zoom(self) -> int:
+        return self.c.adc_zoom
+
+    @adc_zoom.setter
+    def adc_zoom(self, v: int) -> None:
+        self.c.adc_zoom = v
+
+    @property
+    def img_size_x(self) -> int:
+        return self.c.img_size_x
+
+    @img_size_x.setter
+    def img_size_x(self, v: int) -> None:
+        self.c.img_size_x = v
+
+    @property
+    def img_size_y(self) -> int:
+        return self.c.img_size_y
+
+    @img_size_y.setter
+    def img_size_y(self, v: int) -> None:
+        self.c.img_size_y = v
+
+    @property
+    def img_rout_x(self) -> int:
+        return self.c.img_rout_x
+
+    @img_rout_x.setter
+    def img_rout_x(self, v: int) -> None:
+        self.c.img_rout_x = v
+
+    @property
+    def img_rout_y(self) -> int:
+        return self.c.img_rout_y
+
+    @img_rout_y.setter
+    def img_rout_y(self, v: int) -> None:
+        self.c.img_rout_y = v
+
+    @property
+    def xy_gain(self) -> int:
+        return self.c.xy_gain
+
+    @xy_gain.setter
+    def xy_gain(self, v: int) -> None:
+        self.c.xy_gain = v
+
+    @property
+    def master_clock(self) -> int:
+        return self.c.master_clock
+
+    @master_clock.setter
+    def master_clock(self, v: int) -> None:
+        self.c.master_clock = v
+
+    @property
+    def adc_sample_delay(self) -> int:
+        return self.c.adc_sample_delay
+
+    @adc_sample_delay.setter
+    def adc_sample_delay(self, v: int) -> None:
+        self.c.adc_sample_delay = v
+
+    @property
+    def detector_type(self) -> int:
+        return self.c.detector_type
+
+    @detector_type.setter
+    def detector_type(self, v: int) -> None:
+        self.c.detector_type = v
+
+    @property
+    def chan_enable(self) -> int:
+        return self.c.chan_enable
+
+    @chan_enable.setter
+    def chan_enable(self, v: int) -> None:
+        self.c.chan_enable = v
+
+    @property
+    def chan_slope(self) -> int:
+        return self.c.chan_slope
+
+    @chan_slope.setter
+    def chan_slope(self, v: int) -> None:
+        self.c.chan_slope = v
+
+    @property
+    def chan_spec_no(self) -> int:
+        return self.c.chan_spec_no
+
+    @chan_spec_no.setter
+    def chan_spec_no(self, v: int) -> None:
+        self.c.chan_spec_no = v
+
+    @property
+    def tdc_control(self) -> int:
+        return self.c.tdc_control
+
+    @tdc_control.setter
+    def tdc_control(self, v: int) -> None: self.c.tdc_control = v
+
+    @property
+    def tdc_offset(self) -> tuple[int, int, int, int]:
+        return tuple(self.c.tdc_offset)
+
+    @tdc_offset.setter
+    def tdc_offset(self, v: tuple[int, int, int, int]) -> None:
+        self.c.tdc_offset = v
 
 
 def get_error_string(error_id: int) -> str:
@@ -248,7 +849,7 @@ def get_module_info(mod_no: int) -> ModInfo:
         If there was an error.
     """
     cdef ModInfo mod_info = ModInfo()
-    _raise_spcm_error(_spcm.SPC_get_module_info(mod_no, &mod_info.c_mod_info))
+    _raise_spcm_error(_spcm.SPC_get_module_info(mod_no, &mod_info.c))
     return mod_info
 
 
@@ -278,3 +879,26 @@ def get_version(mod_no: int) -> str:
     cdef unsigned short version = 0
     _raise_spcm_error(_spcm.SPC_get_version(mod_no, <short *>&version))
     return f"{version:X}"
+
+
+def get_parameters(mod_no: int) -> SPCdata:
+    cdef SPCdata data = SPCdata()
+    _raise_spcm_error(_spcm.SPC_get_parameters(mod_no, &data.c))
+    return data
+
+
+def set_parameters(mod_no: int, SPCdata data) -> None:
+    _raise_spcm_error(_spcm.SPC_set_parameters(mod_no, &data.c))
+
+
+def get_parameter(mod_no: int, par_id: int) -> float | int:
+    cdef float value = 0.0
+    _raise_spcm_error(_spcm.SPC_get_parameter(mod_no, par_id, &value))
+    if False:  # TODO If parameter is integer type
+        return int(value)
+    return value
+
+
+def set_parameter(mod_no: int, par_id: int, value: float | int) -> None:
+    cdef float v = value
+    _raise_spcm_error(_spcm.SPC_set_parameter(mod_no, par_id, value))

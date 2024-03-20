@@ -14,8 +14,11 @@ Windows 10+ (64-bit Intel) only.
 
 The Becker-Hickl SPCM DLL (part of their "TCSPC Package" installer) must be
 installed on the system. The most recent version is usually recommended;
-absolute minimum is version 4.0 (but versions below 5.2 have not been tested).
-Note that these are version numbers of the SPCM DLL, not of the TCSPC Package.
+absolute minimum is version 4.0 (Apr 2014; but versions below 5.2 have not been
+tested). Note that these are version numbers of the SPCM DLL, not of the TCSPC
+Package.
+
+_Building_ pybhspc requires SPCM DLL 5.1.0 (Dec 2022) or later to be installed.
 
 ## Development
 
