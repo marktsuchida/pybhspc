@@ -145,6 +145,15 @@ def test_set_mode(ini150):
     assert spcm.get_init_status(7) == spcm.InitStatus.NOT_DONE
 
 
+def test_test_id(ini150):
+    assert spcm.test_id(0) == 150
+
+
+def test_test_id_error():
+    with pytest.raises(spcm.SPCMError):
+        spcm.test_id(100)
+
+
 def test_get_module_info(ini150):
     info = spcm.get_module_info(0)
     assert info.module_type == 150

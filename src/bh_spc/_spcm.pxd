@@ -93,6 +93,7 @@ cdef extern from "Spcm_def.h":
     short SPC_get_init_status(short mod_no)
     short SPC_get_mode()
     short SPC_set_mode(short mode, short force_use, int *use)
+    short SPC_test_id(short mod_no)
     short SPC_get_module_info(short mod_no, SPCModInfo *mod_info)
     short SPC_get_version(short mod_no, short *version)
 

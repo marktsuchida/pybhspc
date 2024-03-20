@@ -853,6 +853,14 @@ def set_mode(mode: int, force_use: bool, use: Sequence[bool]) -> None:
     _raise_spcm_error(_spcm.SPC_set_mode(mode, force_use, u.data.as_ints))
 
 
+def test_id(mod_no: int) -> int:
+    """
+    """
+    ret = _spcm.SPC_test_id(mod_no)
+    _raise_spcm_error(ret)
+    return ret
+
+
 def get_module_info(mod_no: int) -> ModInfo:
     """
     Get information about an SPC module.
