@@ -117,25 +117,25 @@ cdef class ModInfo:
     # Leave out base_adr. It is not valid on 64-bit.
 
 
-cdef class SPCdata:
+cdef class Data:
     cdef _spcm.SPCdata c
 
     def __cinit__(self):
         memset(&self.c, 0, sizeof(_spcm.SPCdata))
 
-    def __copy__(self) -> SPCdata:
-        cdef SPCdata cpy = SPCdata()
+    def __copy__(self) -> Data:
+        cdef Data cpy = Data()
         memcpy(&cpy.c, &self.c, sizeof(_spcm.SPCdata))
         return cpy
 
-    def __deepcopy__(self, memo) -> SPCdata:
+    def __deepcopy__(self, memo) -> Data:
         # There are no objects stored by reference.
         return self.__copy__()
 
     def __eq__(self, other) -> bool:
         if type(other) is not type(self):
             return False
-        cdef SPCdata o = other
+        cdef Data o = other
         # There will be some irregular behavior when the unexposed parts of the
         # struct (base_addr, init, pci_card_no, and reserve) are not equal. But
         # this should not cause problems because their values should be
@@ -144,7 +144,7 @@ cdef class SPCdata:
         return memcmp(&o.c, &self.c, sizeof(_spcm.SPCdata)) == 0
 
     def __repr__(self) -> str:
-        return "<SPCdata({})>".format(
+        return "<Data({})>".format(
             ", ".join(
                 f"{f}={repr(getattr(self, f))}" for f in self._fields
             )
@@ -161,14 +161,14 @@ cdef class SPCdata:
         """
         return {f: getattr(self, f) for f in self._fields}
 
-    def diff_as_dict(self, other: SPCdata) -> dict:
+    def diff_as_dict(self, other: Data) -> dict:
         """
         Return a dictionary containing the fields and their values where they
         differ from the given other instance.
 
         Parameters
         ----------
-        other : SPCdata
+        other : Data
             The instance to compare to.
 
         Returns
@@ -713,14 +713,14 @@ cdef class SPCdata:
         self.c.tdc_offset = v
 
 
-cdef class SPC_Adjust_Para:
+cdef class AdjustPara:
     cdef _spcm.SPC_Adjust_Para c
 
     def __cinit__(self):
         memset(&self.c, 0, sizeof(_spcm.SPC_Adjust_Para))
 
     def __repr__(self) -> str:
-        return "<SPC_Adjust_Para({})>".format(
+        return "<AdjustPara({})>".format(
             ", ".join(f"{f}={repr(getattr(self, f))}" for f in self._fields)
         )
 
@@ -809,14 +809,14 @@ cdef class SPC_Adjust_Para:
         return self.c.sync_div
 
 
-cdef class SPC_EEP_Data:
+cdef class EEPData:
     cdef _spcm.SPC_EEP_Data c
 
     def __cinit__(self):
         memset(&self.c, 0, sizeof(_spcm.SPC_EEP_Data))
 
     def __repr__(self) -> str:
-        return "<SPC_EEP_Data({})>".format(
+        return "<EEPData({})>".format(
             ", ".join(f"{f}={repr(getattr(self, f))}" for f in self._fields)
         )
 
@@ -851,8 +851,8 @@ cdef class SPC_EEP_Data:
         return self.c.date.decode('ascii')
 
     @property
-    def adj_para(self) -> SPC_Adjust_Para:
-        cdef SPC_Adjust_Para ret = SPC_Adjust_Para()
+    def adj_para(self) -> AdjustPara:
+        cdef AdjustPara ret = AdjustPara()
         memcpy(&ret.c, &self.c.adj_para, sizeof(_spcm.SPC_Adjust_Para))
         return ret
 
@@ -1057,13 +1057,13 @@ def get_version(mod_no: int) -> str:
     return f"{version:X}"
 
 
-def get_parameters(mod_no: int) -> SPCdata:
-    cdef SPCdata data = SPCdata()
+def get_parameters(mod_no: int) -> Data:
+    cdef Data data = Data()
     _raise_spcm_error(_spcm.SPC_get_parameters(mod_no, &data.c))
     return data
 
 
-def set_parameters(mod_no: int, SPCdata data) -> None:
+def set_parameters(mod_no: int, Data data) -> None:
     _raise_spcm_error(_spcm.SPC_set_parameters(mod_no, &data.c))
 
 
@@ -1080,7 +1080,7 @@ def set_parameter(mod_no: int, par_id: int, value: float | int) -> None:
     _raise_spcm_error(_spcm.SPC_set_parameter(mod_no, par_id, value))
 
 
-def get_eeprom_data(mod_no: int) -> SPC_EEP_Data:
+def get_eeprom_data(mod_no: int) -> EEPData:
     """
     Get EEPROM data of an SPC module.
 
@@ -1091,7 +1091,7 @@ def get_eeprom_data(mod_no: int) -> SPC_EEP_Data:
 
     Returns
     -------
-    SPC_EEP_Data
+    EEPData
         EEPROM data of the module.
 
     Riases
@@ -1099,12 +1099,12 @@ def get_eeprom_data(mod_no: int) -> SPC_EEP_Data:
     SPCMError
         If there was an error.
     """
-    cdef SPC_EEP_Data eep_data = SPC_EEP_Data()
+    cdef EEPData eep_data = EEPData()
     _raise_spcm_error(_spcm.SPC_get_eeprom_data(mod_no, &eep_data.c))
     return eep_data
 
 
-def get_adjust_parameters(mod_no: int) -> SPC_Adjust_Para:
+def get_adjust_parameters(mod_no: int) -> AdjustPara:
     """
     Get adjustment parameters of an SPC module.
 
@@ -1115,7 +1115,7 @@ def get_adjust_parameters(mod_no: int) -> SPC_Adjust_Para:
 
     Returns
     -------
-    SPC_Adjust_Para
+    AdjustPara
         Adjustment parameters of the module.
 
     Riases
@@ -1123,6 +1123,6 @@ def get_adjust_parameters(mod_no: int) -> SPC_Adjust_Para:
     SPCMError
         If there was an error.
     """
-    cdef SPC_Adjust_Para adjpara = SPC_Adjust_Para()
+    cdef AdjustPara adjpara = AdjustPara()
     _raise_spcm_error(_spcm.SPC_get_adjust_parameters(mod_no, &adjpara.c))
     return adjpara

@@ -29,7 +29,7 @@ def test_mod_info_as_dict():
 
 
 def test_spc_data_copy():
-    d0 = spcm.SPCdata()
+    d0 = spcm.Data()
     assert d0.cfd_limit_low != 4.5  # Premise of test
     d0.cfd_limit_low = 4.5
     d1 = copy.copy(d0)
@@ -37,15 +37,15 @@ def test_spc_data_copy():
 
 
 def test_spc_data_deep_copy():
-    d0 = spcm.SPCdata()
+    d0 = spcm.Data()
     d0.cfd_limit_low = 4.5
     d1 = copy.deepcopy(d0)
     assert d1.cfd_limit_low == 4.5
 
 
 def test_spc_data_eq():
-    d0 = spcm.SPCdata()
-    d1 = spcm.SPCdata()
+    d0 = spcm.Data()
+    d1 = spcm.Data()
     assert d0 == d1
     d1.cfd_limit_low = 4.5
     assert d0 != d1
@@ -54,16 +54,16 @@ def test_spc_data_eq():
 
 
 def test_spc_data_repr():
-    d = spcm.SPCdata()
+    d = spcm.Data()
     d.sync_freq_div = 2
     r = repr(d)
-    assert r.startswith("<SPCdata(")
+    assert r.startswith("<Data(")
     assert r.endswith(")>")
     assert ", sync_freq_div=2, " in r
 
 
 def test_spc_data_as_dict():
-    d = spcm.SPCdata()
+    d = spcm.Data()
     d.sync_freq_div = 2
     dct = d.as_dict()
     assert "sync_freq_div" in dct
@@ -71,8 +71,8 @@ def test_spc_data_as_dict():
 
 
 def test_spc_data_diff_as_dict():
-    d0 = spcm.SPCdata()
-    d1 = spcm.SPCdata()
+    d0 = spcm.Data()
+    d1 = spcm.Data()
     d1.sync_freq_div = 2
     diff = d1.diff_as_dict(d0)
     assert len(diff) == 1
@@ -82,8 +82,8 @@ def test_spc_data_diff_as_dict():
 def test_spc_data_fields():
     # Mostly test that we do not have any typos that cause the field getters
     # and setters to not match.
-    for f in spcm.SPCdata._fields:
-        d = spcm.SPCdata()
+    for f in spcm.Data._fields:
+        d = spcm.Data()
         if f == "tdc_offset":  # The only non-scalar field.
             assert getattr(d, f) == (0.0, 0.0, 0.0, 0.0)
             setattr(d, f, (1.0, 2.0, 3.0, 4.0))
@@ -97,27 +97,27 @@ def test_spc_data_fields():
 
 
 def test_adjust_para_repr():
-    r = repr(spcm.SPC_Adjust_Para())
-    assert r.startswith("<SPC_Adjust_Para(")
+    r = repr(spcm.AdjustPara())
+    assert r.startswith("<AdjustPara(")
     assert r.endswith(")>")
     assert ", vrt2=0, " in r
 
 
 def test_adjust_para_as_dict():
-    d = spcm.SPC_Adjust_Para().as_dict()
+    d = spcm.AdjustPara().as_dict()
     assert "vrt1" in d
     assert d["vrt1"] == 0
 
 
 def test_eep_data_repr():
-    r = repr(spcm.SPC_EEP_Data())
-    assert r.startswith("<SPC_EEP_Data(")
+    r = repr(spcm.EEPData())
+    assert r.startswith("<EEPData(")
     assert r.endswith(")>")
     assert ", serial_no='', " in r
 
 
 def test_eep_data_as_dict():
-    d = spcm.SPC_EEP_Data().as_dict()
+    d = spcm.EEPData().as_dict()
     assert "date" in d
     assert d["date"] == ""
     assert d["adj_para"].as_dict()["sync_div"] == 0
