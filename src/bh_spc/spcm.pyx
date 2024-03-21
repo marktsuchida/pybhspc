@@ -857,6 +857,52 @@ cdef class EEPData:
         return ret
 
 
+cdef class RateValues:
+    cdef _spcm.rate_values c
+
+    def __cinit__(self):
+        memset(&self.c, 0, sizeof(_spcm.rate_values))
+
+    def __repr__(self) -> str:
+        return "<RateValues({})>".format(
+            ", ".join(f"{f}={repr(getattr(self, f))}" for f in self._fields)
+        )
+
+    def as_dict(self) -> dict:
+        """
+        Return a dictionary containing the fields and values.
+
+        Returns
+        -------
+        dict
+            Every field and its value.
+        """
+        return {f: getattr(self, f) for f in self._fields}
+
+    _fields = [
+        "sync_rate",
+        "cfd_rate",
+        "tac_rate",
+        "adc_rate",
+    ]
+
+    @property
+    def sync_rate(self) -> float:
+        return self.c.sync_rate
+
+    @property
+    def cfd_rate(self) -> float:
+        return self.c.cfd_rate
+
+    @property
+    def tac_rate(self) -> float:
+        return self.c.tac_rate
+
+    @property
+    def adc_rate(self) -> float:
+        return self.c.adc_rate
+
+
 def get_error_string(error_id: int) -> str:
     """
     Return the error message for the given SPCM error code.

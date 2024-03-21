@@ -123,6 +123,19 @@ def test_eep_data_as_dict():
     assert d["adj_para"].as_dict()["sync_div"] == 0
 
 
+def test_rate_values_repr():
+    r = repr(spcm.RateValues())
+    assert r.startswith("<RateValues(")
+    assert r.endswith(")>")
+    assert ", cfd_rate=0.0, " in r
+
+
+def test_rate_values_as_dict():
+    d = spcm.RateValues().as_dict()
+    assert "tac_rate" in d
+    assert d["tac_rate"] == 0.0
+
+
 def test_get_error_string():
     assert spcm.get_error_string(0) == "No error"
     assert "file" in spcm.get_error_string(-1).lower()
