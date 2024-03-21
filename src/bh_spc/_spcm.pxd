@@ -81,7 +81,7 @@ cdef extern from "Spcm_def.h":
         # In SPCM DLL v5.1+, the size of the struct is padded to 256. However,
         # do not include the 'reserve' field so that we can compile with future
         # versions of the header that may add fields (and shrink 'reserve').
-        # char reserve[56]
+        # char[56] reserve
 
     ctypedef struct SPC_Adjust_Para:
         short vrt1

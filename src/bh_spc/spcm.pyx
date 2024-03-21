@@ -14,9 +14,6 @@ from libc.string cimport memcmp, memcpy, memset, strlen
 from . cimport _spcm
 
 
-assert sizeof(_spcm.SPCdata) == 256  # TODO Move to wrapper def
-
-
 class SPCMError(RuntimeError):
     def __init__(self, code: int, message: str) -> None:
         super().__init__(message)
@@ -118,6 +115,13 @@ cdef class ModInfo:
 
 
 cdef class Data:
+    # We shouldn't hit this assertion because the build should have failed (due
+    # to missing struct fields) if old headers (SPCM DLL < 5.1) were used. This
+    # is mostly to document our assumption (and report any unexpected changes
+    # in the future).
+    assert sizeof(_spcm.SPCdata) == 256, \
+        "sizeof(SPCdata) (at build time) should have been 256"
+
     cdef _spcm.SPCdata c
 
     def __cinit__(self):
