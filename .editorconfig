@@ -1,0 +1,14 @@
+# This file is part of pybhspc
+# Copyright 2024 Board of Regents of the University of Wisconsin System
+# SPDX-License-Identifier: MIT
+
+root = true
+
+[*]
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.{yaml,yml}]
+indent_size = 2
