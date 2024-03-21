@@ -1176,3 +1176,84 @@ def get_adjust_parameters(mod_no: int) -> AdjustPara:
     cdef AdjustPara adjpara = AdjustPara()
     _raise_spcm_error(_spcm.SPC_get_adjust_parameters(mod_no, &adjpara.c))
     return adjpara
+
+
+def read_parameters_from_inifile(inifile: bytes | str) -> Data:
+    """
+    Read an .ini file in the spcm.ini format.
+
+    The .ini file must contain a first-line comment starting with (whitespace
+    followed by) `SPCM`, an ``[spc_base]`` section, and an ``[spc_module]``
+    section. The sections may be empty but the section headers need to be
+    terminated with a newline.
+
+    Parameters
+    ----------
+    inifile : bytes or str
+        Filename of the .ini file.
+
+    Returns
+    -------
+    Data
+        The parameters read from the .ini file.
+    """
+    if isinstance(inifile, str):
+        inifile = inifile.encode()
+    cdef Data data = Data()
+    _raise_spcm_error(_spcm.SPC_read_parameters_from_inifile(&data.c, inifile))
+    return data
+
+
+def save_parameters_to_inifile(
+    data: Data,
+    dest_inifile: bytes | str,
+    *,
+    source_inifile: bytes | str | None = None,
+    with_comments: bool = False,
+) -> None:
+    """
+    Save parameters to an .ini file in the spcm.ini format.
+
+    A source .ini file is required for this function to work, optionally given
+    by `source_inifile`. If not given, the filename previously passed to `init`
+    is used. Either way, this file must exist and must contain a first-line
+    comment starting with (whitespace followed by) `SPCM`, an ``[spc_base]``
+    section, and an ``[spc_module]`` section. The sections may be empty but the
+    section headers need to be terminated with a newline.
+
+    When `with_comments` is True, it appears that there need to be at least 2
+    fields set in the ``[spc_module]`` section of the ``source_inifile``. The
+    precise requirements have not been determined.
+
+    Parameters
+    ----------
+    data : Data
+        The parameters to save.
+    dest_inifile : bytes or str
+        Filename of the .ini file to write.
+    source_inifile : bytes or str or None
+        Filename of an .ini file from which to copy initial comment lines and
+        the ``[spc_base]`` section. If None, the .ini file passed to ``init()``
+        is used.
+    with_comments : bool
+        If True, also copy parameter comments from `source_inifile`.
+    """
+    if isinstance(dest_inifile, str):
+        dest_inifile = dest_inifile.encode()
+    if isinstance(source_inifile, str):
+        source_inifile = source_inifile.encode()
+    if source_inifile is None:
+        _raise_spcm_error(
+            _spcm.SPC_save_parameters_to_inifile(
+                &data.c, dest_inifile, NULL, (1 if with_comments else 0)
+            )
+        )
+    else:
+        _raise_spcm_error(
+            _spcm.SPC_save_parameters_to_inifile(
+                &data.c,
+                dest_inifile,
+                source_inifile,
+                (1 if with_comments else 0),
+            )
+        )

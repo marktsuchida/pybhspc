@@ -88,9 +88,16 @@ def minimal_spcm_ini(mode: int = 0) -> str:
     str
         The .ini text.
     """
+    # The first line must be a comment starting with (whitespace followed by)
+    # "SPCM", or the DLL rejects it ("Not valid configuration file"). The
+    # [spc_module] section heading is not needed for spcm.init(), but it is
+    # needed for the file to serve as a source_inifile for
+    # spcm.save_parameters_to_inifile(), or to be read by
+    # spcm.read_parameters_from_inifile().
     return f"""; SPCM
 [spc_base]
 simulation = {mode}
+[spc_module]
 """
 
 

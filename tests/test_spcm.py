@@ -234,5 +234,34 @@ def test_get_adjust_parameters(ini150):
     assert ap.vrt1 == d.adj_para.vrt1
 
 
+def test_read_parameters_from_inifile(ini150):
+    with ini_file(minimal_spcm_ini(150)) as ininame:
+        p = spcm.read_parameters_from_inifile(ininame)
+    assert p.add_select == 0  # Default value.
+
+
+def test_save_parameters_to_inifile(ini150, tmp_path):
+    test_ini = tmp_path / "test.ini"
+    p = spcm.Data()
+    # Since we initialized with a temporary INI file that no longer exists, we
+    # need to specify a source_inifile that exists during the call.
+    with ini_file(minimal_spcm_ini(150)) as ininame:
+        spcm.save_parameters_to_inifile(
+            p, str(test_ini), source_inifile=ininame
+        )
+
+    pp = spcm.read_parameters_from_inifile(str(test_ini))
+    # Default would be ~ -19.6, but zero should have been saved.
+    assert pp.sync_threshold == 0.0
+
+    # It's not clear exactly what requirements are imposed on source_inifile
+    # when with_comments=True, but it does seem to work on files containing all
+    # the parameters from a previous save.
+    test2_ini = tmp_path / "test2.ini"
+    spcm.save_parameters_to_inifile(
+        p, str(test2_ini), source_inifile=str(test_ini), with_comments=True
+    )
+
+
 def test_dump_state(ini150):
     dump_state()
