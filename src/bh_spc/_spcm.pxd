@@ -105,6 +105,12 @@ cdef extern from "Spcm_def.h":
         char[16] date
         SPC_Adjust_Para adj_para
 
+    ctypedef struct rate_values:
+        float sync_rate
+        float cfd_rate
+        float tac_rate
+        float adc_rate
+
     short SPC_get_error_string(
         short error_id, char *dest_string, short max_length
     )
@@ -128,7 +134,81 @@ cdef extern from "Spcm_def.h":
     # Omit SPC_write_eeprom_data(): It is dangerous, requires a secret key from
     # the manufacturer, and is not usually something that ought to be done
     # programmatically.
+
     short SPC_get_adjust_parameters(short mod_no, SPC_Adjust_Para *adjpara)
     # Omit SPC_set_adjust_parameters(), at least for now: Although it does not
     # write to the EEPROM, its use is discouraged (and as far as I know, the
-    # meaning of the parameters is not documented).
+    # meaning of the parameters is not documented, so it's not clear what one
+    # would do with it).
+
+    short SPC_read_parameters_from_inifile(SPCdata *data, char *inifile)
+    short SPC_save_parameters_to_inifile(
+        SPCdata *data,
+        char *dest_inifile,
+        char *source_inifile,
+        int with_comments,
+    )
+
+    short SPC_test_state(short mod_no, short *state)
+    short SPC_get_sync_state(short mod_no, short *sync_state)
+    short SPC_get_time_from_start(short mod_no, float *time)
+    short SPC_get_break_time(short mod_no, float *time)
+    short SPC_get_actual_coltime(short mod_no, float *time)
+    short SPC_read_rates(short mod_no, rate_values *rates)
+    short SPC_clear_rates(short mod_no)
+    short SPC_get_fifo_usage(short mod_no, float *usage_degree)
+    # SPC_get_scan_clk_state not applicable to FIFO mode.
+    # SPC_get_sequencer_state not applicable to FIFO mode.
+    # SPC_read_gap_time not applicable to FIFO mode.
+
+    short SPC_start_measurement(short mod_no)
+    short SPC_stop_measurement(short mod_no)
+    # SPC_pause_measurement not applicable to FIFO mode.
+    # SPC_restart_measurement not applicable to FIFO mode.
+    # SPC_set_page not applicable to FIFO mode.
+    # SPC_enable_sequencer not applicable to FIFO mode.
+
+    short SPC_read_fifo(
+        short mod_no, unsigned long *count, unsigned short *data
+    )
+    # SPC_configure_memory not applicable to FIFO mode.
+    # SPC_fill_memory not applicable to FIFO mode.
+    # SPC_read_data_block not applicable to FIFO mode.
+    # SPC_write_data_block not applicable to FIFO mode.
+    # SPC_read_data_frame not applicable to FIFO mode.
+    # SPC_read_data_page not applicable to FIFO mode.
+    # SPC_read_block not applicable to FIFO mode.
+    # SPC_save_data_to_sdtfile not applicable to FIFO mode.
+
+    short SPC_get_fifo_init_vars(
+        short mod_no,
+        short *fifo_type,
+        short *stream_type,
+        int *mt_clock,
+        unsigned int *spc_header,
+    )
+    # "Stream" functions are omitted, at least for now:
+    # SPC_init_phot_stream
+    # SPC_close_phot_stream
+    # SPC_get_photon
+    # SPC_init_buf_stream
+    # SPC_add_data_to_stream
+    # SPC_read_fifo_to_stream
+    # SPC_get_photons_from_stream
+    # SPC_stream_start_condition
+    # SPC_stream_stop_condition
+    # SPC_stream_reset
+    # SPC_get_stream_buffer_size
+    # SPC_get_buffer_from_stream
+
+    # SPC_get_detector_info not applicable to FIFO mode.
+
+    # Functions that show up in the header but omitted here:
+    # SPC_clear_mom_memory - something to do with Sutter MOM?
+    # SPC_read_mom_data
+    # SPC_prepare_time_gates - ???
+    # SPC_get_start_offset - DPC-specific
+    # DPC_fill_memory - DPC-specific
+    # DPC_read_rates - DPC-specific
+    # SPC_clear_status_flags - "low level"
+    # SPC_convert_dpc_raw_data - DPC-specific
