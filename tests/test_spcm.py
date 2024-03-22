@@ -40,6 +40,13 @@ def test_mod_info_as_dict():
     }
 
 
+def test_par_id():
+    assert spcm.ParID.CFD_LIMIT_LOW.value == 0
+    assert spcm.ParID.CFD_LIMIT_LOW.type is float
+    assert spcm.ParID.MODE.value == 27
+    assert spcm.ParID.MODE.type is int
+
+
 def test_spc_data_copy():
     d0 = spcm.Data()
     assert d0.cfd_limit_low != 4.5  # Premise of test
@@ -237,7 +244,33 @@ def test_get_version(ini150):
     assert spcm.get_version(0) == "0"
 
 
-# TODO get/set parameters
+def test_get_set_parameters(ini150):
+    # For now, just test that it works.
+    p = spcm.get_parameters(0)
+    spcm.set_parameters(0, p)
+
+
+def test_get_parameter(ini150):
+    cfdll = spcm.get_parameter(0, spcm.ParID.CFD_LIMIT_LOW)
+    assert isinstance(cfdll, float)
+    assert cfdll == spcm.get_parameters(0).cfd_limit_low
+
+    mode = spcm.get_parameter(0, spcm.ParID.MODE)
+    assert isinstance(mode, int)
+    assert mode == spcm.get_parameters(0).mode
+
+
+def test_set_parameter(ini150):
+    spcm.set_parameter(0, spcm.ParID.CFD_LIMIT_LOW, -10.0)
+    assert spcm.get_parameter(0, spcm.ParID.CFD_LIMIT_LOW) == pytest.approx(
+        -10.0, abs=0.5
+    )
+
+    spcm.set_parameter(0, spcm.ParID.MODE, 1)
+    assert spcm.get_parameter(0, spcm.ParID.MODE) == 1
+
+    with pytest.raises(TypeError):
+        spcm.set_parameter(0, spcm.ParID.MODE, 1.0)
 
 
 def test_get_eeprom_data(ini150):

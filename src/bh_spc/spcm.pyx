@@ -259,6 +259,79 @@ cdef class ModInfo:
     # Leave out base_adr. It is not valid on 64-bit.
 
 
+class ParID(enum.Enum):
+    CFD_LIMIT_LOW = (0, float)
+    CFD_LIMIT_HIGH = (1, float)
+    CFD_ZC_LEVEL = (2, float)
+    CFD_HOLDOFF = (3, float)
+    SYNC_ZC_LEVEL = (4, float)
+    SYNC_FREQ_DIV = (5, int)
+    SYNC_HOLDOFF = (6, float)
+    SYNC_THRESHOLD = (7, float)
+    TAC_RANGE = (8, float)
+    TAC_GAIN = (9, int)
+    TAC_OFFSET = (10, float)
+    TAC_LIMIT_LOW = (11, float)
+    TAC_LIMIT_HIGH = (12, float)
+    ADC_RESOLUTION = (13, int)
+    EXT_LATCH_DELAY = (14, int)
+    COLLECT_TIME = (15, float)
+    DISPLAY_TIME = (16, float)
+    REPEAT_TIME = (17, float)
+    STOP_ON_TIME = (18, int)
+    STOP_ON_OVFL = (19, int)
+    DITHER_RANGE = (20, int)
+    COUNT_INCR = (21, int)
+    MEM_BANK = (22, int)
+    DEAD_TIME_COMP = (23, int)
+    SCAN_CONTROL = (24, int)
+    ROUTING_MODE = (25, int)
+    TAC_ENABLE_HOLD = (26, float)
+    MODE = (27, int)
+    SCAN_SIZE_X = (28, int)
+    SCAN_SIZE_Y = (29, int)
+    SCAN_ROUT_X = (30, int)
+    SCAN_ROUT_Y = (31, int)
+    SCAN_POLARITY = (32, int)
+    SCAN_FLYBACK = (33, int)
+    SCAN_BORDERS = (34, int)
+    PIXEL_TIME = (35, float)
+    PIXEL_CLOCK = (36, int)
+    LINE_COMPRESSION = (37, int)
+    TRIGGER = (38, int)
+    EXT_PIXCLK_DIV = (39, int)
+    RATE_COUNT_TIME = (40, float)
+    MACRO_TIME_CLK = (41, int)
+    ADD_SELECT = (42, int)
+    ADC_ZOOM = (43, int)
+    XY_GAIN = (44, int)
+    IMG_SIZE_X = (45, int)
+    IMG_SIZE_Y = (46, int)
+    IMG_ROUT_X = (47, int)
+    IMG_ROUT_Y = (48, int)
+    MASTER_CLOCK = (49, int)
+    ADC_SAMPLE_DELAY = (50, int)
+    DETECTOR_TYPE = (51, int)
+    TDC_CONTROL = (52, int)
+    CHAN_ENABLE = (53, int)
+    CHAN_SLOPE = (54, int)
+    CHAN_SPEC_NO = (55, int)
+    TDC_OFFSET1 = (56, int)
+    TDC_OFFSET2 = (57, int)
+    TDC_OFFSET3 = (58, int)
+    TDC_OFFSET4 = (59, int)
+
+    def __new__(cls, value: int, typ: type) -> None:
+        obj = object.__new__(cls)
+        obj._value_ = value
+        obj._type = typ
+        return obj
+
+    @property
+    def type(self) -> type:
+        return self._type
+
+
 cdef class Data:
     # We shouldn't hit this assertion because the build should have failed (due
     # to missing struct fields) if old headers (SPCM DLL < 5.1) were used. This
@@ -1282,17 +1355,20 @@ def set_parameters(mod_no: int, Data data) -> None:
     _raise_spcm_error(_spcm.SPC_set_parameters(mod_no, &data.c))
 
 
-def get_parameter(mod_no: int, par_id: int) -> float | int:
+def get_parameter(mod_no: int, par_id: ParID) -> float | int:
     cdef float value = 0.0
-    _raise_spcm_error(_spcm.SPC_get_parameter(mod_no, par_id, &value))
-    if False:  # TODO If parameter is integer type
+    _raise_spcm_error(_spcm.SPC_get_parameter(mod_no, par_id.value, &value))
+    if par_id.type is int:
         return int(value)
+    assert par_id.type is float
     return value
 
 
-def set_parameter(mod_no: int, par_id: int, value: float | int) -> None:
+def set_parameter(mod_no: int, par_id: ParID, value: float | int) -> None:
+    if par_id.type is int and isinstance(value, float):
+        raise TypeError(f"{par_id} takes an integer value; float found")
     cdef float v = value
-    _raise_spcm_error(_spcm.SPC_set_parameter(mod_no, par_id, value))
+    _raise_spcm_error(_spcm.SPC_set_parameter(mod_no, par_id.value, value))
 
 
 def get_eeprom_data(mod_no: int) -> EEPData:
