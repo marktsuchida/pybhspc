@@ -9,6 +9,19 @@ import pytest
 from bh_spc import dump_state, ini_file, minimal_spcm_ini, spcm
 
 
+def test_init_status_xilinx_err():
+    assert spcm.InitStatus(-100) == spcm.InitStatus.XILINX_ERR_00
+    assert spcm.InitStatus(-142) == spcm.InitStatus.XILINX_ERR_42
+    assert spcm.InitStatus(-199) == spcm.InitStatus.XILINX_ERR_99
+
+
+def test_init_status_unknown():
+    with pytest.raises(ValueError):
+        spcm.InitStatus(1)
+    with pytest.raises(ValueError):
+        spcm.InitStatus(-200)
+
+
 def test_mod_info_repr():
     mi = spcm.ModInfo()
     assert (

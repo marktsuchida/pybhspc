@@ -5,7 +5,7 @@
 # cython: language_level=3
 
 import array
-from enum import Enum
+import enum
 from collections.abc import Sequence
 
 from cpython cimport array
@@ -23,39 +23,30 @@ class SPCMError(RuntimeError):
         return f"SPCM: {super().__str__()} ({self.code})"
 
 
-class InitStatus(Enum):
-    OK = 0
-    NOT_DONE = -1
-    WRONG_EEP_CHKSUM = -2
-    WRONG_MOD_ID = -3
-    HARD_TEST_ERR = -4
-    CANT_OPEN_PCI_CARD = -5
-    MOD_IN_USE = -6
-    WINDRVR_VER = -7
-    WRONG_LICENSE = -8
-    FIRMWARE_VER = -9
-    NO_LICENSE = -10
-    LICENSE_NOT_VALID = -11
-    LICENSE_DATE_EXP = -12
-    CANT_OPEN_USB_CARD = -13
-    XILINX_ERR = -100  # Including -1xx where xx is Xilinx error code.
-
-    UNKNOWN = -999  # Not in SPCM DLL but in case we encounter something else.
-
-
-def _make_init_status(code: int) -> InitStatus:
-    try:
-        return InitStatus(code)
-    except ValueError:
-        pass
-    if code <= -100 and code > -200:
-        return InitStatus.XILINX_ERR
-    if code == -32:  # Module number out of range (attested).
-        _raise_spcm_error(code)
-    return InitStatus.UNKNOWN
+InitStatus = enum.Enum(
+    "InitStatus",
+    [
+        ("OK", 0),
+        ("NOT_DONE", -1),
+        ("WRONG_EEP_CHKSUM", -2),
+        ("WRONG_MOD_ID", -3),
+        ("HARD_TEST_ERR", -4),
+        ("CANT_OPEN_PCI_CARD", -5),
+        ("MOD_IN_USE", -6),
+        ("WINDRVR_VER", -7),
+        ("WRONG_LICENSE", -8),
+        ("FIRMWARE_VER", -9),
+        ("NO_LICENSE", -10),
+        ("LICENSE_NOT_VALID", -11),
+        ("LICENSE_DATE_EXP", -12),
+        ("CANT_OPEN_USB_CARD", -13),
+    ] + [
+        (f"XILINX_ERR_{i:02d}", -100 - i) for i in range(100)
+    ],
+)
 
 
-class InUseStatus(Enum):
+class InUseStatus(enum.Enum):
     NOT_IN_USE = 0
     IN_USE_HERE = 1
     IN_USE_ELSEWHERE = -1
@@ -109,7 +100,7 @@ cdef class ModInfo:
 
     @property
     def init(self) -> InitStatus:
-        return _make_init_status(self.c.init)
+        return InitStatus(self.c.init)
 
     # Leave out base_adr. It is not valid on 64-bit.
 
@@ -985,8 +976,10 @@ def get_init_status(mod_no: int) -> InitStatus:
     InitStatus
         Whether the module is initialized, or the reason if not.
     """
-    # Note return value is NOT an error code!
-    return _make_init_status(_spcm.SPC_get_init_status(mod_no))
+    status = _spcm.SPC_get_init_status(mod_no)
+    if status == -32:  # Module number out of range (attested).
+        _raise_spcm_error(status)
+    return InitStatus(status)
 
 
 def get_mode() -> int:
