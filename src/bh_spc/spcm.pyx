@@ -316,10 +316,10 @@ class ParID(enum.Enum):
     CHAN_ENABLE = (53, int)
     CHAN_SLOPE = (54, int)
     CHAN_SPEC_NO = (55, int)
-    TDC_OFFSET1 = (56, int)
-    TDC_OFFSET2 = (57, int)
-    TDC_OFFSET3 = (58, int)
-    TDC_OFFSET4 = (59, int)
+    TDC_OFFSET1 = (56, float)
+    TDC_OFFSET2 = (57, float)
+    TDC_OFFSET3 = (58, float)
+    TDC_OFFSET4 = (59, float)
 
     def __new__(cls, value: int, typ: type) -> None:
         obj = object.__new__(cls)
@@ -927,12 +927,15 @@ cdef class Data:
     def tdc_control(self, v: int) -> None: self.c.tdc_control = v
 
     @property
-    def tdc_offset(self) -> tuple[int, int, int, int]:
+    def tdc_offset(self) -> tuple[float, float, float, float]:
         return tuple(self.c.tdc_offset)
 
     @tdc_offset.setter
-    def tdc_offset(self, v: tuple[int, int, int, int]) -> None:
-        self.c.tdc_offset = v
+    def tdc_offset(self, v: tuple[float, float, float, float]) -> None:
+        self.c.tdc_offset[0] = <float>(v[0])
+        self.c.tdc_offset[1] = <float>(v[1])
+        self.c.tdc_offset[2] = <float>(v[2])
+        self.c.tdc_offset[3] = <float>(v[3])
 
 
 cdef class AdjustPara:

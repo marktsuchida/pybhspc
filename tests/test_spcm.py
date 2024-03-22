@@ -273,6 +273,23 @@ def test_set_parameter(ini150):
         spcm.set_parameter(0, spcm.ParID.MODE, 1.0)
 
 
+def test_get_parameter_parameters(ini150):
+    # Have some chance of catching incorrect numbering or typing of ParID
+    # members.
+    p = spcm.get_parameters(0)
+    for par_id in spcm.ParID:
+        v = spcm.get_parameter(0, par_id)
+        field = par_id.name.lower()
+        if field.startswith("tdc_offset"):
+            i = int(field[len("tdc_offset") :]) - 1
+            vv = p.tdc_offset[i]
+        else:
+            vv = getattr(p, field)
+        assert type(v) is par_id.type
+        assert par_id.type is type(vv)
+        assert v == vv
+
+
 def test_get_eeprom_data(ini150):
     d = spcm.get_eeprom_data(0)
     assert d.module_type == "SPC-150"
