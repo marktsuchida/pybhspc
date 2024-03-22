@@ -3,7 +3,6 @@
 # SPDX-License-Identifier: MIT
 
 import copy
-import re
 
 import pytest
 from bh_spc import dump_state, ini_file, minimal_spcm_ini, spcm
@@ -151,6 +150,7 @@ def test_rate_values_as_dict():
 
 def test_get_error_string():
     assert spcm.get_error_string(0) == "No error"
+    assert spcm.get_error_string(spcm.ErrorEnum.NONE) == "No error"
     assert "file" in spcm.get_error_string(-1).lower()
     with pytest.raises(OverflowError):
         spcm.get_error_string(32768)
@@ -164,9 +164,10 @@ def test_init_close():
 
 def test_failed_init():
     with ini_file("invalid") as ininame, pytest.raises(
-        spcm.SPCMError, match=re.escape("(-2)")
-    ):
+        spcm.SPCMError
+    ) as exc_info:
         spcm.init(ininame)
+    assert exc_info.value.enum == spcm.ErrorEnum.FILE_NVALID
 
 
 @pytest.fixture
@@ -179,8 +180,9 @@ def ini150():
 
 def test_get_init_status(ini150):
     assert spcm.get_init_status(0) == spcm.InitStatus.OK
-    with pytest.raises(spcm.SPCMError, match=re.escape("(-32)")):
+    with pytest.raises(spcm.SPCMError) as exc_info:
         spcm.get_init_status(1000)
+    assert exc_info.value.enum == spcm.ErrorEnum.MOD_NO
 
 
 def test_get_mode(ini150):
@@ -203,8 +205,9 @@ def test_test_id(ini150):
 
 
 def test_test_id_error():
-    with pytest.raises(spcm.SPCMError):
+    with pytest.raises(spcm.SPCMError) as exc_info:
         spcm.test_id(100)
+    assert exc_info.value.enum == spcm.ErrorEnum.MOD_NO
 
 
 def test_get_module_info(ini150):
@@ -223,8 +226,9 @@ def test_disabled_module(ini150):
 
 
 def test_disabling_all_modules_raises(ini150):
-    with pytest.raises(spcm.SPCMError, match=re.escape("(-31)")):
+    with pytest.raises(spcm.SPCMError) as exc_info:
         spcm.set_mode(150, False, ())
+    assert exc_info.value.enum == spcm.ErrorEnum.NO_ACT_MOD
 
 
 def test_get_version(ini150):

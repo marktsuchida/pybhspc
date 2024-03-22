@@ -14,13 +14,87 @@ from libc.string cimport memcmp, memcpy, memset, strlen
 from . cimport _spcm
 
 
+class ErrorEnum(enum.Enum):
+    NONE = 0
+    OPEN_FILE = -1
+    FILE_NVALID = -2
+    MEM_ALLOC = -3
+    READ_STR = -4
+    WRONG_ID = -5
+    EEP_CHKSUM = -6
+    EEPROM_READ = -7
+    EEPROM_WRITE = -8
+    EEP_WR_DIS = -9
+    BAD_PAR_ID = -10
+    BAD_PAR_VAL = -11
+    HARD_TEST = -12
+    BAD_PARA1 = -13
+    BAD_PARA2 = -14
+    BAD_PARA3 = -15
+    BAD_PARA4 = -16
+    BAD_PARA5 = -17
+    BAD_PARA6 = -18
+    BAD_PARA7 = -19
+    CANT_ARM = -20
+    CANT_STOP = -21
+    INV_REPT = -22
+    NO_SEQ = -23
+    SEQ_RUN = -24
+    FILL_TOUT = -25
+    BAD_FUNC = -26
+    WINDRV_ERR = -27
+    NOT_INIT = -28
+    ERR_ID = -29
+    RATES_NOT_RDY = -30
+    NO_ACT_MOD = -31
+    MOD_NO = -32
+    NOT_ACTIVE = -33
+    IN_USE = -34
+    WINDRV_VER = -35
+    DMA_ERR = -36
+    WRONG_LICENSE = -37
+    WRITE_STR = -38
+    MAX_STREAM = -39
+    XILINX_ERR = -40
+    DET_NFOUND = -41
+    FIRMWARE_VER = -42
+    NO_LICENSE = -43
+    LICENSE_NOT_VALID = -44
+    LICENSE_DATE_EXP = -45
+    DEEP_CHKSUM = -46
+    DEEPROM_READ = -47
+    DEEPROM_WRITE = -48
+    RAM_BUSY = -49
+    STR_TYPE = -50
+    STR_SIZE = -51
+    STR_BUF_NO = -52
+    STR_NO_START = -53
+    STR_NO_STOP = -54
+    USBDRV_ERR = -55
+
+    UNKNOWN = -65537  # Does not clash with 16-bit codes.
+
+    @classmethod
+    def _missing_(cls, value: int) -> ErrorEnum:
+        return cls.UNKNOWN
+
+
 class SPCMError(RuntimeError):
     def __init__(self, code: int, message: str) -> None:
         super().__init__(message)
-        self.code = code
+        self._code = code  # Preserves unknown codes.
+        self._enum = ErrorEnum(code)
 
     def __str__(self) -> str:
         return f"SPCM: {super().__str__()} ({self.code})"
+
+    @property
+    def code(self) -> int:
+        return self._code
+
+    @property
+    def enum(self) -> ErrorEnum:
+        return self._enum
 
 
 InitStatus = enum.Enum(
@@ -898,7 +972,7 @@ cdef class RateValues:
         return self.c.adc_rate
 
 
-def get_error_string(error_id: int) -> str:
+def get_error_string(error_id: int | ErrorEnum) -> str:
     """
     Return the error message for the given SPCM error code.
 
@@ -912,6 +986,8 @@ def get_error_string(error_id: int) -> str:
     str
         The error message
     """
+    if isinstance(error_id, ErrorEnum):
+        error_id = error_id.value
     cdef char[256] buf
     err = _spcm.SPC_get_error_string(error_id, buf, 256)
     if err != 0:
@@ -977,7 +1053,7 @@ def get_init_status(mod_no: int) -> InitStatus:
         Whether the module is initialized, or the reason if not.
     """
     status = _spcm.SPC_get_init_status(mod_no)
-    if status == -32:  # Module number out of range (attested).
+    if status == ErrorEnum.MOD_NO.value:
         _raise_spcm_error(status)
     return InitStatus(status)
 
