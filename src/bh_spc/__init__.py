@@ -70,7 +70,7 @@ with os.add_dll_directory(_spcm_dll_dir()):
     from . import spcm  # type: ignore
 
 
-def minimal_spcm_ini(mode: int = 0) -> str:
+def minimal_spcm_ini(mode: int | spcm.DLLOperationMode = 0) -> str:
     """
     Return the text for a minimal .ini file for use with `spcm.init`.
 
@@ -88,6 +88,9 @@ def minimal_spcm_ini(mode: int = 0) -> str:
     str
         The .ini text.
     """
+    if isinstance(mode, spcm.DLLOperationMode):
+        mode = mode.value
+
     # The first line must be a comment starting with (whitespace followed by)
     # "SPCM", or the DLL rejects it ("Not valid configuration file"). The
     # [spc_module] section heading is not needed for spcm.init(), but it is

@@ -25,14 +25,14 @@ def test_mod_info_repr():
     mi = spcm.ModInfo()
     assert (
         repr(mi)
-        == "<ModInfo(module_type=0, bus_number=0, slot_number=0, in_use=<InUseStatus.NOT_IN_USE: 0>, init=<InitStatus.OK: 0>)>"
+        == "<ModInfo(module_type=<ModuleType.UNKNOWN: 0>, bus_number=0, slot_number=0, in_use=<InUseStatus.NOT_IN_USE: 0>, init=<InitStatus.OK: 0>)>"
     )
 
 
 def test_mod_info_as_dict():
     mi = spcm.ModInfo()
     assert mi.as_dict() == {
-        "module_type": 0,
+        "module_type": spcm.ModuleType(0),
         "bus_number": 0,
         "slot_number": 0,
         "in_use": spcm.InUseStatus(0),
@@ -186,22 +186,22 @@ def test_get_init_status(ini150):
 
 
 def test_get_mode(ini150):
-    assert spcm.get_mode() == 150
+    assert spcm.get_mode() == spcm.DLLOperationMode.SIMULATE_SPC_150
     # Would be good to also test that SPCMError is raised when not initialized,
     # but the uninitialized state cannot be reproduced with
     # SPC_close() (so we would need to test in a dedicated fresh process).
 
 
 def test_set_mode(ini150):
-    spcm.set_mode(180, False, (True,))
-    assert spcm.get_mode() == 180
+    spcm.set_mode(spcm.DLLOperationMode.SIMULATE_SPC_180N, False, (True,))
+    assert spcm.get_mode() == spcm.DLLOperationMode.SIMULATE_SPC_180N
     assert spcm.get_init_status(0) == spcm.InitStatus.OK
     assert spcm.get_init_status(1) == spcm.InitStatus.NOT_DONE
     assert spcm.get_init_status(7) == spcm.InitStatus.NOT_DONE
 
 
 def test_test_id(ini150):
-    assert spcm.test_id(0) == 150
+    assert spcm.test_id(0) == spcm.ModuleType.SPC_150
 
 
 def test_test_id_error():
@@ -212,22 +212,22 @@ def test_test_id_error():
 
 def test_get_module_info(ini150):
     info = spcm.get_module_info(0)
-    assert info.module_type == 150
+    assert info.module_type == spcm.ModuleType.SPC_150
     assert info.in_use == spcm.InUseStatus.IN_USE_HERE
     assert info.init == spcm.InitStatus.OK
 
 
 def test_disabled_module(ini150):
-    spcm.set_mode(150, False, (True,))
+    spcm.set_mode(spcm.DLLOperationMode.SIMULATE_SPC_150, False, (True,))
     info = spcm.get_module_info(1)
-    assert info.module_type == 150
+    assert info.module_type == spcm.ModuleType.SPC_150
     assert info.in_use == spcm.InUseStatus.NOT_IN_USE
     assert info.init == spcm.InitStatus.NOT_DONE
 
 
 def test_disabling_all_modules_raises(ini150):
     with pytest.raises(spcm.SPCMError) as exc_info:
-        spcm.set_mode(150, False, ())
+        spcm.set_mode(spcm.DLLOperationMode.SIMULATE_SPC_150, False, ())
     assert exc_info.value.enum == spcm.ErrorEnum.NO_ACT_MOD
 
 

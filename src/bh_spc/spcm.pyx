@@ -15,6 +15,8 @@ from . cimport _spcm
 
 
 class ErrorEnum(enum.Enum):
+    UNKNOWN = -32769  # Does not clash with 16-bit codes.
+
     NONE = 0
     OPEN_FILE = -1
     FILE_NVALID = -2
@@ -72,8 +74,6 @@ class ErrorEnum(enum.Enum):
     STR_NO_STOP = -54
     USBDRV_ERR = -55
 
-    UNKNOWN = -65537  # Does not clash with 16-bit codes.
-
     @classmethod
     def _missing_(cls, value: int) -> ErrorEnum:
         return cls.UNKNOWN
@@ -95,6 +95,47 @@ class SPCMError(RuntimeError):
     @property
     def enum(self) -> ErrorEnum:
         return self._enum
+
+
+class DLLOperationMode(enum.Enum):
+    """
+    The operation mode of the SPCM DLL (hardware or module type to simulate).
+
+    Not to be confused with `ModuleType`.
+    """
+    UNKNOWN = -32769  # Does not clash with 16-bit codes.
+
+    HARDWARE = 0
+    SIMULATE_SPC_600 = 600
+    SIMULATE_SPC_630 = 630
+    SIMULATE_SPC_700 = 700
+    SIMULATE_SPC_730 = 730
+    SIMULATE_SPC_130 = 130
+    SIMULATE_SPC_830 = 830
+    SIMULATE_SPC_140 = 140
+    SIMULATE_SPC_930 = 930
+    SIMULATE_DPC_230 = 230
+    SIMULATE_SPC_150 = 150
+    SIMULATE_SPC_150N = 151
+    SIMULATE_SPC_150NX = 152
+    SIMULATE_SPC_150NXX = 153
+    SIMULATE_SPC_130EM = 131
+    SIMULATE_SPC_130EMN = 132
+    SIMULATE_SPC_130IN = 135
+    SIMULATE_SPC_130INX = 136
+    SIMULATE_SPC_130INXX = 137
+    SIMULATE_SPC_160 = 160
+    SIMULATE_SPC_160X = 161
+    SIMULATE_SPC_160PCIE = 162
+    SIMULATE_SPC_180N = 180
+    SIMULATE_SPC_180NX = 181
+    SIMULATE_SPC_180NXX = 182
+    SIMULATE_SPC_QC_104 = 104
+    SIMULATE_SPC_QC_004 = 4
+
+    @classmethod
+    def _missing_(cls, value: int) -> DLLOperationMode:
+        return cls.UNKNOWN
 
 
 InitStatus = enum.Enum(
@@ -124,6 +165,45 @@ class InUseStatus(enum.Enum):
     NOT_IN_USE = 0
     IN_USE_HERE = 1
     IN_USE_ELSEWHERE = -1
+
+
+class ModuleType(enum.Enum):
+    """
+    The module type (model number) of an SPC module.
+
+    Not to be confused with `DLLOperationMode`.
+    """
+    UNKNOWN = 0
+
+    SPC_600 = 600
+    SPC_630 = 630
+    SPC_700 = 700
+    SPC_730 = 730
+    SPC_130 = 130
+    SPC_830 = 830
+    SPC_140 = 140
+    SPC_930 = 930
+    DPC_230 = 230
+    SPC_150 = 150
+    SPC_150N = 151
+    SPC_150NX_OR_150NXX = 152
+    SPC_130EM = 131
+    SPC_130EMN = 132
+    SPC_130IN = 135
+    SPC_130INX = 136
+    SPC_130INXX = 137
+    SPC_160 = 160
+    SPC_160X = 161
+    SPC_160PCIE = 162
+    SPC_180N = 180
+    SPC_180NX = 181
+    SPC_180NXX = 182
+    SPC_QC_104 = 104
+    SPC_QC_004 = 4
+
+    @classmethod
+    def _missing_(cls, value: int) -> ModuleType:
+        return cls.UNKNOWN
 
 
 cdef class ModInfo:
@@ -157,8 +237,8 @@ cdef class ModInfo:
     ]
 
     @property
-    def module_type(self) -> int:
-        return self.c.module_type
+    def module_type(self) -> ModuleType:
+        return ModuleType(self.c.module_type)
 
     @property
     def bus_number(self) -> int:
@@ -1058,14 +1138,14 @@ def get_init_status(mod_no: int) -> InitStatus:
     return InitStatus(status)
 
 
-def get_mode() -> int:
+def get_mode() -> DLLOperationMode:
     """
     Get the operation mode of the SPCM DLL.
 
     Returns
     -------
-    int
-        The mode: 0 for hardware control, or specific constants for simulation.
+    DLLOperationMode
+        The mode, either hardware or simulation of a module type.
 
     Raises
     ------
@@ -1075,19 +1155,20 @@ def get_mode() -> int:
     ret = _spcm.SPC_get_mode()
     # Not mentioned in the docs, but the return value can be an error code.
     _raise_spcm_error(ret)
-    return ret
+    return DLLOperationMode(ret)
 
 
-def set_mode(mode: int, force_use: bool, use: Sequence[bool]) -> None:
+def set_mode(
+    mode: DLLOperationMode, force_use: bool, use: Sequence[bool]
+) -> None:
     """
     Set the operation mode of the SPCM DLL and activate or deactivate each of
     the SPC modules.
 
     Parameters
     ----------
-    mode : int
-        The operation mode: 0 for hardware control, or specific constants for
-        simulation.
+    mode : DLLOperationMode
+        The operation mode specifying hardware or simulation module type.
     force_use : bool
         If true, try to obtain control of the requested modules even if they
         are in use by another process.
@@ -1113,15 +1194,30 @@ def set_mode(mode: int, force_use: bool, use: Sequence[bool]) -> None:
     cdef array.array u = array.array('i', (0,) * max_mods)
     for i, b in enumerate(use):
         u[i] = 1 if b else 0
-    _raise_spcm_error(_spcm.SPC_set_mode(mode, force_use, u.data.as_ints))
+    _raise_spcm_error(
+        _spcm.SPC_set_mode(mode.value, force_use, u.data.as_ints)
+    )
 
 
-def test_id(mod_no: int) -> int:
+def test_id(mod_no: int) -> ModuleType:
     """
+    Return the module type (model number) of the given SPC module.
+
+    The return value is not accurate if called before `init`.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+
+    Returns
+    -------
+    ModuleType
+        The module type enum.
     """
     ret = _spcm.SPC_test_id(mod_no)
     _raise_spcm_error(ret)
-    return ret
+    return ModuleType(ret)
 
 
 def get_module_info(mod_no: int) -> ModInfo:
