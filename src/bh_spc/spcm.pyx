@@ -7,6 +7,7 @@
 import array
 import enum
 from collections.abc import Sequence
+from typing import Any
 
 from cpython cimport array
 from libc.string cimport memcmp, memcpy, memset, strlen
@@ -209,7 +210,7 @@ class ModuleType(enum.Enum):
 cdef class ModInfo:
     cdef _spcm.SPCModInfo c
 
-    def __cinit__(self):
+    def __cinit__(self) -> None:
         memset(&self.c, 0, sizeof(_spcm.SPCModInfo))
 
     def __repr__(self) -> str:
@@ -342,7 +343,7 @@ cdef class Data:
 
     cdef _spcm.SPCdata c
 
-    def __cinit__(self):
+    def __cinit__(self) -> None:
         memset(&self.c, 0, sizeof(_spcm.SPCdata))
 
     def __copy__(self) -> Data:
@@ -350,11 +351,11 @@ cdef class Data:
         memcpy(&cpy.c, &self.c, sizeof(_spcm.SPCdata))
         return cpy
 
-    def __deepcopy__(self, memo) -> Data:
+    def __deepcopy__(self, memo: Any) -> Data:
         # There are no objects stored by reference.
         return self.__copy__()
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: Any) -> bool:
         if type(other) is not type(self):
             return False
         cdef Data o = other
@@ -926,22 +927,28 @@ cdef class Data:
     @tdc_control.setter
     def tdc_control(self, v: int) -> None: self.c.tdc_control = v
 
+    # We cannot rule out the future possibility of BH adding more elements to
+    # the tdc_offset array, because it is currently the last field in the
+    # struct. So do not promise a 4-element tuple.
+
     @property
-    def tdc_offset(self) -> tuple[float, float, float, float]:
+    def tdc_offset(self) -> tuple[float, ...]:
         return tuple(self.c.tdc_offset)
 
     @tdc_offset.setter
-    def tdc_offset(self, v: tuple[float, float, float, float]) -> None:
-        self.c.tdc_offset[0] = <float>(v[0])
-        self.c.tdc_offset[1] = <float>(v[1])
-        self.c.tdc_offset[2] = <float>(v[2])
-        self.c.tdc_offset[3] = <float>(v[3])
+    def tdc_offset(self, v: Sequence[float]) -> None:
+        if len(v) > 4:
+            raise ValueError("tdc_offset may not have more than 4 elements")
+        for i in range(len(v)):
+            self.c.tdc_offset[i] = <float>(v[i])
+        # If v has fewer elements than tdc_offset, we do not modify the
+        # remaining ones.
 
 
 cdef class AdjustPara:
     cdef _spcm.SPC_Adjust_Para c
 
-    def __cinit__(self):
+    def __cinit__(self) -> None:
         memset(&self.c, 0, sizeof(_spcm.SPC_Adjust_Para))
 
     def __repr__(self) -> str:
@@ -1037,7 +1044,7 @@ cdef class AdjustPara:
 cdef class EEPData:
     cdef _spcm.SPC_EEP_Data c
 
-    def __cinit__(self):
+    def __cinit__(self) -> None:
         memset(&self.c, 0, sizeof(_spcm.SPC_EEP_Data))
 
     def __repr__(self) -> str:
@@ -1085,7 +1092,7 @@ cdef class EEPData:
 cdef class RateValues:
     cdef _spcm.rate_values c
 
-    def __cinit__(self):
+    def __cinit__(self) -> None:
         memset(&self.c, 0, sizeof(_spcm.rate_values))
 
     def __repr__(self) -> str:
@@ -1134,7 +1141,7 @@ def get_error_string(error_id: int | ErrorEnum) -> str:
 
     Parameters
     ----------
-    error_id : int
+    error_id : int or ErrorEnum
         The error code
 
     Returns
@@ -1354,7 +1361,7 @@ def get_parameters(mod_no: int) -> Data:
     return data
 
 
-def set_parameters(mod_no: int, Data data) -> None:
+def set_parameters(mod_no: int, data: Data) -> None:
     _raise_spcm_error(_spcm.SPC_set_parameters(mod_no, &data.c))
 
 
@@ -1369,7 +1376,7 @@ def get_parameter(mod_no: int, par_id: ParID) -> float | int:
 
 def set_parameter(mod_no: int, par_id: ParID, value: float | int) -> None:
     if par_id.type is int and isinstance(value, float):
-        raise TypeError(f"{par_id} takes an integer value; float found")
+        raise TypeError(f"{par_id.name} takes an integer value; float found")
     cdef float v = value
     _raise_spcm_error(_spcm.SPC_set_parameter(mod_no, par_id.value, value))
 
