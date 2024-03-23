@@ -2,6 +2,7 @@
 # Copyright 2024 Board of Regents of the University of Wisconsin System
 # SPDX-License-Identifier: MIT
 
+import array
 import copy
 
 import pytest
@@ -328,6 +329,97 @@ def test_save_parameters_to_inifile(ini150, tmp_path):
     spcm.save_parameters_to_inifile(
         p, str(test2_ini), source_inifile=str(test_ini), with_comments=True
     )
+
+
+def test_test_state(ini150):
+    assert spcm.MeasurementState.ARMED not in spcm.test_state(0)
+
+
+def test_get_sync_state(ini150):
+    # Presumably a good assumption for the simulator.
+    assert spcm.SyncState.SYNC_OVERLOAD not in spcm.get_sync_state(0)
+
+
+def test_get_time_from_start(ini150):
+    assert spcm.get_time_from_start(0) >= 0.0
+
+
+def test_get_break_time(ini150):
+    assert spcm.get_break_time(0) >= 0.0
+
+
+def test_get_actual_coltime(ini150):
+    assert spcm.get_actual_coltime(0) >= 0.0
+
+
+def test_clear_read_rates(ini150):
+    spcm.clear_rates(0)
+    # With hardware, we could get None if we read the rates before they are
+    # ready. With the simulator this behavior has not been observed.
+    assert spcm.read_rates(0).sync_rate > 0.0  # Assume simulator behavior.
+
+
+def test_get_fifo_usage(ini150):
+    spcm.set_parameter(0, spcm.ParID.MODE, 1)  # FIFO
+    assert spcm.get_fifo_usage(0) == 0.0
+
+
+def test_start_stop_measurement(ini150):
+    spcm.set_parameter(0, spcm.ParID.MODE, 1)  # FIFO
+    spcm.set_parameter(0, spcm.ParID.STOP_ON_TIME, 0)
+    assert spcm.MeasurementState.ARMED not in spcm.test_state(0)
+    spcm.start_measurement(0)
+    assert spcm.MeasurementState.ARMED in spcm.test_state(0)
+    spcm.stop_measurement(0)
+    assert spcm.MeasurementState.ARMED not in spcm.test_state(0)
+
+
+def test_read_fifo(ini150):
+    spcm.set_parameter(0, spcm.ParID.MODE, 1)  # FIFO
+    spcm.set_parameter(0, spcm.ParID.COLLECT_TIME, 0.01)
+    spcm.set_parameter(0, spcm.ParID.STOP_ON_TIME, 1)
+    spcm.start_measurement(0)
+    buf = array.array("H", (0 for _ in range(1024)))
+    words_read = 0
+    n = 1
+    while spcm.MeasurementState.ARMED in spcm.test_state(0) or n > 0:
+        n = spcm.read_fifo(0, buf)
+        words_read += n
+    spcm.stop_measurement(0)
+    assert words_read > 0
+
+
+def test_read_fifo_to_array(ini150):
+    spcm.set_parameter(0, spcm.ParID.MODE, 1)  # FIFO
+    spcm.set_parameter(0, spcm.ParID.COLLECT_TIME, 0.01)
+    spcm.set_parameter(0, spcm.ParID.STOP_ON_TIME, 1)
+    spcm.start_measurement(0)
+    words_read = 0
+    n = 1
+    while spcm.MeasurementState.ARMED in spcm.test_state(0) or n > 0:
+        data = spcm.read_fifo_to_array(0, 1024)
+        n = len(data)
+        words_read += n
+    spcm.stop_measurement(0)
+    assert words_read > 0
+
+
+def test_get_fifo_init_vars(ini150):
+    spcm.set_parameter(0, spcm.ParID.MODE, 1)  # FIFO
+    spcm.set_parameter(0, spcm.ParID.MACRO_TIME_CLK, 0)  # 25 ns
+    v = spcm.get_fifo_init_vars(0)
+    assert v.fifo_type == spcm.FIFOType.SPC_150
+    assert spcm.StreamType.HAS_SPC_HEADER in v.stream_type
+    assert v.mt_clock == 250
+
+    # SPC header in SPC-150 format.
+    assert len(v.spc_header) == 4
+    # Bytes 0-2: mt_clock
+    assert v.spc_header[0] == 250
+    assert v.spc_header[1] == 0
+    assert v.spc_header[2] == 0
+    # Byte 3: Bits 3-6: number of routing bits (4); bit 7: always 1
+    assert v.spc_header[3] == (4 << 3) | (1 << 7)
 
 
 def test_dump_state(ini150):

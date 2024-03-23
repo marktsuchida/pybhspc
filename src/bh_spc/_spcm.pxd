@@ -154,8 +154,8 @@ cdef extern from "Spcm_def.h":
     short SPC_get_time_from_start(short mod_no, float *time)
     short SPC_get_break_time(short mod_no, float *time)
     short SPC_get_actual_coltime(short mod_no, float *time)
-    short SPC_read_rates(short mod_no, rate_values *rates)
     short SPC_clear_rates(short mod_no)
+    short SPC_read_rates(short mod_no, rate_values *rates)
     short SPC_get_fifo_usage(short mod_no, float *usage_degree)
     # SPC_get_scan_clk_state not applicable to FIFO mode.
     # SPC_get_sequencer_state not applicable to FIFO mode.

@@ -5,6 +5,7 @@
 # cython: language_level=3
 
 import array
+import dataclasses
 import enum
 from collections.abc import Sequence
 from typing import Any
@@ -1135,6 +1136,103 @@ cdef class RateValues:
         return self.c.adc_rate
 
 
+class MeasurementState(enum.Flag):
+    STOPPED_ON_OVERFLOW = 0x1
+    OVERFLOW = 0x2
+    STOPPED_ON_COLLECT_TIME = 0x4
+    COLLECT_TIME_ELAPSED = 0x8
+    STOPPED_ON_COMMAND = 0x10
+    REPEAT_TIME_ELAPSED = 0x20
+    ARMED = 0x80
+    COLLECT_TIME_ELAPSED_2ND_TIME = 0x100
+    REPEAT_TIME_ELAPSED_2ND_TIME = 0x200
+
+    # Some of the remaining bits have more than one meaning. Make sure to list
+    # the names for FIFO mode first, and newer module types first, because the
+    # first appearance of the value determines the default name.
+
+    # FIFO modes
+    FIFO_OVERFLOW = 0x400
+    FIFO_EMPTY = 0x800
+
+    # FIFO Image mode
+    WAITING_FOR_FRAME = 0x2000
+
+    # (Presumably the values that apply to 160 also apply to 180N, 130IN.)
+
+    # SPC-700/730, 140, 830, 930, 150(N), 130EM(N), 160, 180N, 130IN
+    MEASUREMENT_ACTIVE = 0x40
+    SCAN_READY = 0x400
+    SCAN_FLOWBACK_READY = 0x800
+    WAITING_FOR_TRIGGER = 0x1000
+    HARDWARE_FILL_NOT_READY = 0x8000
+
+    # SPC-140, 150(N), 130EM(N), 160, 180N, 130IN
+    STOPPED_BY_SEQUENCER = 0x4000
+
+    # SPC-150(N), 130EM(N), 160, 180N, 130IN
+    SEQUENCER_GAP_150 = 0x2000
+    # SPC-600/630, 130 only
+    SEQUENCER_GAP = 0x40
+
+    # DPC-200
+    TDC1_ARMED = 0x80
+    TDC1_COLLECT_TIME_ELAPSED = 0x8
+    TDC1_FIFO_EMPTY = 0x100
+    TDC1_FIFO_OVERFLOW = 0x400
+    TDC2_ARMED = 0x4000
+    TDC2_COLLECT_TIME_ELAPSED = 0x20
+    TDC2_FIFO_EMPTY = 0x200
+    TDC2_FIFO_OVERFLOW = 0x800
+
+
+class SyncState(enum.Flag):
+    SYNC_OK = 0x1
+    SYNC_OVERLOAD = 0x2
+
+
+class FIFOType(enum.Enum):
+    UNKNOWN = 0  # Attested when not in FIFO mode.
+    SPC_600_48BIT = 2
+    SPC_600_32BIT = 3
+    SPC_130 = 4
+    SPC_830 = 5
+    SPC_140 = 6
+    SPC_150 = 7
+    DPC_230 = 8
+    IMAGE = 9
+    TDC = 11
+    TDC_ABS = 12
+
+    @classmethod
+    def _missing_(cls, value: int) -> FIFOType:
+        return cls.UNKNOWN
+
+
+class StreamType(enum.Flag):
+    HAS_SPC_HEADER = 1 << 0
+    HAS_MARKERS = 1 << 9
+    RAW_DATA = 1 << 10
+    SPC_QC = 1 << 11
+    BUFFERED = 1 << 12
+    AUTOFREE_BUFFER = 1 << 13
+    RING_BUFFER = 1 << 14
+
+    # DPC-230
+    DPC_TDC1_RAW_DATA = 1 << 1
+    DPC_TDC2_RAW_DATA = 1 << 2
+    DPC_TDC_TTL_RAW_DATA = 1 << 3
+    DPC = 1 << 8
+
+
+@dataclasses.dataclass
+class FIFOInitVars:
+    fifo_type: FIFOType
+    stream_type: StreamType
+    mt_clock: int
+    spc_header: array.array
+
+
 def get_error_string(error_id: int | ErrorEnum) -> str:
     """
     Return the error message for the given SPCM error code.
@@ -1274,9 +1372,8 @@ def set_mode(
     max_mods = 32
     if len(use) > max_mods:
         raise ValueError(f"No more than {max_mods} SPC modules are supported")
-    cdef array.array u = array.array('i', (0,) * max_mods)
-    for i, b in enumerate(use):
-        u[i] = 1 if b else 0
+    cdef array.array u = array.array('i', ((1 if b else 0) for b in use))
+    u.extend(0 for _ in range(len(use), max_mods))
     _raise_spcm_error(
         _spcm.SPC_set_mode(mode.value, force_use, u.data.as_ints)
     )
@@ -1508,3 +1605,277 @@ def save_parameters_to_inifile(
                 (1 if with_comments else 0),
             )
         )
+
+
+def test_state(mod_no: int) -> MeasurementState:
+    """
+    Get various status flags for the last-started measurement.
+
+    This function should be called periodically during a measurement in order
+    to detect when the measurement is stopped (among other things).
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+
+    Returns
+    -------
+    MeasurementState
+        Flags indicating timer and FIFO states, reason for measurement stop,
+        etc.
+    """
+    cdef short state = 0
+    _raise_spcm_error(_spcm.SPC_test_state(mod_no, &state))
+    return MeasurementState(state)
+
+
+def get_sync_state(mod_no: int) -> SyncState:
+    """
+    Get the state of the SYNC input.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+
+    Returns
+    -------
+    SyncState
+        Whether the SYNC signal is triggering and whether it is overloaded.
+    """
+    cdef short sync_state = 0
+    _raise_spcm_error(_spcm.SPC_get_sync_state(mod_no, &sync_state))
+    return SyncState(sync_state)
+
+
+def get_time_from_start(mod_no: int) -> float:
+    """
+    Get the time since measurement start.
+
+    `test_state` must be called periodically for this function to work
+    correctly during measurements that exceed 80 seconds.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+
+    Returns
+    -------
+    float
+        Elapsed time since measurement start, in seconds.
+    """
+    cdef float time = 0.0
+    _raise_spcm_error(_spcm.SPC_get_time_from_start(mod_no, &time))
+    return time
+
+
+def get_break_time(mod_no: int) -> float:
+    """
+    Get the time from measurement start to stop or pause.
+
+    The return value may not be valid in FIFO mode (to be investigated).
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+
+    Returns
+    -------
+    float
+        Duration of measurement in seconds.
+    """
+    cdef float time = 0.0
+    _raise_spcm_error(_spcm.SPC_get_break_time(mod_no, &time))
+    return time
+
+
+def get_actual_coltime(mod_no: int) -> float:
+    """
+    Get the remaining time to the end of the measurement, taking dead time
+    compensation into account.
+
+    Under some conditions (e.g., in FIFO mode with STOP_ON_TIME disabled), the
+    return value counts up similarly to `get_time_from_start`.
+
+    `test_state` must be called periodically for this function to work
+    correctly during measurements that exceed 80 seconds.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+
+    Returns
+    -------
+    float
+        Remaining or elapsed collection time, in seconds.
+    """
+    cdef float time = 0.0
+    _raise_spcm_error(_spcm.SPC_get_actual_coltime(mod_no, &time))
+    return time
+
+
+def clear_rates(mod_no: int) -> None:
+    """
+    Initialize and clear the rate counters and start a count cycle.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+    """
+    _raise_spcm_error(_spcm.SPC_clear_rates(mod_no))
+
+
+def read_rates(mod_no: int) -> RateValues | None:
+    """
+    Read the rate counters and start a new count cycle.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+
+    Returns
+    -------
+    RateValues or None
+        The rate counts, or None if a count cycle has not yet completed.
+    """
+    cdef RateValues rates = RateValues()
+    ret = _spcm.SPC_read_rates(mod_no, &rates.c)
+    if ret == -ErrorEnum.RATES_NOT_RDY.value:
+        return None
+    _raise_spcm_error(ret)
+    return rates
+
+
+def get_fifo_usage(mod_no: int) -> float:
+    """
+    Get the used fraction of the FIFO.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+
+    Returns
+    -------
+    float
+        The fraction of the FIFO occupied (0.0 to 1.0).
+    """
+    cdef float usage_degree = 0.0
+    _raise_spcm_error(_spcm.SPC_get_fifo_usage(mod_no, &usage_degree))
+    return usage_degree
+
+
+def start_measurement(mod_no: int) -> None:
+    """
+    Start a measurement.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+    """
+    _raise_spcm_error(_spcm.SPC_start_measurement(mod_no))
+
+
+def stop_measurement(mod_no: int) -> None:
+    """
+    Stop any ongoing measurement.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+    """
+    _raise_spcm_error(_spcm.SPC_stop_measurement(mod_no))
+
+
+def read_fifo(mod_no: int, unsigned short[::1] data not None) -> int:
+    """
+    Read data from a FIFO mode measurement.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+    data : array_like
+        The destination buffer for the data read. The object must implement the
+        buffer protocol, be typed unsigned short (uint16), be 1-dimentional,
+        and be C-contiguous. For example, ``np.empty(65536, dtype=np.uint16)``.
+
+    Returns
+    -------
+    int
+        The number of 16-bit words read. Thus, if the return value is ``r``,
+        ``data[:r]`` contains valid data.
+    """
+    if data.shape[0] > 2**32 - 1:
+        raise ValueError("Cannot read size that doesn't fit in 32 bits")
+    cdef unsigned long count = <unsigned long>(data.shape[0])
+    if count == 0:  # Cannot write &data[0].
+        _raise_spcm_error(_spcm.SPC_read_fifo(mod_no, &count, NULL))
+    else:
+        _raise_spcm_error(_spcm.SPC_read_fifo(mod_no, &count, &data[0]))
+    return count
+
+
+def read_fifo_to_array(mod_no: int, max_words: int) -> array.array:
+    """
+    Convenience wrapper around `read_fifo` that allocates an array for the
+    output.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+    max_words:
+        Maximum number of 16-bit words to read.
+
+    Returns
+    -------
+    array.array of unsigned short
+        The FIFO data read. The length of the array is between 0 and
+        `max_words`.
+    """
+    cdef array.array data = array.array('H')
+    array.resize(data, max_words)
+    return data[:read_fifo(mod_no, data)]
+
+
+def get_fifo_init_vars(mod_no: int) -> FIFOInitVars:
+    """
+    Get format information on the currently set FIFO mode.
+
+    The return value is only meaningful if the module is set to a FIFO mode.
+
+    For SPC-600/630, the number of routing bits in the SPCHeader may always be
+    zero (in both FIFO formats).
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+
+    Returns
+    -------
+    FIFOInitVars
+        The FIFO format information.
+    """
+    cdef short fifo_type = 0
+    cdef short stream_type = 0
+    cdef int mt_clock = 0
+    cdef array.array spc_header = array.array('B', (0 for _ in range(4)))
+    _raise_spcm_error(
+        _spcm.SPC_get_fifo_init_vars(
+            mod_no, &fifo_type, &stream_type, &mt_clock,
+            spc_header.data.as_uints
+        )
+    )
+    return FIFOInitVars(
+        FIFOType(fifo_type), StreamType(stream_type), mt_clock, spc_header
+    )
