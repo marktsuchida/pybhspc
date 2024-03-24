@@ -2,6 +2,8 @@
 # Copyright 2024 Board of Regents of the University of Wisconsin System
 # SPDX-License-Identifier: MIT
 
+"""noxfile for pybhspc."""
+
 import nox
 
 nox.options.sessions = ["test"]
@@ -9,5 +11,6 @@ nox.options.sessions = ["test"]
 
 @nox.session
 def test(session):
+    """Run the tests."""
     session.install(".[testing]")
     session.run("pytest")

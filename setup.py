@@ -2,6 +2,10 @@
 # Copyright 2024 Board of Regents of the University of Wisconsin System
 # SPDX-License-Identifier: MIT
 
+# ruff: noqa: TRY003  # Avoid specifying long messages outside exception class
+
+"""Setup.py for pybhspc."""
+
 import os.path
 import platform
 

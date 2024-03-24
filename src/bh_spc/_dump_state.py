@@ -6,7 +6,64 @@
 import textwrap
 from collections.abc import Sequence
 
-from . import spcm  # type: ignore
+from . import spcm  # type: ignore[attr-defined]
+
+
+def _dump_eeprom_data(mod_no: int, print) -> None:
+    try:
+        eep_data = spcm.get_eeprom_data(mod_no)
+    except spcm.SPCMError as e:
+        print(f"  get_eeprom_data() failed: {e}")
+    else:
+        print(f"  EEPData.module_type: {eep_data.module_type}")
+        print(f"  EEPData.serial_no:   {eep_data.serial_no}")
+        print(f"  EEPData.date:        {eep_data.date}")
+
+
+def _dump_fpga_version(mod_no: int, print) -> None:
+    try:
+        version = spcm.get_version(mod_no)
+    except spcm.SPCMError as e:
+        print(f"  get_version() failed: {e}")
+    else:
+        print(f"  FPGA Version:        {version}")
+
+
+def _dump_measurement_state(mod_no: int, print) -> None:
+    try:
+        meas_state = spcm.test_state(mod_no)
+    except spcm.SPCMError as e:
+        print(f"  test_state() failed: {e}")
+    else:
+        print(f"  State:               {meas_state!r}")
+
+
+def _dump_sync_state(mod_no: int, print) -> None:
+    try:
+        sync_state = spcm.get_sync_state(mod_no)
+    except spcm.SPCMError as e:
+        print(f"  get_sync_state() failed: {e}")
+    else:
+        print(f"  Sync state:          {sync_state!r}")
+
+
+def _dump_parameters(mod_no: int, print) -> None:
+    try:
+        data = spcm.get_parameters(mod_no)
+    except spcm.SPCMError as e:
+        print(f"  get_parameters() failed: {e}")
+    else:
+        params = " ".join(f"{k}={v!r}" for k, v in data.items())
+        print("  Parameters:")
+        for line in textwrap.wrap(
+            params,
+            width=79,
+            initial_indent="    ",
+            subsequent_indent="    ",
+            break_long_words=False,
+            break_on_hyphens=False,
+        ):
+            print(line)
 
 
 def dump_module_state(mod_no: int, *, file=None) -> None:
@@ -25,13 +82,13 @@ def dump_module_state(mod_no: int, *, file=None) -> None:
             raise
         _print(f"Module {mod_no}: test_id() failed: {e}")
         return
-    _print(f"Module {mod_no}: {repr(module_type)}")
+    _print(f"Module {mod_no}: {module_type!r}")
 
     try:
         init_status = spcm.get_init_status(mod_no)
     except spcm.SPCMError as e:
         init_status = f"get_init_status() failed: {e}"
-    _print(f"  {repr(init_status)}")
+    _print(f"  {init_status!r}")
 
     try:
         info = spcm.get_module_info(mod_no)
@@ -39,58 +96,17 @@ def dump_module_state(mod_no: int, *, file=None) -> None:
         _print(f"  get_module_info() failed: {e}")
     else:
         if info.module_type != module_type:
-            _print(f"  ModInfo.module_type: {repr(info.module_type)}")
+            _print(f"  ModInfo.module_type: {info.module_type!r}")
         _print(f"  PCI bus/slot:        {info.bus_number}, {info.slot_number}")
-        _print(f"  ModInfo.in_use:      {repr(info.in_use)}")
+        _print(f"  ModInfo.in_use:      {info.in_use!r}")
         if info.init != init_status:
-            _print(f"  ModInfo.init_status: {repr(info.init)}")
+            _print(f"  ModInfo.init_status: {info.init!r}")
 
-    try:
-        eep_data = spcm.get_eeprom_data(mod_no)
-    except spcm.SPCMError as e:
-        _print(f"  get_eeprom_data() failed: {e}")
-    else:
-        _print(f"  EEPData.module_type: {eep_data.module_type}")
-        _print(f"  EEPData.serial_no:   {eep_data.serial_no}")
-        _print(f"  EEPData.date:        {eep_data.date}")
-
-    try:
-        version = spcm.get_version(mod_no)
-    except spcm.SPCMError as e:
-        _print(f"  get_version() failed: {e}")
-    else:
-        _print(f"  FPGA Version:        {version}")
-
-    try:
-        meas_state = spcm.test_state(mod_no)
-    except spcm.SPCMError as e:
-        _print(f"  test_state() failed: {e}")
-    else:
-        _print(f"  State:               {repr(meas_state)}")
-
-    try:
-        sync_state = spcm.get_sync_state(mod_no)
-    except spcm.SPCMError as e:
-        _print(f"  get_sync_state() failed: {e}")
-    else:
-        _print(f"  Sync state:          {repr(sync_state)}")
-
-    try:
-        data = spcm.get_parameters(mod_no)
-    except spcm.SPCMError as e:
-        _print(f"  get_parameters() failed: {e}")
-    else:
-        params = " ".join(f"{k}={repr(v)}" for k, v in data.items())
-        _print("  Parameters:")
-        for line in textwrap.wrap(
-            params,
-            width=79,
-            initial_indent="    ",
-            subsequent_indent="    ",
-            break_long_words=False,
-            break_on_hyphens=False,
-        ):
-            _print(line)
+    _dump_eeprom_data(mod_no, _print)
+    _dump_fpga_version(mod_no, print)
+    _dump_measurement_state(mod_no, print)
+    _dump_sync_state(mod_no, print)
+    _dump_parameters(mod_no, _print)
 
 
 def dump_state(

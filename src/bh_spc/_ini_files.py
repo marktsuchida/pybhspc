@@ -7,7 +7,7 @@ import os
 import tempfile
 from typing import Iterator
 
-from . import spcm  # type: ignore
+from . import spcm  # type: ignore[attr-defined]
 
 
 def minimal_spcm_ini(mode: int | spcm.DLLOperationMode = 0) -> str:

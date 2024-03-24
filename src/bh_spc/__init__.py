@@ -2,7 +2,10 @@
 # Copyright 2024 Board of Regents of the University of Wisconsin System
 # SPDX-License-Identifier: MIT
 
-# ruff: noqa: E402
+# ruff: noqa: E402    # Module level import not at top of file
+# ruff: noqa: TRY003  # Avoid specifying long messages outside exception class
+
+"""bh_spc package (pybhspc)."""
 
 __all__ = [
     "dump_module_state",
@@ -54,6 +57,16 @@ def _spcm_dll_dir() -> str:
 
 @functools.cache
 def spcm_dll_version() -> tuple[int, int, int, int]:
+    """
+    Return the file version number of the SPCM DLL.
+
+    The information is read from the Windows version resource of the file.
+
+    Returns
+    -------
+    tuple of int, length 4
+        File version number of the spcm64.dll file.
+    """
     return _dll_file_version(os.path.join(_spcm_dll_dir(), "spcm64.dll"))
 
 
@@ -67,7 +80,7 @@ if spcm_dll_version() < (4, 0, 0, 0):
 
 
 with os.add_dll_directory(_spcm_dll_dir()):
-    from . import spcm  # type: ignore
+    from . import spcm  # type: ignore[attr-defined]
 
 
 # Imports that depend on spcm can now be done.
