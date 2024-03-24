@@ -110,6 +110,12 @@ def test_spc_data_fields():
         assert float(d.as_dict()[f]) == 1.0
 
 
+def test_spc_data_fields_match_par_ids():
+    pids = [pid.name.lower() for pid in spcm.ParID]
+    fields = [k for k, v in spcm.Data().items()]
+    assert pids == fields
+
+
 def test_adjust_para_repr():
     r = repr(spcm.AdjustPara())
     assert r.startswith("<AdjustPara(")

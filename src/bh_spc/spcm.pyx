@@ -429,16 +429,22 @@ cdef class Data:
     # of the same type should be wrapped in exactly the same way. Use editor
     # macros to make uniform changes.
 
+    # Here we order the fields so that they match the ParID enum, _not_ the
+    # order they appear in the C struct. Not only does this hide the
+    # superficial inconsistency, but it also puts the fields in a more logical
+    # order, probably because the ParID order is the original order (the struct
+    # fields were reordered in SPCM DLL 4.0).
+
     _fields = (
         "cfd_limit_low",
         "cfd_limit_high",
         "cfd_zc_level",
         "cfd_holdoff",
         "sync_zc_level",
+        "sync_freq_div",
         "sync_holdoff",
         "sync_threshold",
         "tac_range",
-        "sync_freq_div",
         "tac_gain",
         "tac_offset",
         "tac_limit_low",
@@ -462,30 +468,30 @@ cdef class Data:
         "scan_size_y",
         "scan_rout_x",
         "scan_rout_y",
+        "scan_polarity",
         "scan_flyback",
         "scan_borders",
-        "scan_polarity",
+        "pixel_time",
         "pixel_clock",
         "line_compression",
         "trigger",
-        "pixel_time",
         "ext_pixclk_div",
         "rate_count_time",
         "macro_time_clk",
         "add_select",
         "adc_zoom",
+        "xy_gain",
         "img_size_x",
         "img_size_y",
         "img_rout_x",
         "img_rout_y",
-        "xy_gain",
         "master_clock",
         "adc_sample_delay",
         "detector_type",
+        "tdc_control",
         "chan_enable",
         "chan_slope",
         "chan_spec_no",
-        "tdc_control",
         "tdc_offset1",
         "tdc_offset2",
         "tdc_offset3",
@@ -533,6 +539,14 @@ cdef class Data:
         self.c.sync_zc_level = <float>v
 
     @property
+    def sync_freq_div(self) -> int:
+        return self.c.sync_freq_div
+
+    @sync_freq_div.setter
+    def sync_freq_div(self, v: int) -> None:
+        self.c.sync_freq_div = v
+
+    @property
     def sync_holdoff(self) -> float:
         return self.c.sync_holdoff
 
@@ -555,14 +569,6 @@ cdef class Data:
     @tac_range.setter
     def tac_range(self, v: float) -> None:
         self.c.tac_range = <float>v
-
-    @property
-    def sync_freq_div(self) -> int:
-        return self.c.sync_freq_div
-
-    @sync_freq_div.setter
-    def sync_freq_div(self, v: int) -> None:
-        self.c.sync_freq_div = v
 
     @property
     def tac_gain(self) -> int:
@@ -749,6 +755,14 @@ cdef class Data:
         self.c.scan_rout_y = v
 
     @property
+    def scan_polarity(self) -> int:
+        return self.c.scan_polarity
+
+    @scan_polarity.setter
+    def scan_polarity(self, v: int) -> None:
+        self.c.scan_polarity = v
+
+    @property
     def scan_flyback(self) -> int:
         return self.c.scan_flyback
 
@@ -765,12 +779,12 @@ cdef class Data:
         self.c.scan_borders = v
 
     @property
-    def scan_polarity(self) -> int:
-        return self.c.scan_polarity
+    def pixel_time(self) -> float:
+        return self.c.pixel_time
 
-    @scan_polarity.setter
-    def scan_polarity(self, v: int) -> None:
-        self.c.scan_polarity = v
+    @pixel_time.setter
+    def pixel_time(self, v: float) -> None:
+        self.c.pixel_time = <float>v
 
     @property
     def pixel_clock(self) -> int:
@@ -795,14 +809,6 @@ cdef class Data:
     @trigger.setter
     def trigger(self, v: int) -> None:
         self.c.trigger = v
-
-    @property
-    def pixel_time(self) -> float:
-        return self.c.pixel_time
-
-    @pixel_time.setter
-    def pixel_time(self, v: float) -> None:
-        self.c.pixel_time = <float>v
 
     @property
     def ext_pixclk_div(self) -> int:
@@ -845,6 +851,14 @@ cdef class Data:
         self.c.adc_zoom = v
 
     @property
+    def xy_gain(self) -> int:
+        return self.c.xy_gain
+
+    @xy_gain.setter
+    def xy_gain(self, v: int) -> None:
+        self.c.xy_gain = v
+
+    @property
     def img_size_x(self) -> int:
         return self.c.img_size_x
 
@@ -877,14 +891,6 @@ cdef class Data:
         self.c.img_rout_y = v
 
     @property
-    def xy_gain(self) -> int:
-        return self.c.xy_gain
-
-    @xy_gain.setter
-    def xy_gain(self, v: int) -> None:
-        self.c.xy_gain = v
-
-    @property
     def master_clock(self) -> int:
         return self.c.master_clock
 
@@ -909,6 +915,14 @@ cdef class Data:
         self.c.detector_type = v
 
     @property
+    def tdc_control(self) -> int:
+        return self.c.tdc_control
+
+    @tdc_control.setter
+    def tdc_control(self, v: int) -> None:
+        self.c.tdc_control = v
+
+    @property
     def chan_enable(self) -> int:
         return self.c.chan_enable
 
@@ -931,13 +945,6 @@ cdef class Data:
     @chan_spec_no.setter
     def chan_spec_no(self, v: int) -> None:
         self.c.chan_spec_no = v
-
-    @property
-    def tdc_control(self) -> int:
-        return self.c.tdc_control
-
-    @tdc_control.setter
-    def tdc_control(self, v: int) -> None: self.c.tdc_control = v
 
     # Hide the float[4] tdc_offset and expose properties that match the ParID
     # and INI fields exactly. This has the added advantage that, should BH
