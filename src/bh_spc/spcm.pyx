@@ -4,6 +4,30 @@
 
 # cython: language_level=3
 
+"""
+Low-level wrappers of the SPCM DLL functions and data structures.
+
+This extension module aims to provide straightforward Python wrappers for the
+C functions, structs, and enums in the SPCM DLL. Currently, only the functions
+required to acquire data in FIFO mode are wrapped (excluding those that are
+specific to the DPC-230).
+
+Error codes returned by functions are converted to exceptions (SPCMError).
+Functions that take output arguments are wrapped so that they provide the data
+as a return value. A few other small changes are made to facilitate usage from
+Python. In some cases enum names have been changed for readability.
+
+A design goal of this module is to generally avoid artificially restricting
+user code from performing operations that the C functions allow, even if they
+are logically questionable or lead to unexpected return values. This is so that
+this module can be used to experiment with the C API and discover its behavior.
+A higher-level interface that guides the user toward correct usage can be built
+on top of this module.
+
+As such, to fully understand the correct usage of these functions and data
+types, you will need to refer to the Becker-Hickl SPCM DLL documentation.
+"""
+
 import array
 import dataclasses
 import enum

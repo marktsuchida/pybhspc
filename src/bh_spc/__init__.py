@@ -5,7 +5,14 @@
 # ruff: noqa: E402    # Module level import not at top of file
 # ruff: noqa: TRY003  # Avoid specifying long messages outside exception class
 
-"""bh_spc package (pybhspc)."""
+"""
+bh_spc package (pybhspc).
+
+This package provides control of and data acquisition from Becker-Hickl SPC
+modules, in FIFO mode.
+
+Currently, low-level control is provided by the `spcm` module.
+"""
 
 __all__ = [
     "dump_module_state",
