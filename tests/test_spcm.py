@@ -178,29 +178,21 @@ def test_failed_init():
     assert exc_info.value.enum == spcm.ErrorEnum.FILE_NVALID
 
 
-@pytest.fixture
-def ini150():
-    with ini_file(minimal_spcm_ini(150)) as ininame:
-        spcm.init(ininame)
-    yield
-    spcm.close()
-
-
-def test_get_init_status(ini150):
+def test_get_init_status(init_spc150):
     assert spcm.get_init_status(0) == spcm.InitStatus.OK
     with pytest.raises(spcm.SPCMError) as exc_info:
         spcm.get_init_status(1000)
     assert exc_info.value.enum == spcm.ErrorEnum.MOD_NO
 
 
-def test_get_mode(ini150):
+def test_get_mode(init_spc150):
     assert spcm.get_mode() == spcm.DLLOperationMode.SIMULATE_SPC_150
     # Would be good to also test that SPCMError is raised when not initialized,
     # but the uninitialized state cannot be reproduced with
     # SPC_close() (so we would need to test in a dedicated fresh process).
 
 
-def test_set_mode(ini150):
+def test_set_mode(init_spc150):
     spcm.set_mode(spcm.DLLOperationMode.SIMULATE_SPC_180N, False, (True,))
     assert spcm.get_mode() == spcm.DLLOperationMode.SIMULATE_SPC_180N
     assert spcm.get_init_status(0) == spcm.InitStatus.OK
@@ -208,7 +200,7 @@ def test_set_mode(ini150):
     assert spcm.get_init_status(7) == spcm.InitStatus.NOT_DONE
 
 
-def test_test_id(ini150):
+def test_test_id(init_spc150):
     assert spcm.test_id(0) == spcm.ModuleType.SPC_150
 
 
@@ -218,14 +210,14 @@ def test_test_id_error():
     assert exc_info.value.enum == spcm.ErrorEnum.MOD_NO
 
 
-def test_get_module_info(ini150):
+def test_get_module_info(init_spc150):
     info = spcm.get_module_info(0)
     assert info.module_type == spcm.ModuleType.SPC_150
     assert info.in_use == spcm.InUseStatus.IN_USE_HERE
     assert info.init == spcm.InitStatus.OK
 
 
-def test_disabled_module(ini150):
+def test_disabled_module(init_spc150):
     spcm.set_mode(spcm.DLLOperationMode.SIMULATE_SPC_150, False, (True,))
     info = spcm.get_module_info(1)
     assert info.module_type == spcm.ModuleType.SPC_150
@@ -233,25 +225,25 @@ def test_disabled_module(ini150):
     assert info.init == spcm.InitStatus.NOT_DONE
 
 
-def test_disabling_all_modules_raises(ini150):
+def test_disabling_all_modules_raises(init_spc150):
     with pytest.raises(spcm.SPCMError) as exc_info:
         spcm.set_mode(spcm.DLLOperationMode.SIMULATE_SPC_150, False, ())
     assert exc_info.value.enum == spcm.ErrorEnum.NO_ACT_MOD
 
 
-def test_get_version(ini150):
+def test_get_version(init_spc150):
     # We assume simulated modules return 0 as version. Don't know if this is
     # always the case.
     assert spcm.get_version(0) == "0"
 
 
-def test_get_set_parameters(ini150):
+def test_get_set_parameters(init_spc150):
     # For now, just test that it works.
     p = spcm.get_parameters(0)
     spcm.set_parameters(0, p)
 
 
-def test_get_parameter(ini150):
+def test_get_parameter(init_spc150):
     cfdll = spcm.get_parameter(0, spcm.ParID.CFD_LIMIT_LOW)
     assert isinstance(cfdll, float)
     assert cfdll == spcm.get_parameters(0).cfd_limit_low
@@ -261,7 +253,7 @@ def test_get_parameter(ini150):
     assert mode == spcm.get_parameters(0).mode
 
 
-def test_set_parameter(ini150):
+def test_set_parameter(init_spc150):
     spcm.set_parameter(0, spcm.ParID.CFD_LIMIT_LOW, -10.0)
     assert spcm.get_parameter(0, spcm.ParID.CFD_LIMIT_LOW) == pytest.approx(
         -10.0, abs=0.5
@@ -274,7 +266,7 @@ def test_set_parameter(ini150):
         spcm.set_parameter(0, spcm.ParID.MODE, 1.0)
 
 
-def test_get_parameter_parameters(ini150):
+def test_get_parameter_parameters(init_spc150):
     # Have some chance of catching incorrect numbering or typing of ParID
     # members.
     p = spcm.get_parameters(0)
@@ -291,24 +283,24 @@ def test_get_parameter_parameters(ini150):
         assert v == vv
 
 
-def test_get_eeprom_data(ini150):
+def test_get_eeprom_data(init_spc150):
     d = spcm.get_eeprom_data(0)
     assert d.module_type == "SPC-150"
 
 
-def test_get_adjust_parameters(ini150):
+def test_get_adjust_parameters(init_spc150):
     ap = spcm.get_adjust_parameters(0)
     d = spcm.get_eeprom_data(0)
     assert ap.vrt1 == d.adj_para.vrt1
 
 
-def test_read_parameters_from_inifile(ini150):
+def test_read_parameters_from_inifile(init_spc150):
     with ini_file(minimal_spcm_ini(150)) as ininame:
         p = spcm.read_parameters_from_inifile(ininame)
     assert p.add_select == 0  # Default value.
 
 
-def test_save_parameters_to_inifile(ini150, tmp_path):
+def test_save_parameters_to_inifile(init_spc150, tmp_path):
     test_ini = tmp_path / "test.ini"
     p = spcm.Data()
     # Since we initialized with a temporary INI file that no longer exists, we
@@ -331,40 +323,40 @@ def test_save_parameters_to_inifile(ini150, tmp_path):
     )
 
 
-def test_test_state(ini150):
+def test_test_state(init_spc150):
     assert spcm.MeasurementState.ARMED not in spcm.test_state(0)
 
 
-def test_get_sync_state(ini150):
+def test_get_sync_state(init_spc150):
     # Presumably a good assumption for the simulator.
     assert spcm.SyncState.SYNC_OVERLOAD not in spcm.get_sync_state(0)
 
 
-def test_get_time_from_start(ini150):
+def test_get_time_from_start(init_spc150):
     assert spcm.get_time_from_start(0) >= 0.0
 
 
-def test_get_break_time(ini150):
+def test_get_break_time(init_spc150):
     assert spcm.get_break_time(0) >= 0.0
 
 
-def test_get_actual_coltime(ini150):
+def test_get_actual_coltime(init_spc150):
     assert spcm.get_actual_coltime(0) >= 0.0
 
 
-def test_clear_read_rates(ini150):
+def test_clear_read_rates(init_spc150):
     spcm.clear_rates(0)
     # With hardware, we could get None if we read the rates before they are
     # ready. With the simulator this behavior has not been observed.
     assert spcm.read_rates(0).sync_rate > 0.0  # Assume simulator behavior.
 
 
-def test_get_fifo_usage(ini150):
+def test_get_fifo_usage(init_spc150):
     spcm.set_parameter(0, spcm.ParID.MODE, 1)  # FIFO
     assert spcm.get_fifo_usage(0) == 0.0
 
 
-def test_start_stop_measurement(ini150):
+def test_start_stop_measurement(init_spc150):
     spcm.set_parameter(0, spcm.ParID.MODE, 1)  # FIFO
     spcm.set_parameter(0, spcm.ParID.STOP_ON_TIME, 0)
     assert spcm.MeasurementState.ARMED not in spcm.test_state(0)
@@ -374,7 +366,7 @@ def test_start_stop_measurement(ini150):
     assert spcm.MeasurementState.ARMED not in spcm.test_state(0)
 
 
-def test_read_fifo(ini150):
+def test_read_fifo(init_spc150):
     spcm.set_parameter(0, spcm.ParID.MODE, 1)  # FIFO
     spcm.set_parameter(0, spcm.ParID.COLLECT_TIME, 0.01)
     spcm.set_parameter(0, spcm.ParID.STOP_ON_TIME, 1)
@@ -389,7 +381,7 @@ def test_read_fifo(ini150):
     assert words_read > 0
 
 
-def test_read_fifo_to_array(ini150):
+def test_read_fifo_to_array(init_spc150):
     spcm.set_parameter(0, spcm.ParID.MODE, 1)  # FIFO
     spcm.set_parameter(0, spcm.ParID.COLLECT_TIME, 0.01)
     spcm.set_parameter(0, spcm.ParID.STOP_ON_TIME, 1)
@@ -404,7 +396,7 @@ def test_read_fifo_to_array(ini150):
     assert words_read > 0
 
 
-def test_get_fifo_init_vars(ini150):
+def test_get_fifo_init_vars(init_spc150):
     spcm.set_parameter(0, spcm.ParID.MODE, 1)  # FIFO
     spcm.set_parameter(0, spcm.ParID.MACRO_TIME_CLK, 0)  # 25 ns
     v = spcm.get_fifo_init_vars(0)
@@ -422,5 +414,5 @@ def test_get_fifo_init_vars(ini150):
     assert v.spc_header[3] == (4 << 3) | (1 << 7)
 
 
-def test_dump_state(ini150):
+def test_dump_state(init_spc150):
     dump_state()

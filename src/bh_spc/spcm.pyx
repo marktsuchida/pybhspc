@@ -7,7 +7,7 @@
 import array
 import dataclasses
 import enum
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from typing import Any
 
 from cpython cimport array
@@ -219,7 +219,10 @@ cdef class ModInfo:
             ", ".join(f"{f}={repr(getattr(self, f))}" for f in self._fields)
         )
 
-    def as_dict(self) -> dict:
+    def items(self) -> Iterable[tuple[str, Any]]:
+        return ((f, getattr(self, f)) for f in self._fields)
+
+    def as_dict(self) -> dict[str, Any]:
         """
         Return a dictionary containing the fields and values.
 
@@ -228,7 +231,7 @@ cdef class ModInfo:
         dict
             Every field and its value.
         """
-        return {f: getattr(self, f) for f in self._fields}
+        return dict(self.items())
 
     _fields = [
         "module_type",
@@ -374,7 +377,10 @@ cdef class Data:
             )
         )
 
-    def as_dict(self) -> dict:
+    def items(self) -> Iterable[tuple[str, Any]]:
+        return ((f, getattr(self, f)) for f in self._fields)
+
+    def as_dict(self) -> dict[str, Any]:
         """
         Return a dictionary containing the fields and values.
 
@@ -383,9 +389,16 @@ cdef class Data:
         dict
             Every field and its value.
         """
-        return {f: getattr(self, f) for f in self._fields}
+        return dict(self.items())
 
-    def diff_as_dict(self, other: Data) -> dict:
+    def diff_items(self, other: Data) -> Iterable[tuple[str, Any]]:
+        return (
+            (f, getattr(self, f))
+            for f in self._fields
+            if getattr(self, f) != getattr(other, f)
+        )
+
+    def diff_as_dict(self, other: Data) -> dict[str, Any]:
         """
         Return a dictionary containing the fields and their values where they
         differ from the given other instance.
@@ -401,12 +414,7 @@ cdef class Data:
             Every field that differs from ``other`` and its value in this
             instance.
         """
-        ret = {}
-        for f in self._fields:
-            v = getattr(self, f)
-            if v != getattr(other, f):
-                ret[f] = v
-        return ret
+        return dict(self.diff_items(other))
 
     # We omit the non-parameter fields of SPCdata: base_adr, init, pci_card_no,
     # and test_eep. These fields are redundant and not useful here. None of
@@ -957,7 +965,10 @@ cdef class AdjustPara:
             ", ".join(f"{f}={repr(getattr(self, f))}" for f in self._fields)
         )
 
-    def as_dict(self) -> dict:
+    def items(self) -> Iterable[tuple[str, Any]]:
+        return ((f, getattr(self, f)) for f in self._fields)
+
+    def as_dict(self) -> dict[str, Any]:
         """
         Return a dictionary containing the fields and values.
 
@@ -966,7 +977,7 @@ cdef class AdjustPara:
         dict
             Every field and its value.
         """
-        return {f: getattr(self, f) for f in self._fields}
+        return dict(self.items())
 
     _fields = [
         "vrt1",
@@ -1053,7 +1064,10 @@ cdef class EEPData:
             ", ".join(f"{f}={repr(getattr(self, f))}" for f in self._fields)
         )
 
-    def as_dict(self) -> dict:
+    def items(self) -> Iterable[tuple[str, Any]]:
+        return ((f, getattr(self, f)) for f in self._fields)
+
+    def as_dict(self) -> dict[str, Any]:
         """
         Return a dictionary containing the fields and values.
 
@@ -1062,7 +1076,7 @@ cdef class EEPData:
         dict
             Every field and its value.
         """
-        return {f: getattr(self, f) for f in self._fields}
+        return dict(self.items())
 
     _fields = [
         "module_type",
@@ -1101,7 +1115,10 @@ cdef class RateValues:
             ", ".join(f"{f}={repr(getattr(self, f))}" for f in self._fields)
         )
 
-    def as_dict(self) -> dict:
+    def items(self) -> Iterable[tuple[str, Any]]:
+        return ((f, getattr(self, f)) for f in self._fields)
+
+    def as_dict(self) -> dict[str, Any]:
         """
         Return a dictionary containing the fields and values.
 
@@ -1110,7 +1127,7 @@ cdef class RateValues:
         dict
             Every field and its value.
         """
-        return {f: getattr(self, f) for f in self._fields}
+        return dict(self.items())
 
     _fields = [
         "sync_rate",

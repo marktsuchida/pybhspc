@@ -7,6 +7,7 @@ __all__ = [
     "spcm_dll_version",
     "minimal_spcm_ini",
     "ini_file",
+    "dump_module_state",
     "dump_state",
 ]
 
@@ -70,6 +71,10 @@ with os.add_dll_directory(_spcm_dll_dir()):
     from . import spcm  # type: ignore
 
 
+# Imports that depend on spcm can now be done.
+from ._dump_state import dump_module_state, dump_state  # noqa: E402
+
+
 def minimal_spcm_ini(mode: int | spcm.DLLOperationMode = 0) -> str:
     """
     Return the text for a minimal .ini file for use with `spcm.init`.
@@ -124,27 +129,3 @@ def ini_file(text: str) -> Iterator[str]:
         with open(ininame, mode="w") as inifile:
             inifile.write(text)
         yield ininame
-
-
-def dump_state() -> None:
-    """
-    Print (to standard output) the status of all 8 SPC modules.
-
-    This is a utility intended mostly for troubleshooting.
-    """
-    dll_mode = spcm.get_mode()
-    print(f"DLL mode: {dll_mode}")
-
-    for mod_no in range(8):
-        try:
-            info = spcm.get_module_info(mod_no)
-        except RuntimeError as e:
-            print(f"Module {mod_no}: Error: {e}")
-            continue
-        print(
-            f"""Module {mod_no}:
-    init status: {spcm.get_init_status(mod_no)}
-    module info:
-        module type: {info.module_type}   bus/slot number:  {info.bus_number}, {info.slot_number}
-        in use: {info.in_use}   init:   {info.init}"""
-        )
