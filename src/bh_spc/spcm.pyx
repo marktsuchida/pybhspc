@@ -987,10 +987,10 @@ cdef class AdjustPara:
             ", ".join(f"{f}={repr(getattr(self, f))}" for f in self._fields)
         )
 
-    def items(self) -> Iterable[tuple[str, Any]]:
+    def items(self) -> Iterable[tuple[str, int | float]]:
         return ((f, getattr(self, f)) for f in self._fields)
 
-    def as_dict(self) -> dict[str, Any]:
+    def as_dict(self) -> dict[str, int | float]:
         """
         Return a dictionary containing the fields and values.
 
@@ -1137,10 +1137,10 @@ cdef class RateValues:
             ", ".join(f"{f}={repr(getattr(self, f))}" for f in self._fields)
         )
 
-    def items(self) -> Iterable[tuple[str, Any]]:
+    def items(self) -> Iterable[tuple[str, float]]:
         return ((f, getattr(self, f)) for f in self._fields)
 
-    def as_dict(self) -> dict[str, Any]:
+    def as_dict(self) -> dict[str, float]:
         """
         Return a dictionary containing the fields and values.
 
