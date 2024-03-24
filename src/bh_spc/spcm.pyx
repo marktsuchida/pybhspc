@@ -377,10 +377,10 @@ cdef class Data:
             )
         )
 
-    def items(self) -> Iterable[tuple[str, Any]]:
+    def items(self) -> Iterable[tuple[str, int | float]]:
         return ((f, getattr(self, f)) for f in self._fields)
 
-    def as_dict(self) -> dict[str, Any]:
+    def as_dict(self) -> dict[str, int | float]:
         """
         Return a dictionary containing the fields and values.
 
@@ -391,14 +391,14 @@ cdef class Data:
         """
         return dict(self.items())
 
-    def diff_items(self, other: Data) -> Iterable[tuple[str, Any]]:
+    def diff_items(self, other: Data) -> Iterable[tuple[str, int | float]]:
         return (
             (f, getattr(self, f))
             for f in self._fields
             if getattr(self, f) != getattr(other, f)
         )
 
-    def diff_as_dict(self, other: Data) -> dict[str, Any]:
+    def diff_as_dict(self, other: Data) -> dict[str, int | float]:
         """
         Return a dictionary containing the fields and their values where they
         differ from the given other instance.
@@ -486,7 +486,10 @@ cdef class Data:
         "chan_slope",
         "chan_spec_no",
         "tdc_control",
-        "tdc_offset",
+        "tdc_offset1",
+        "tdc_offset2",
+        "tdc_offset3",
+        "tdc_offset4",
     )
 
     @property
@@ -936,22 +939,41 @@ cdef class Data:
     @tdc_control.setter
     def tdc_control(self, v: int) -> None: self.c.tdc_control = v
 
-    # We cannot rule out the future possibility of BH adding more elements to
-    # the tdc_offset array, because it is currently the last field in the
-    # struct. So do not promise a 4-element tuple.
+    # Hide the float[4] tdc_offset and expose properties that match the ParID
+    # and INI fields exactly. This has the added advantage that, should BH
+    # increase the size from 4 in the future, no API change will be required.
 
     @property
-    def tdc_offset(self) -> tuple[float, ...]:
-        return tuple(self.c.tdc_offset)
+    def tdc_offset1(self) -> int:
+        return self.c.tdc_offset[0]
 
-    @tdc_offset.setter
-    def tdc_offset(self, v: Sequence[float]) -> None:
-        if len(v) > 4:
-            raise ValueError("tdc_offset may not have more than 4 elements")
-        for i in range(len(v)):
-            self.c.tdc_offset[i] = <float>(v[i])
-        # If v has fewer elements than tdc_offset, we do not modify the
-        # remaining ones.
+    @tdc_offset1.setter
+    def tdc_offset1(self, v: int) -> None:
+        self.c.tdc_offset[0] = v
+
+    @property
+    def tdc_offset2(self) -> int:
+        return self.c.tdc_offset[1]
+
+    @tdc_offset2.setter
+    def tdc_offset2(self, v: int) -> None:
+        self.c.tdc_offset[1] = v
+
+    @property
+    def tdc_offset3(self) -> int:
+        return self.c.tdc_offset[2]
+
+    @tdc_offset3.setter
+    def tdc_offset3(self, v: int) -> None:
+        self.c.tdc_offset[2] = v
+
+    @property
+    def tdc_offset4(self) -> int:
+        return self.c.tdc_offset[3]
+
+    @tdc_offset4.setter
+    def tdc_offset4(self, v: int) -> None:
+        self.c.tdc_offset[3] = v
 
 
 cdef class AdjustPara:

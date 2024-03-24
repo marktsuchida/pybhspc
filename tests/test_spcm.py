@@ -104,16 +104,10 @@ def test_spc_data_fields():
     # and setters to not match.
     for f in spcm.Data._fields:
         d = spcm.Data()
-        if f == "tdc_offset":  # The only non-scalar field.
-            assert getattr(d, f) == (0.0, 0.0, 0.0, 0.0)
-            setattr(d, f, (1.0, 2.0, 3.0, 4.0))
-            assert getattr(d, f) == (1.0, 2.0, 3.0, 4.0)
-            assert d.as_dict()[f] == (1.0, 2.0, 3.0, 4.0)
-        else:
-            assert float(getattr(d, f)) == 0.0
-            setattr(d, f, 1)
-            assert float(getattr(d, f)) == 1.0
-            assert float(d.as_dict()[f]) == 1.0
+        assert float(getattr(d, f)) == 0.0
+        setattr(d, f, 1)
+        assert float(getattr(d, f)) == 1.0
+        assert float(d.as_dict()[f]) == 1.0
 
 
 def test_adjust_para_repr():
@@ -273,11 +267,7 @@ def test_get_parameter_parameters(init_spc150):
     for par_id in spcm.ParID:
         v = spcm.get_parameter(0, par_id)
         field = par_id.name.lower()
-        if field.startswith("tdc_offset"):
-            i = int(field[len("tdc_offset") :]) - 1
-            vv = p.tdc_offset[i]
-        else:
-            vv = getattr(p, field)
+        vv = getattr(p, field)
         assert type(v) is par_id.type
         assert par_id.type is type(vv)
         assert v == vv
