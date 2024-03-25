@@ -361,6 +361,10 @@ class ParID(enum.Enum):
         return self._type
 
 
+# For use in defining Data struct fields.
+_params = tuple(p.name.lower() for p in ParID)
+
+
 cdef class Data:
     # We shouldn't hit this assertion because the build should have failed (due
     # to missing struct fields) if old headers (SPCM DLL < 5.1) were used. This
@@ -448,79 +452,20 @@ cdef class Data:
     # SPC_get_parameters() would therefore have failed. Finally, 'pci_card_no'
     # is redundant with ModInfo.
 
-    # The rest of the fields are regular parameters and are in the same order
-    # as the C struct. These wrappers should be kept regular: all parameters
-    # of the same type should be wrapped in exactly the same way. Use editor
-    # macros to make uniform changes.
-
     # Here we order the fields so that they match the ParID enum, _not_ the
     # order they appear in the C struct. Not only does this hide the
     # superficial inconsistency, but it also puts the fields in a more logical
     # order, probably because the ParID order is the original order (the struct
     # fields were reordered in SPCM DLL 4.0).
 
-    _fields = (
-        "cfd_limit_low",
-        "cfd_limit_high",
-        "cfd_zc_level",
-        "cfd_holdoff",
-        "sync_zc_level",
-        "sync_freq_div",
-        "sync_holdoff",
-        "sync_threshold",
-        "tac_range",
-        "tac_gain",
-        "tac_offset",
-        "tac_limit_low",
-        "tac_limit_high",
-        "adc_resolution",
-        "ext_latch_delay",
-        "collect_time",
-        "display_time",
-        "repeat_time",
-        "stop_on_time",
-        "stop_on_ovfl",
-        "dither_range",
-        "count_incr",
-        "mem_bank",
-        "dead_time_comp",
-        "scan_control",
-        "routing_mode",
-        "tac_enable_hold",
-        "mode",
-        "scan_size_x",
-        "scan_size_y",
-        "scan_rout_x",
-        "scan_rout_y",
-        "scan_polarity",
-        "scan_flyback",
-        "scan_borders",
-        "pixel_time",
-        "pixel_clock",
-        "line_compression",
-        "trigger",
-        "ext_pixclk_div",
-        "rate_count_time",
-        "macro_time_clk",
-        "add_select",
-        "adc_zoom",
-        "xy_gain",
-        "img_size_x",
-        "img_size_y",
-        "img_rout_x",
-        "img_rout_y",
-        "master_clock",
-        "adc_sample_delay",
-        "detector_type",
-        "tdc_control",
-        "chan_enable",
-        "chan_slope",
-        "chan_spec_no",
-        "tdc_offset1",
-        "tdc_offset2",
-        "tdc_offset3",
-        "tdc_offset4",
-    )
+    # (I would love to avoid writing out the getter and setter for every field,
+    # but cannot think of a way to do so, other than nasty external codegen.
+    # There may be ways to make it a little DRYer, but we cannot eliminate the
+    # mapping of Python attributes to C struct fields. For now let's keep them
+    # all uniform and make sure to use editor macros to make any changes
+    # uniform (except for the tdc_offset array fields).)
+
+    _fields = _params
 
     @property
     def cfd_limit_low(self) -> float:
