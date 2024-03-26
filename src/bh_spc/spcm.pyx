@@ -184,28 +184,29 @@ class DLLOperationMode(enum.Enum):
         return cls.UNKNOWN
 
 
-# TODO Use class syntax so that docstring works with mkdocstrings.
-InitStatus = enum.Enum(
-    "InitStatus",
-    [
-        ("OK", 0),
-        ("NOT_DONE", -1),
-        ("WRONG_EEP_CHKSUM", -2),
-        ("WRONG_MOD_ID", -3),
-        ("HARD_TEST_ERR", -4),
-        ("CANT_OPEN_PCI_CARD", -5),
-        ("MOD_IN_USE", -6),
-        ("WINDRVR_VER", -7),
-        ("WRONG_LICENSE", -8),
-        ("FIRMWARE_VER", -9),
-        ("NO_LICENSE", -10),
-        ("LICENSE_NOT_VALID", -11),
-        ("LICENSE_DATE_EXP", -12),
-        ("CANT_OPEN_USB_CARD", -13),
-    ] + [
-        (f"XILINX_ERR_{i:02d}", -100 - i) for i in range(100)
-    ],
-)
+class InitStatus(enum.Enum):
+    """Initialization status of an SPC module."""
+
+    OK = 0
+    NOT_DONE = -1
+    WRONG_EEP_CHKSUM = -2
+    WRONG_MOD_ID = -3
+    HARD_TEST_ERR = -4
+    CANT_OPEN_PCI_CARD = -5
+    MOD_IN_USE = -6
+    WINDRVR_VER = -7
+    WRONG_LICENSE = -8
+    FIRMWARE_VER = -9
+    NO_LICENSE = -10
+    LICENSE_NOT_VALID = -11
+    LICENSE_DATE_EXP = -12
+    CANT_OPEN_USB_CARD = -13
+    XILINX_ERR = -100
+
+    @classmethod
+    def _missing_(cls, value: int) -> InitStatus:
+        if -200 < value <= -100:
+            return cls.XILINX_ERR
 
 
 class InUseStatus(enum.Enum):
