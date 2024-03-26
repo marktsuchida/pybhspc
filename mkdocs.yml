@@ -1,0 +1,29 @@
+# This file is part of pybhspc
+# Copyright 2024 Board of Regents of the University of Wisconsin System
+# SPDX-License-Identifier: MIT
+
+site_name: pybhspc
+nav:
+  - Introduction: index.md
+  - API Reference:
+    - bh_spc package: api.md
+    - bh_spc.spcm module: api_spcm.md
+watch:
+  - src
+theme:
+  name: material
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: ["src"]
+          options:
+            show_source: false
+            filters:
+              - "!^_"       # Leave out dunders, sunders, and private,
+              - "__init__"  # except for __init__.
+              - "!^[A-Z0-9_]*$"  # Leave out enum members.
+            docstring_style: numpy
+            show_signature_annotations: true

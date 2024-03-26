@@ -67,6 +67,17 @@ def _dump_parameters(mod_no: int, print) -> None:
 
 
 def dump_module_state(mod_no: int, *, file=None) -> None:
+    """
+    Print the status of one SPC module.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+    file : file or None
+        The stream to print to.
+    """
+
     def _print(*args, **kwargs):
         kwargs["file"] = file
         print(*args, **kwargs)
@@ -113,9 +124,17 @@ def dump_state(
     mod_nos: int | Sequence[int] | None = (0,), *, file=None
 ) -> None:
     """
-    Print (to standard output) the status of all 8 SPC modules.
+    Print (to standard output) the status SPC modules.
 
     This is a utility intended mostly for troubleshooting.
+
+    Parameters
+    ----------
+    mod_nos : int or Sequence[int] or None
+        The SPC module index or indices for which to dump state. If None, use
+        all modules.
+    file : file or None
+        The stream to print to.
     """
     dll_mode = spcm.get_mode()
     print(repr(dll_mode), file=file)

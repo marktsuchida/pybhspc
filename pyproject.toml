@@ -17,6 +17,9 @@ build-backend = "setuptools.build_meta"
 # All development tools:
 dev = [
     "Cython",
+    "mkdocs",
+    "mkdocs-material",
+    "mkdocstrings[python] >= 0.19",
     "nox",
     "pytest",
     "setuptools",

@@ -19,14 +19,14 @@ def minimal_spcm_ini(mode: int | spcm.DLLOperationMode = 0) -> str:
 
     Parameters
     ----------
-    mode : int
+    mode : int or spcm.DLLOperationMode
         The mode in which to initialize the SPCM DLL. Use 0 for hardware;
         special constants for simulation.
 
     Returns
     -------
     str
-        The .ini text.
+        The .ini content text.
     """
     if isinstance(mode, spcm.DLLOperationMode):
         mode = mode.value

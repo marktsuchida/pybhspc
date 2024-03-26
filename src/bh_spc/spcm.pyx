@@ -41,6 +41,8 @@ from . cimport _spcm
 
 
 class ErrorEnum(enum.Enum):
+    """SPCM error codes."""
+
     UNKNOWN = -32769  # Does not clash with 16-bit codes.
 
     NONE = 0
@@ -106,6 +108,8 @@ class ErrorEnum(enum.Enum):
 
 
 class SPCMError(RuntimeError):
+    """Exception raised when an SPCM function returns an error."""
+
     def __init__(self, code: int, message: str) -> None:
         super().__init__(message)
         self._code = code  # Preserves unknown codes.
@@ -116,10 +120,25 @@ class SPCMError(RuntimeError):
 
     @property
     def code(self) -> int:
+        """
+        The integer error code (a negative value).
+
+        Returns
+        -------
+        The raw error code returned by the SPCM function.
+        """
         return self._code
 
     @property
     def enum(self) -> ErrorEnum:
+        """
+        The error enum.
+
+        Returns
+        -------
+        The error enum member. ``ErrorEnum.UNKNOWN`` if the code is not known
+        to pybhspc.
+        """
         return self._enum
 
 
@@ -129,6 +148,7 @@ class DLLOperationMode(enum.Enum):
 
     Not to be confused with `ModuleType`.
     """
+
     UNKNOWN = -32769  # Does not clash with 16-bit codes.
 
     HARDWARE = 0
@@ -164,6 +184,7 @@ class DLLOperationMode(enum.Enum):
         return cls.UNKNOWN
 
 
+# TODO Use class syntax so that docstring works with mkdocstrings.
 InitStatus = enum.Enum(
     "InitStatus",
     [
@@ -188,6 +209,8 @@ InitStatus = enum.Enum(
 
 
 class InUseStatus(enum.Enum):
+    """State of access to an SPC module."""
+
     NOT_IN_USE = 0
     IN_USE_HERE = 1
     IN_USE_ELSEWHERE = -1
@@ -233,6 +256,8 @@ class ModuleType(enum.Enum):
 
 
 cdef class ModInfo:
+    """SPC module information."""
+
     cdef _spcm.SPCModInfo c
 
     def __cinit__(self) -> None:
@@ -244,6 +269,14 @@ cdef class ModInfo:
         )
 
     def items(self) -> Iterable[tuple[str, Any]]:
+        """
+        Return an iterable yielding the fields and values in fixed order.
+
+        Returns
+        -------
+        Iterable
+            An iterable yielding the pair (name, value) for every field.
+        """
         return ((f, getattr(self, f)) for f in self._fields)
 
     def as_dict(self) -> dict[str, Any]:
@@ -257,13 +290,13 @@ cdef class ModInfo:
         """
         return dict(self.items())
 
-    _fields = [
+    _fields = (
         "module_type",
         "bus_number",
         "slot_number",
         "in_use",
         "init",
-    ]
+    )
 
     @property
     def module_type(self) -> ModuleType:
@@ -289,6 +322,12 @@ cdef class ModInfo:
 
 
 class ParID(enum.Enum):
+    """
+    SPC parameter ids.
+
+    These correspond to the fields of `Data`.
+    """
+
     CFD_LIMIT_LOW = (0, float)
     CFD_LIMIT_HIGH = (1, float)
     CFD_ZC_LEVEL = (2, float)
@@ -366,6 +405,10 @@ _params = tuple(p.name.lower() for p in ParID)
 
 
 cdef class Data:
+    """
+    The collection of values for all SPC parameters.
+    """
+
     # We shouldn't hit this assertion because the build should have failed (due
     # to missing struct fields) if old headers (SPCM DLL < 5.1) were used. This
     # is mostly to document our assumption (and report any unexpected changes
@@ -406,6 +449,16 @@ cdef class Data:
         )
 
     def items(self) -> Iterable[tuple[str, int | float]]:
+        """
+        Return an iterable yielding the fields and values in fixed order.
+
+        The order matches with the `ParID` enum members.
+
+        Returns
+        -------
+        Iterable
+            An iterable yielding the pair (name, value) for every field.
+        """
         return ((f, getattr(self, f)) for f in self._fields)
 
     def as_dict(self) -> dict[str, int | float]:
@@ -420,6 +473,18 @@ cdef class Data:
         return dict(self.items())
 
     def diff_items(self, other: Data) -> Iterable[tuple[str, int | float]]:
+        """
+        Return an iterable yielding the fields and values where they differ
+        from the given other instance, in fixed order.
+
+        The order matches with the `ParID` enum members.
+
+        Returns
+        -------
+        Iterable
+            An iterable yielding the pair (name, value) for every field in this
+            instance where the value differs from the other instance.
+        """
         return (
             (f, getattr(self, f))
             for f in self._fields
@@ -440,7 +505,7 @@ cdef class Data:
         -------
         dict
             Every field that differs from ``other`` and its value in this
-            instance.
+            instance where the value differs from the other instance.
         """
         return dict(self.diff_items(other))
 
@@ -953,6 +1018,12 @@ cdef class Data:
 
 
 cdef class AdjustPara:
+    """
+    Adjustment parameters (wraps the ``SPC_Adjust_Para`` struct).
+
+    This is returned by `get_adjust_parameters` and is also part of `EEPData`.
+    """
+
     cdef _spcm.SPC_Adjust_Para c
 
     def __cinit__(self) -> None:
@@ -964,6 +1035,14 @@ cdef class AdjustPara:
         )
 
     def items(self) -> Iterable[tuple[str, int | float]]:
+        """
+        Return an iterable yielding the fields and values in fixed order.
+
+        Returns
+        -------
+        Iterable
+            An iterable yielding the pair (name, value) for every field.
+        """
         return ((f, getattr(self, f)) for f in self._fields)
 
     def as_dict(self) -> dict[str, int | float]:
@@ -977,7 +1056,7 @@ cdef class AdjustPara:
         """
         return dict(self.items())
 
-    _fields = [
+    _fields = (
         "vrt1",
         "vrt2",
         "vrt3",
@@ -992,7 +1071,7 @@ cdef class AdjustPara:
         "tac_r4",
         "tac_r8",
         "sync_div",
-    ]
+    )
 
     @property
     def vrt1(self) -> int:
@@ -1052,6 +1131,8 @@ cdef class AdjustPara:
 
 
 cdef class EEPData:
+    """SPC EEPROM data."""
+
     cdef _spcm.SPC_EEP_Data c
 
     def __cinit__(self) -> None:
@@ -1063,6 +1144,14 @@ cdef class EEPData:
         )
 
     def items(self) -> Iterable[tuple[str, Any]]:
+        """
+        Return an iterable yielding the fields and values in fixed order.
+
+        Returns
+        -------
+        Iterable
+            An iterable yielding the pair (name, value) for every field.
+        """
         return ((f, getattr(self, f)) for f in self._fields)
 
     def as_dict(self) -> dict[str, Any]:
@@ -1076,12 +1165,12 @@ cdef class EEPData:
         """
         return dict(self.items())
 
-    _fields = [
+    _fields = (
         "module_type",
         "serial_no",
         "date",
         "adj_para",
-    ]
+    )
 
     @property
     def module_type(self) -> str:
@@ -1103,6 +1192,8 @@ cdef class EEPData:
 
 
 cdef class RateValues:
+    """A set of rate counter values."""
+
     cdef _spcm.rate_values c
 
     def __cinit__(self) -> None:
@@ -1114,6 +1205,14 @@ cdef class RateValues:
         )
 
     def items(self) -> Iterable[tuple[str, float]]:
+        """
+        Return an iterable yielding the fields and values in fixed order.
+
+        Returns
+        -------
+        Iterable
+            An iterable yielding the pair (name, value) for every field.
+        """
         return ((f, getattr(self, f)) for f in self._fields)
 
     def as_dict(self) -> dict[str, float]:
@@ -1127,12 +1226,12 @@ cdef class RateValues:
         """
         return dict(self.items())
 
-    _fields = [
+    _fields = (
         "sync_rate",
         "cfd_rate",
         "tac_rate",
         "adc_rate",
-    ]
+    )
 
     @property
     def sync_rate(self) -> float:
@@ -1152,6 +1251,8 @@ cdef class RateValues:
 
 
 class MeasurementState(enum.Flag):
+    """Measurement state flags as returned by `test_state`."""
+
     STOPPED_ON_OVERFLOW = 0x1
     OVERFLOW = 0x2
     STOPPED_ON_COLLECT_TIME = 0x4
@@ -1202,11 +1303,15 @@ class MeasurementState(enum.Flag):
 
 
 class SyncState(enum.Flag):
+    """Sync state flags as returned by get_sync_state."""
+
     SYNC_OK = 0x1
     SYNC_OVERLOAD = 0x2
 
 
 class FIFOType(enum.Enum):
+    """FIFO types (photon stream data formats)."""
+
     UNKNOWN = 0  # Attested when not in FIFO mode.
     SPC_600_48BIT = 2
     SPC_600_32BIT = 3
@@ -1225,6 +1330,8 @@ class FIFOType(enum.Enum):
 
 
 class StreamType(enum.Flag):
+    """Properties of SPCM DLL streams (which are not supported by pybhspc)."""
+
     HAS_SPC_HEADER = 1 << 0
     HAS_MARKERS = 1 << 9
     RAW_DATA = 1 << 10
@@ -1242,6 +1349,19 @@ class StreamType(enum.Flag):
 
 @dataclasses.dataclass
 class FIFOInitVars:
+    """
+    Dataclass aggregating the return values of `get_fifo_init_vars`.
+
+    Instances have 4 attributes: `fifo_type: FIFOType`, `stream_type:
+    StreamType`, `mt_clock: int`, and `spc_header: array.array`.
+
+    The macrotime clock units `mt_clock` is in units of 0.1 ns (or 1 fs in the
+    case of DPC-230).
+
+    The .spc file header `spc_header` is always 4 bytes. In the case of
+    SPC-600/630 FIFO-48 format, two zero bytes should be appended to form the
+    6-byte file header.
+    """
     fifo_type: FIFOType
     stream_type: StreamType
     mt_clock: int
@@ -1305,11 +1425,6 @@ def init(ini_file: bytes | str) -> None:
 def close() -> None:
     """
     Uninitialize the SPCM DLL.
-
-    Raises
-    ------
-    SPCMError
-        If there was an error.
     """
     _raise_spcm_error(_spcm.SPC_close())
 
@@ -1428,11 +1543,6 @@ def get_module_info(mod_no: int) -> ModInfo:
     -------
     ModInfo
         Basic information about the module.
-
-    Riases
-    ------
-    SPCMError
-        If there was an error.
     """
     cdef ModInfo mod_info = ModInfo()
     _raise_spcm_error(_spcm.SPC_get_module_info(mod_no, &mod_info.c))
@@ -1452,11 +1562,6 @@ def get_version(mod_no: int) -> str:
     -------
     str
         The FPGA version (4 hex digits).
-
-    Riases
-    ------
-    SPCMError
-        If there was an error.
     """
     # SPC_get_version() is not fully documented but it is mentioned in the SPCM
     # DLL documentation as a method to check the FPGA version.
@@ -1468,16 +1573,54 @@ def get_version(mod_no: int) -> str:
 
 
 def get_parameters(mod_no: int) -> Data:
+    """
+    Get all parameter values of an SPC module.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+
+    Returns
+    -------
+    Data
+        The parameter values.
+    """
     cdef Data data = Data()
     _raise_spcm_error(_spcm.SPC_get_parameters(mod_no, &data.c))
     return data
 
 
 def set_parameters(mod_no: int, data: Data) -> None:
+    """
+    Set all parameter values of an SPC module.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+    data : Data
+        The parameter values.
+    """
     _raise_spcm_error(_spcm.SPC_set_parameters(mod_no, &data.c))
 
 
 def get_parameter(mod_no: int, par_id: ParID) -> float | int:
+    """
+    Get one parameter's value.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+    par_id : ParID
+        The parameter to read.
+
+    Returns
+    -------
+    float or int
+        The parameter value.
+    """
     cdef float value = 0.0
     _raise_spcm_error(_spcm.SPC_get_parameter(mod_no, par_id.value, &value))
     if par_id.type is int:
@@ -1487,6 +1630,18 @@ def get_parameter(mod_no: int, par_id: ParID) -> float | int:
 
 
 def set_parameter(mod_no: int, par_id: ParID, value: float | int) -> None:
+    """
+    Set one parameter's value.
+
+    Parameters
+    ----------
+    mod_no : int
+        The SPC module index.
+    par_id : ParID
+        The parameter to write.
+    value : float or int
+        The parameter value.
+    """
     if par_id.type is int and isinstance(value, float):
         raise TypeError(f"{par_id.name} takes an integer value; float found")
     cdef float v = value
@@ -1506,11 +1661,6 @@ def get_eeprom_data(mod_no: int) -> EEPData:
     -------
     EEPData
         EEPROM data of the module.
-
-    Riases
-    ------
-    SPCMError
-        If there was an error.
     """
     cdef EEPData eep_data = EEPData()
     _raise_spcm_error(_spcm.SPC_get_eeprom_data(mod_no, &eep_data.c))
@@ -1530,11 +1680,6 @@ def get_adjust_parameters(mod_no: int) -> AdjustPara:
     -------
     AdjustPara
         Adjustment parameters of the module.
-
-    Riases
-    ------
-    SPCMError
-        If there was an error.
     """
     cdef AdjustPara adjpara = AdjustPara()
     _raise_spcm_error(_spcm.SPC_get_adjust_parameters(mod_no, &adjpara.c))

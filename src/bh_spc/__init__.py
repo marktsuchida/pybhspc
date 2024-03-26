@@ -6,12 +6,10 @@
 # ruff: noqa: TRY003  # Avoid specifying long messages outside exception class
 
 """
-bh_spc package (pybhspc).
+The root package of pybhspc.
 
-This package provides control of and data acquisition from Becker-Hickl SPC
-modules, in FIFO mode.
-
-Currently, low-level control is provided by the `spcm` module.
+Currently, low-level control is provided by the `spcm` module. Some utility
+functions are provided here in the root package.
 """
 
 __all__ = [
@@ -71,8 +69,8 @@ def spcm_dll_version() -> tuple[int, int, int, int]:
 
     Returns
     -------
-    tuple of int, length 4
-        File version number of the spcm64.dll file.
+    tuple[int]
+        File version number (a 4-tuple) of the spcm64.dll file.
     """
     return _dll_file_version(os.path.join(_spcm_dll_dir(), "spcm64.dll"))
 
