@@ -31,6 +31,10 @@ def test_init_status_unknown():
         spcm.InitStatus(-200)
 
 
+def test_init_status_message():
+    assert spcm.InitStatus(0).message == "Initialized"
+
+
 def test_mod_info_repr():
     mi = spcm.ModInfo()
     assert (

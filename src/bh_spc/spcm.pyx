@@ -233,38 +233,53 @@ class InitStatus(enum.Enum):
     Values of this type are returned by `get_init_status` and (as an attribute
     of `ModInfo`) by `get_module_info`.
 
+    Attributes
+    ----------
+    message : str
+        Human-readable message string
+
     Examples
     --------
     >>> for e in InitStatus:
-    ...     print(e.name, e.value)
-    OK 0
-    NOT_DONE -1
+    ...     print(e.name, e.value, e.message)
+    OK 0 Initialized
+    NOT_DONE -1 Initialization not requested
     ...
-    XILINX_ERR -100
+    XILINX_ERR -100 FPGA configuration error
 
-    Print a table of all the enum members.
+    Print a table of all the enum members and corresponding messages.
 
     Notes
     -----
-    The member `XILINX_ERR` is used for all possible Xilinx errors (-100
-    through -199) returned by SPCM DLL functions.
+    The member `XILINX_ERR` is used for all possible Xilinx (FPGA
+    configuration) errors (-100 through -199) returned by SPCM DLL functions.
     """
 
-    OK = 0
-    NOT_DONE = -1
-    WRONG_EEP_CHKSUM = -2
-    WRONG_MOD_ID = -3
-    HARD_TEST_ERR = -4
-    CANT_OPEN_PCI_CARD = -5
-    MOD_IN_USE = -6
-    WINDRVR_VER = -7
-    WRONG_LICENSE = -8
-    FIRMWARE_VER = -9
-    NO_LICENSE = -10
-    LICENSE_NOT_VALID = -11
-    LICENSE_DATE_EXP = -12
-    CANT_OPEN_USB_CARD = -13
-    XILINX_ERR = -100
+    OK = (0, "Initialized")
+    NOT_DONE = (-1, "Initialization not requested")
+    WRONG_EEP_CHKSUM = (-2, "Incorrect EEPROM checksum")
+    WRONG_MOD_ID = (-3, "Incorrect module identification code")
+    HARD_TEST_ERR = (-4, "Hardware test failed")
+    CANT_OPEN_PCI_CARD = (-5, "Cannot open PCI card")
+    MOD_IN_USE = (-6, "Module in use elsewhere")
+    WINDRVR_VER = (-7, "Incorrect WinDriver version")
+    WRONG_LICENSE = (-8, "Corrupted license key")
+    FIRMWARE_VER = (-9, "Incorrect firmware version")
+    NO_LICENSE = (-10, "License key not found")
+    LICENSE_NOT_VALID = (-11, "License key not applicable")
+    LICENSE_DATE_EXP = (-12, "License key expired")
+    CANT_OPEN_USB_CARD = (-13, "Cannot open USB card")
+    XILINX_ERR = (-100, "FPGA configuration error")
+
+    def __new__(cls, value: int, message: str) -> None:
+        obj = object.__new__(cls)
+        obj._value_ = value
+        obj._msg = message
+        return obj
+
+    @property
+    def message(self) -> str:
+        return self._msg
 
     @classmethod
     def _missing_(cls, value: int) -> InitStatus:
@@ -1825,7 +1840,7 @@ def get_init_status(mod_no: int) -> InitStatus:
     Returns
     -------
     InitStatus
-        Whether the module is initialized, or the reason if not.
+        Whether the module is initialized, or the reason why if not.
     """
     status = _spcm.SPC_get_init_status(mod_no)
     if status == ErrorEnum.MOD_NO.value:
