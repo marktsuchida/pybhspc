@@ -22,8 +22,7 @@ plugins:
           options:
             show_source: false
             filters:
-              - "!^_"       # Leave out dunders, sunders, and private,
-              - "__init__"  # except for __init__.
+              - "!^_"            # Leave out dunders, sunders, and private.
               - "!^[A-Z0-9_]*$"  # Leave out enum members.
             docstring_style: numpy
             show_signature_annotations: true

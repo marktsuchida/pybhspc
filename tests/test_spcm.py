@@ -4,9 +4,18 @@
 
 import array
 import copy
+import doctest
 
 import pytest
 from bh_spc import dump_state, ini_file, minimal_spcm_ini, spcm
+
+
+def test_doctest():
+    # We are not using pytest's --doctest-modules option because it didn't
+    # seem to work (for extension modules?). Instead, let's just run it here.
+    fails, tests = doctest.testmod(spcm, optionflags=doctest.ELLIPSIS)
+    assert tests > 0
+    assert fails == 0
 
 
 def test_init_status_xilinx_err():
@@ -156,12 +165,18 @@ def test_rate_values_as_dict():
     assert d["tac_rate"] == 0.0
 
 
+def test_measurement_state_bh_name():
+    assert spcm.measurement_state_bh_name("FIFO_OVERFLOW") == "SPC_FOVFL"
+    assert spcm.measurement_state_bh_name("SEQUENCER_GAP") == "SPC_SEQ_GAP"
+
+
 def test_get_error_string():
     assert spcm.get_error_string(0) == "No error"
     assert spcm.get_error_string(spcm.ErrorEnum.NONE) == "No error"
     assert "file" in spcm.get_error_string(-1).lower()
     with pytest.raises(OverflowError):
         spcm.get_error_string(32768)
+    assert spcm.get_error_string(spcm.ErrorEnum.UNKNOWN).startswith("Unknown ")
 
 
 def test_init_close():

@@ -41,9 +41,31 @@ from . cimport _spcm
 
 
 class ErrorEnum(enum.Enum):
-    """SPCM error codes."""
+    """
+    Enum of SPCM DLL error codes.
 
-    UNKNOWN = -32769  # Does not clash with 16-bit codes.
+    The members' values are the SPCM DLL error codes (except for ``UNKNOWN``).
+    An additional member, ``UNKNOWN``, which does not appear in the SPCM DLL,
+    is used for any unknown error code that is encountered.
+
+    Usually you will get a value of this type from the ``enum`` attribute of an
+    `SPCMError` exception.
+
+    Examples
+    --------
+    >>> for e in ErrorEnum:
+    ...     print(e.value, e.name, get_error_string(e))
+    0 NONE No error
+    -1 OPEN_FILE Can't open file
+    ...
+    -32769 UNKNOWN Unknown SPCM error
+
+    Print a list of all enum members and the corresponding error message.
+
+    See Also
+    --------
+    SPCMError : Exception class for SPCM DLL errors.
+    """
 
     NONE = 0
     OPEN_FILE = -1
@@ -102,13 +124,31 @@ class ErrorEnum(enum.Enum):
     STR_NO_STOP = -54
     USBDRV_ERR = -55
 
+    UNKNOWN = -32769  # Does not clash with 16-bit codes.
+
     @classmethod
     def _missing_(cls, value: int) -> ErrorEnum:
         return cls.UNKNOWN
 
 
 class SPCMError(RuntimeError):
-    """Exception raised when an SPCM function returns an error."""
+    """
+    Exception raised when an SPCM function returns an error.
+
+    Attributes
+    ----------
+    enum : ErrorEnum
+        The error enum (read-only).
+    code : int
+        The raw error code, a negative value (read-only). This is usually
+        redundant with the ``enum`` attribute but provided so that the code for
+        an unknown (to pybhspc) error can be retrieved when ``enum`` is
+        ``ErrorEnum.UNKNOWN``.
+
+    See Also
+    --------
+    ErrorEnum : Enum of SPCM DLL error codes.
+    """
 
     def __init__(self, code: int, message: str) -> None:
         super().__init__(message)
@@ -120,36 +160,36 @@ class SPCMError(RuntimeError):
 
     @property
     def code(self) -> int:
-        """
-        The integer error code (a negative value).
-
-        Returns
-        -------
-        The raw error code returned by the SPCM function.
-        """
         return self._code
 
     @property
     def enum(self) -> ErrorEnum:
-        """
-        The error enum.
-
-        Returns
-        -------
-        The error enum member. ``ErrorEnum.UNKNOWN`` if the code is not known
-        to pybhspc.
-        """
         return self._enum
 
 
 class DLLOperationMode(enum.Enum):
     """
-    The operation mode of the SPCM DLL (hardware or module type to simulate).
+    Enum for the operation mode of the SPCM DLL.
 
-    Not to be confused with `ModuleType`.
+    Values of this type are returned by `get_mode` and are given to
+    `set_mode`.
+
+    Not to be confused with `ModuleType`, which has similar (but slightly
+    different) values.
+
+    Examples
+    --------
+    >>> for e in DLLOperationMode:
+    ...     print(e.name, e.value)
+    HARDWARE 0
+    SIMULATE_SPC_600 600
+    ...
+    SIMULATE_SPC_150NX 152
+    SIMULATE_SPC_150NXX 153
+    ...
+
+    Print a table of all the enum members.
     """
-
-    UNKNOWN = -32769  # Does not clash with 16-bit codes.
 
     HARDWARE = 0
     SIMULATE_SPC_600 = 600
@@ -179,13 +219,36 @@ class DLLOperationMode(enum.Enum):
     SIMULATE_SPC_QC_104 = 104
     SIMULATE_SPC_QC_004 = 4
 
+    UNKNOWN = -32769  # Does not clash with 16-bit codes.
+
     @classmethod
     def _missing_(cls, value: int) -> DLLOperationMode:
         return cls.UNKNOWN
 
 
 class InitStatus(enum.Enum):
-    """Initialization status of an SPC module."""
+    """
+    Enum for the initialization status of an SPC module.
+
+    Values of this type are returned by `get_init_status` and (as an attribute
+    of `ModInfo`) by `get_module_info`.
+
+    Examples
+    --------
+    >>> for e in InitStatus:
+    ...     print(e.name, e.value)
+    OK 0
+    NOT_DONE -1
+    ...
+    XILINX_ERR -100
+
+    Print a table of all the enum members.
+
+    Notes
+    -----
+    The member `XILINX_ERR` is used for all possible Xilinx errors (-100
+    through -199) returned by SPCM DLL functions.
+    """
 
     OK = 0
     NOT_DONE = -1
@@ -210,7 +273,15 @@ class InitStatus(enum.Enum):
 
 
 class InUseStatus(enum.Enum):
-    """State of access to an SPC module."""
+    """
+    Enum representing whether an SPC module is in use.
+
+    Possible values are `NOT_IN_USE` (0), `IN_USE_HERE` (1), and
+    `IN_USE_ELSEWHERE` (-1), "elsewhere" meaning by another program or process.
+
+    Values of this type are returned (as an attribute of `ModInfo`) by
+    `get_module_info`.
+    """
 
     NOT_IN_USE = 0
     IN_USE_HERE = 1
@@ -219,11 +290,26 @@ class InUseStatus(enum.Enum):
 
 class ModuleType(enum.Enum):
     """
-    The module type (model number) of an SPC module.
+    Enum for the module type (model number) of an SPC module.
 
-    Not to be confused with `DLLOperationMode`.
+    Values of this type are returned by `test_id` and (as an attribute of
+    `ModInfo`) by `get_module_info`.
+
+    Not to be confused with `DLLOperationMode`, which has similar (but slightly
+    different) values.
+
+    Examples
+    --------
+    >>> for e in ModuleType:
+    ...     print(e.name, e.value)
+    SPC_600 600
+    SPC_630 630
+    ...
+    SPC_150NX_OR_150NXX 152
+    ...
+
+    Print a table of all the enum members.
     """
-    UNKNOWN = 0
 
     SPC_600 = 600
     SPC_630 = 630
@@ -251,13 +337,34 @@ class ModuleType(enum.Enum):
     SPC_QC_104 = 104
     SPC_QC_004 = 4
 
+    UNKNOWN = 0
+
     @classmethod
     def _missing_(cls, value: int) -> ModuleType:
         return cls.UNKNOWN
 
 
 cdef class ModInfo:
-    """SPC module information."""
+    """
+    SPC module information.
+
+    Wraps the SPCM DLL ``SPCModInfo`` struct. Values of this type are returned
+    by `get_module_info`.
+
+    Attributes
+    ----------
+    module_type : ModuleType
+        The module type (read-only).
+    bus_number : int
+        The PCI bus number (read-only).
+    slot_number : int
+        The PCI slot number (read-only).
+    in_use : InUseStatus
+        Whether the module is in use (read-only).
+    init : InitStatus
+        Whether the module is initialized, and the reason why if not
+        (read-only).
+    """
 
     cdef _spcm.SPCModInfo c
 
@@ -324,9 +431,39 @@ cdef class ModInfo:
 
 class ParID(enum.Enum):
     """
-    SPC parameter ids.
+    Enum of SPC parameter ids.
 
-    These correspond to the fields of `Data`.
+    The members' values are the SPCM DLL parameter ids. Members also have an
+    attribute `type` which is either `int` or `float`.
+
+    Values of this type are passed to `get_parameter` and `set_parameter`. The
+    attributes of the `Data` class match the lowercased version of the enum
+    member names.
+
+    C language parameter types ``short``, ``unsigned short``, and ``unsigned
+    long`` all map to Python `int`. C language ``float`` maps to Python
+    ``float``.
+
+    Attributes
+    ----------
+    type : type
+        The parameter type: `int` or `float`.
+
+    Examples
+    --------
+    >>> for e in ParID:
+    ...     print(e.value, e.name, e.type.__name__)
+    0 CFD_LIMIT_LOW float
+    1 CFD_LIMIT_HIGH float
+    ...
+    27 MODE int
+    ...
+
+    Print a list of all parameter ids, their names, and types.
+
+    See Also
+    --------
+    Data : Aggregate object of all the parameters and their values.
     """
 
     CFD_LIMIT_LOW = (0, float)
@@ -408,6 +545,50 @@ _params = tuple(p.name.lower() for p in ParID)
 cdef class Data:
     """
     The collection of values for all SPC parameters.
+
+    Wraps the SPCM DLL ``SPCdata`` struct. Values of this type are returned by
+    `get_parameters` and are passed to `set_parameters`.
+
+    Instances have attributes that match the `ParID` enum member names, but in
+    lowercase. Attribute types match the `type` attribute of the corresponding
+    `ParID` enum member.
+
+    An instance created by calling ``Data()`` contains zero for every
+    parameter.
+
+    Instances can be duplicated using ``copy.copy()`` (or ``copy.deepcopy()``),
+    and can also be compared with ``==`` for (exact) equality (see Notes
+    below).
+
+    Examples
+    --------
+    >>> for p, v in Data().items():
+    ...     print(f"{p} = {v}")
+    cfd_limit_low = 0.0
+    cfd_limit_high = 0.0
+    ...
+    mode = 0
+    ...
+
+    Print the values of all parameters of a default instance (more interesting
+    if you replace ``Data()`` with, say, ``get_parameters(0)``).
+
+    See Also
+    --------
+    ParID : Enum of SPC parameter ids.
+
+    Notes
+    -----
+    The C struct fields ``base_adr``, ``init``, ``pci_card_no``, and
+    ``test_eep`` are hidden from this Python wrapper. These fields are either
+    not currently meaningful or are redundant with information that can be
+    obtained from `get_module_info` or `get_eeprom_data`. However, these fields
+    are included in the equality comparison, so an instance created as
+    ``Data()`` may never compare equal to an instance returned by
+    `get_parameters` even if all attributes are set to be equal. Usually it is
+    best to avoid creating an instance from scratch except in special
+    situations such as testing. Always obtain an instance from
+    `get_parameters`.
     """
 
     # We shouldn't hit this assertion because the build should have failed (due
@@ -509,14 +690,6 @@ cdef class Data:
             instance where the value differs from the other instance.
         """
         return dict(self.diff_items(other))
-
-    # We omit the non-parameter fields of SPCdata: base_adr, init, pci_card_no,
-    # and test_eep. These fields are redundant and not useful here. None of
-    # them are writable. 'base_adr' is no longer used (in 64-bit, at least). If
-    # 'init' were not 0 (OK), SPC_get_parameters() would have failed anyway. If
-    # 'test_eep' were not 1, again, initialization would have failed and
-    # SPC_get_parameters() would therefore have failed. Finally, 'pci_card_no'
-    # is redundant with ModInfo.
 
     # Here we order the fields so that they match the ParID enum, _not_ the
     # order they appear in the C struct. Not only does this hide the
@@ -1022,7 +1195,12 @@ cdef class AdjustPara:
     """
     Adjustment parameters (wraps the ``SPC_Adjust_Para`` struct).
 
-    This is returned by `get_adjust_parameters` and is also part of `EEPData`.
+    Wraps the SPCM DLL ``SPC_Adjust_Para`` struct. Values of this type are
+    returned by `get_adjust_parameters` and (as an attribute of `EEPData`) by
+    `get_eeprom_data`.
+
+    Instances have the attributes corresponding to the C struct fields. All are
+    read-only.
     """
 
     cdef _spcm.SPC_Adjust_Para c
@@ -1132,7 +1310,23 @@ cdef class AdjustPara:
 
 
 cdef class EEPData:
-    """SPC EEPROM data."""
+    """
+    Information read from an SPC modules non-volatile memory.
+
+    Wraps the SPCM DLL ``SPC_EEP_Data`` struct. Values of this type are
+    returned by `get_eeprom_data`.
+
+    Attributes
+    ----------
+    module_type : str
+        The module type as a string, such as ``"SPC-180NX"`` (read-only).
+    serial_no : str
+        The serial number (read-only).
+    date : str
+        Production date, such as ``"2024-03-26"`` (read-only).
+    adj_para : AdjustPara
+        Adjustment parameters (read-only).
+    """
 
     cdef _spcm.SPC_EEP_Data c
 
@@ -1193,7 +1387,23 @@ cdef class EEPData:
 
 
 cdef class RateValues:
-    """A set of rate counter values."""
+    """
+    Rate counter values.
+
+    Wraps the SPCM DLL ``rate_values`` struct. Values of this type are returned
+    by `read_rates`.
+
+    Attributes
+    ----------
+    sync_rate : float
+        The SYNC rate (counts/s, read-only).
+    cfd_rate : float
+        The CFD rate (counts/s, read-only).
+    tac_rate : float
+        The TAC rate (counts/s, read-only).
+    adc_rate : float
+        The ADC rate (counts/s, read-only).
+    """
 
     cdef _spcm.rate_values c
 
@@ -1252,7 +1462,65 @@ cdef class RateValues:
 
 
 class MeasurementState(enum.Flag):
-    """Measurement state flags as returned by `test_state`."""
+    """
+    Flag enum for measurement state.
+
+    Values of this type are returned by `test_state`.
+
+    For the sake of readability, the enum members are named differently from
+    the SPCM DLL. See the example below for how to view the correspondence.
+
+    Examples
+    --------
+    >>> for n in MeasurementState.__members__:
+    ...     e = MeasurementState[n]
+    ...     print(e.name, e.value)
+    STOPPED_ON_OVERFLOW 1
+    OVERFLOW 2
+    ...
+
+    Print a table of all enum members, including aliases.
+
+    >>> for n in MeasurementState.__members__:
+    ...     e = MeasurementState[n]
+    ...     print(
+    ...         f"{measurement_state_bh_name(e.name):16} {e.value: 6} {e.name}"
+    ...     )
+    SPC_OVERFL            1 STOPPED_ON_OVERFLOW
+    SPC_OVERFLOW          2 OVERFLOW
+    SPC_TIME_OVER         4 STOPPED_ON_COLLECT_TIME
+    SPC_COLTIM_OVER       8 COLLECT_TIME_ELAPSED
+    SPC_CMD_STOP         16 STOPPED_ON_COMMAND
+    SPC_REPTIM_OVER      32 REPEAT_TIME_ELAPSED
+    SPC_ARMED           128 ARMED
+    SPC_COLTIM_2OVER    256 COLLECT_TIME_ELAPSED_2ND_TIME
+    SPC_REPTIM_2OVER    512 REPEAT_TIME_ELAPSED_2ND_TIME
+    SPC_FOVFL          1024 FIFO_OVERFLOW
+    SPC_FEMPTY         2048 FIFO_EMPTY
+    SPC_WAIT_FR        8192 WAITING_FOR_FRAME
+    SPC_MEASURE          64 MEASUREMENT_ACTIVE
+    SPC_FOVFL          1024 FIFO_OVERFLOW
+    SPC_FEMPTY         2048 FIFO_EMPTY
+    SPC_WAIT_TRG       4096 WAITING_FOR_TRIGGER
+    SPC_HFILL_NRDY    32768 HARDWARE_FILL_NOT_READY
+    SPC_SEQ_STOP      16384 STOPPED_BY_SEQUENCER
+    SPC_WAIT_FR        8192 WAITING_FOR_FRAME
+    SPC_MEASURE          64 MEASUREMENT_ACTIVE
+    SPC_ARMED           128 ARMED
+    SPC_COLTIM_OVER       8 COLLECT_TIME_ELAPSED
+    SPC_COLTIM_2OVER    256 COLLECT_TIME_ELAPSED_2ND_TIME
+    SPC_FOVFL          1024 FIFO_OVERFLOW
+    SPC_SEQ_STOP      16384 STOPPED_BY_SEQUENCER
+    SPC_REPTIM_OVER      32 REPEAT_TIME_ELAPSED
+    SPC_REPTIM_2OVER    512 REPEAT_TIME_ELAPSED_2ND_TIME
+    SPC_FEMPTY         2048 FIFO_EMPTY
+
+    Print the correspondence from SPCM DLL names to pybhspc names.
+
+    See Also
+    --------
+    measurement_state_bh_name
+    """
 
     STOPPED_ON_OVERFLOW = 0x1
     OVERFLOW = 0x2
@@ -1274,8 +1542,6 @@ class MeasurementState(enum.Flag):
 
     # FIFO Image mode
     WAITING_FOR_FRAME = 0x2000
-
-    # (Presumably the values that apply to 160 also apply to 180N, 130IN.)
 
     # SPC-700/730, 140, 830, 930, 150(N), 130EM(N), 160, 180N, 130IN
     MEASUREMENT_ACTIVE = 0x40
@@ -1303,17 +1569,99 @@ class MeasurementState(enum.Flag):
     TDC2_FIFO_OVERFLOW = 0x800
 
 
+_measurement_state_to_bh_name = {
+    "STOPPED_ON_OVERFLOW": "OVERFL",
+    "OVERFLOW": "OVERFLOW",
+    "STOPPED_ON_COLLECT_TIME": "TIME_OVER",
+    "COLLECT_TIME_ELAPSED": "COLTIM_OVER",
+    "STOPPED_ON_COMMAND": "CMD_STOP",
+    "REPEAT_TIME_ELAPSED": "REPTIM_OVER",
+    "ARMED": "ARMED",
+    "COLLECT_TIME_ELAPSED_2ND_TIME": "COLTIM_2OVER",
+    "REPEAT_TIME_ELAPSED_2ND_TIME": "REPTIM_2OVER",
+    "FIFO_OVERFLOW": "FOVFL",
+    "FIFO_EMPTY": "FEMPTY",
+    "WAITING_FOR_FRAME": "WAIT_FR",
+    "MEASUREMENT_ACTIVE": "MEASURE",
+    "SCAN_READY": "SCRDY",
+    "SCAN_FLOWBACK_READY": "FBRDY",
+    "WAITING_FOR_TRIGGER": "WAIT_TRG",
+    "HARDWARE_FILL_NOT_READY": "HFILL_NRDY",
+    "STOPPED_BY_SEQUENCER": "SEQ_STOP",
+    "SEQUENCER_GAP_150": "SEQ_GAP150",
+    "SEQUENCER_GAP": "SEQ_GAP",
+    "TDC1_ARMED": "ARMED1",
+    "TDC1_COLLECT_TIME_ELAPSED": "CTIM_OVER1",
+    "TDC1_FIFO_EMPTY": "FEMPTY1",
+    "TDC1_FIFO_OVERFLOW": "FOVFL1",
+    "TDC2_ARMED": "ARMED2",
+    "TDC2_COLLECT_TIME_ELAPSED": "CTIM_OVER2",
+    "TDC2_FIFO_EMPTY": "FEMPTY2",
+    "TDC2_FIFO_OVERFLOW": "FOVFL2",
+}
+
+
+def measurement_state_bh_name(name: str) -> str:
+    """
+    Map `MeasurementState` enum member names to their SPCM DLL names.
+
+    Parameters
+    ----------
+    name : str
+        The pybhspc `MeasurementState` enum member name.
+
+    Returns
+    -------
+    str
+        The corresponding SPCM DLL constant name.
+
+    See Also
+    --------
+    MeasurementState
+    """
+    return f"SPC_{_measurement_state_to_bh_name[name]}"
+
+
 class SyncState(enum.Flag):
-    """Sync state flags as returned by get_sync_state."""
+    """
+    Flag enum for sync state.
+
+    Values of this type are returned by `get_sync_state`.
+
+    There are two flags: `SYNC_OK` (bit 0) and `SYNC_OVERLOAD` (bit 1). When
+    the `SYNC_OVERLOAD` bit is set, the `SYNC_OK` bit is invalid.
+    """
 
     SYNC_OK = 0x1
     SYNC_OVERLOAD = 0x2
 
 
 class FIFOType(enum.Enum):
-    """FIFO types (photon stream data formats)."""
+    """
+    Enum of FIFO data formats.
 
-    UNKNOWN = 0  # Attested when not in FIFO mode.
+    Values of this type are returned by `get_fifo_init_vars` as an attribute of
+    `FIFOInitVars`.
+
+    Examples
+    --------
+    >>> for e in FIFOType:
+    ...     print(e.name, e.value)
+    SPC_600_48BIT 2
+    SPC_600_32BIT 3
+    SPC_130 4
+    SPC_830 5
+    SPC_140 6
+    SPC_150 7
+    DPC_230 8
+    IMAGE 9
+    TDC 11
+    TDC_ABS 12
+    UNKNOWN 0
+
+    Print a table of all enum members.
+    """
+
     SPC_600_48BIT = 2
     SPC_600_32BIT = 3
     SPC_130 = 4
@@ -1325,13 +1673,42 @@ class FIFOType(enum.Enum):
     TDC = 11
     TDC_ABS = 12
 
+    UNKNOWN = 0  # Attested when not in FIFO mode.
+
     @classmethod
     def _missing_(cls, value: int) -> FIFOType:
         return cls.UNKNOWN
 
 
 class StreamType(enum.Flag):
-    """Properties of SPCM DLL streams (which are not supported by pybhspc)."""
+    """
+    Flag enum for properties of SPCM DLL streams.
+
+    Values of this type are returned by `get_fifo_init_vars` as an attribute of
+    `FIFOInitVars`.
+
+    Examples
+    --------
+    >>> for f in StreamType:
+    ...     print(f.name, f.value)
+    HAS_SPC_HEADER 1
+    HAS_MARKERS 512
+    RAW_DATA 1024
+    SPC_QC 2048
+    BUFFERED 4096
+    AUTOFREE_BUFFER 8192
+    RING_BUFFER 16384
+    DPC_TDC1_RAW_DATA 2
+    DPC_TDC2_RAW_DATA 4
+    DPC_TDC_TTL_RAW_DATA 8
+    DPC 256
+
+    Print a table of all flag members.
+
+    Notes
+    -----
+    pybhspc does not support the SPCM DLL stream functions.
+    """
 
     HAS_SPC_HEADER = 1 << 0
     HAS_MARKERS = 1 << 9
@@ -1353,16 +1730,20 @@ class FIFOInitVars:
     """
     Dataclass aggregating the return values of `get_fifo_init_vars`.
 
-    Instances have 4 attributes: `fifo_type: FIFOType`, `stream_type:
-    StreamType`, `mt_clock: int`, and `spc_header: array.array`.
-
-    The macrotime clock units `mt_clock` is in units of 0.1 ns (or 1 fs in the
-    case of DPC-230).
-
-    The .spc file header `spc_header` is always 4 bytes. In the case of
-    SPC-600/630 FIFO-48 format, two zero bytes should be appended to form the
-    6-byte file header.
+    Attributes
+    ----------
+    fifo_type : FIFOType
+        FIFO data format.
+    stream_type : StreamType
+        Stream properties.
+    mt_clock : int
+        Macrotime clock units in units of 0.1 ns (or 1 fs in the case of
+        DPC-230).
+    spc_header : array.array
+        4-byte .spc file header. In the case of SPC-600/630 FIFO-48 format, two
+        zero bytes should be appended to form the 6-byte file header.
     """
+
     fifo_type: FIFOType
     stream_type: StreamType
     mt_clock: int
@@ -1385,6 +1766,8 @@ def get_error_string(error_id: int | ErrorEnum) -> str:
     """
     if isinstance(error_id, ErrorEnum):
         error_id = error_id.value
+        if error_id > 32767 or error_id < -32768:
+            return "Unknown SPCM error"
     cdef char[256] buf
     err = _spcm.SPC_get_error_string(error_id, buf, 256)
     if err != 0:
