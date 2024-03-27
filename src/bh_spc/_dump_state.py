@@ -68,7 +68,11 @@ def _dump_parameters(mod_no: int, print) -> None:
 
 def dump_module_state(mod_no: int, *, file=None) -> None:
     """
-    Print the status of one SPC module.
+    Print (to standard output) the status of one SPC module.
+
+    This is a utility intended mostly for troubleshooting.
+
+    The module must be initialized.
 
     Parameters
     ----------
@@ -127,6 +131,8 @@ def dump_state(
     Print (to standard output) the status SPC modules.
 
     This is a utility intended mostly for troubleshooting.
+
+    The SPCM DLL must have been initialized (`spcm.init`).
 
     Parameters
     ----------

@@ -8,7 +8,7 @@
 """
 The root package of pybhspc.
 
-Currently, low-level control is provided by the `spcm` module. Some utility
+For low-level control of the SPCM DLL, see the `spcm` module. Some utility
 functions are provided here in the root package.
 """
 
