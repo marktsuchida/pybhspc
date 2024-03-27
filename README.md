@@ -12,7 +12,7 @@ SPDX-License-Identifier: MIT
 
 Windows 10+ (64-bit Intel) only.
 
-Python 3.8+ (64-bit).
+Python 3.10+ (64-bit).
 
 The Becker-Hickl SPCM DLL (part of their "TCSPC Package" installer) must be
 installed on the system. The most recent version is usually recommended;

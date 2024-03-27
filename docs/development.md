@@ -11,7 +11,7 @@ SPDX-License-Identifier: MIT
 ### Requirements
 
 - Windows 10+, 64-bit Intel.
-- Python 3.8+.
+- Python 3.10+.
 - Becker-Hickl TCSPC Package with SPCM DLL 5.1.0 (Dec 2022) or later (note that
   the required version is greater than at run time).
 
@@ -51,6 +51,9 @@ the extension modules, but that takes longer.)
 pip install nox    # Also included in 'pip install .[dev]'.
 nox                # Build and run the tests.
 ```
+
+By default this attempts to test with all supported Python versions (if
+available).
 
 ### Building the documentation
 

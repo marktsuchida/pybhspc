@@ -9,7 +9,7 @@ import nox
 nox.options.sessions = ["test"]
 
 
-@nox.session
+@nox.session(python=["3.10", "3.11", "3.12"])
 def test(session):
     """Run the tests."""
     session.install(".[testing]")
