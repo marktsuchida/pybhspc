@@ -5,12 +5,16 @@
 [project]
 name = "pybhspc"
 description = "Python bindings for the Becker-Hickl SPCM DLL"
-version = "0.1.0.dev0"
+dynamic = ["version"]
 requires-python = ">= 3.10"
 dependencies = []
 
 [build-system]
-requires = ["setuptools", "Cython"]
+requires = [
+    "Cython",
+    "setuptools >= 64",
+    "setuptools_scm >= 8",
+]
 build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
@@ -23,6 +27,7 @@ dev = [
     "nox",
     "pytest",
     "setuptools",
+    "setuptools_scm",
     "wheel",  # Needed for 'pip install --no-build-isolation .'
 ]
 # Minimal requirements for testing (in nox isolated environment):
@@ -67,3 +72,6 @@ ignore = [
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
+
+[tool.setuptools_scm]
+version_file = "src/bh_spc/_version.py"

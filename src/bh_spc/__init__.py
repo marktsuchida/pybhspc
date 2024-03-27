@@ -28,6 +28,7 @@ import platform
 import winreg
 
 from ._file_version import dll_file_version as _dll_file_version
+from ._version import __version__  # noqa: F401
 
 if platform.machine() != "AMD64":
     raise RuntimeError("Only supported on Windows x64")

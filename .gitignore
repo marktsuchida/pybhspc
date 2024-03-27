@@ -12,5 +12,6 @@
 __pycache__/
 
 # Generated/built
-src/bh_spc/*.c
-src/bh_spc/*.pyd
+/src/bh_spc/*.c
+/src/bh_spc/*.pyd
+/src/bh_spc/_version.py
