@@ -52,7 +52,16 @@ pip install nox    # Also included in 'pip install .[dev]'.
 nox                # Build and run the tests.
 ```
 
-By default this attempts to test with all supported Python versions (if
+By default this attempts to test with every supported Python version (if
+available).
+
+### Building wheels
+
+```sh
+nox -s build
+```
+
+By default this attempts to build wheels for every supported Python version (if
 available).
 
 ### Building the documentation
