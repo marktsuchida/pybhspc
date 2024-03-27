@@ -8,6 +8,7 @@ nav:
   - API Reference:
     - bh_spc package: api.md
     - bh_spc.spcm module: api_spcm.md
+  - Development: development.md
 watch:
   - src
 theme:

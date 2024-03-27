@@ -14,3 +14,11 @@ def test(session):
     """Run the tests."""
     session.install(".[testing]")
     session.run("pytest")
+
+
+@nox.session
+def docs(session):
+    """Build the documentation."""
+    session.install(".[dev]")
+    session.run("python", "setup.py", "build_ext", "--inplace")
+    session.run("mkdocs", "build")
