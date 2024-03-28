@@ -72,3 +72,16 @@ nox -s docs
 
 Note that this builds the extension modules and the documentation in-tree.
 The built documentation is in `site/`.
+
+## Contributing to pybhspc
+
+pybhspc is an open source project and contributions are welcome. Please create
+a GitHub issue or pull request.
+
+If you plan to propose a significant change, it is a good idea to first create
+an issue to discuss the design and scope of the change.
+
+New code should be accompanied with unit tests where practical (but this should
+focus on testing pybhspc, not the behavior of the SPCM DLL). Also, new or
+changed APIs should be documented. Generally, please follow the existing style
+and structure of code and documentation when there is no reason not to.
