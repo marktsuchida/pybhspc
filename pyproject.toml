@@ -32,11 +32,14 @@ build-backend = "setuptools.build_meta"
 # All development tools:
 dev = [
     "Cython",
+    "matplotlib",
     "mkdocs",
     "mkdocs-include-markdown-plugin",
+    "mkdocs-jupyter",
     "mkdocs-material",
     "mkdocstrings[python] >= 0.19",
     "nox",
+    "numpy",
     "pytest",
     "setuptools",
     "setuptools_scm",
