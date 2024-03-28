@@ -15,6 +15,9 @@ theme:
   name: material
 plugins:
   - search
+  - include-markdown:
+      start: <!-- begin-intro-docs -->
+      end: <!-- end-intro-docs -->
   - mkdocstrings:
       default_handler: python
       handlers:

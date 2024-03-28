@@ -22,6 +22,7 @@ build-backend = "setuptools.build_meta"
 dev = [
     "Cython",
     "mkdocs",
+    "mkdocs-include-markdown-plugin",
     "mkdocs-material",
     "mkdocstrings[python] >= 0.19",
     "nox",
