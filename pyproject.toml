@@ -4,7 +4,7 @@
 
 [project]
 name = "pybhspc"
-description = "Python bindings for the Becker-Hickl SPCM DLL"
+description = "Control Becker & Hickl SPC modules from Python"
 dynamic = ["version"]
 requires-python = ">= 3.10"
 dependencies = []

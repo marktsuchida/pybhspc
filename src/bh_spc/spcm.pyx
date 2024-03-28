@@ -25,7 +25,7 @@ A higher-level interface that guides the user toward correct usage can be built
 on top of this module.
 
 As such, to fully understand the correct usage of these functions and data
-types, you will need to refer to the Becker-Hickl SPCM DLL documentation.
+types, you will need to refer to the Becker & Hickl SPCM DLL documentation.
 """
 
 import array

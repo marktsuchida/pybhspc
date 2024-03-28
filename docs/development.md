@@ -10,10 +10,10 @@ SPDX-License-Identifier: MIT
 
 ### Requirements
 
-- Windows 10+, 64-bit Intel.
+- Windows, 64-bit Intel.
 - Python 3.10+.
-- Becker-Hickl TCSPC Package with SPCM DLL 5.1.0 (Dec 2022) or later (note that
-  the required version is greater than at run time).
+- Becker & Hickl TCSPC Package with SPCM DLL 5.1.0 (Dec 2022) or later (note
+  that the required version is greater than at run time).
 
 ### Pre-commit hook
 
