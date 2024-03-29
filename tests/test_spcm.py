@@ -190,9 +190,10 @@ def test_init_close():
 
 
 def test_failed_init():
-    with ini_file("invalid") as ininame, pytest.raises(
-        spcm.SPCMError
-    ) as exc_info:
+    with (
+        ini_file("invalid") as ininame,
+        pytest.raises(spcm.SPCMError) as exc_info,
+    ):
         spcm.init(ininame)
     assert exc_info.value.enum == spcm.ErrorEnum.FILE_NVALID
 

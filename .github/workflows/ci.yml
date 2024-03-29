@@ -1,0 +1,23 @@
+# This file is part of pybhspc
+# Copyright 2024 Board of Regents of the University of Wisconsin System
+# SPDX-License-Identifier: MIT
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+
+jobs:
+  lint:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - uses: pre-commit/action@v3.0.1
