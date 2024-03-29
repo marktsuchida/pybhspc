@@ -5,7 +5,7 @@
 import contextlib
 import os
 import tempfile
-from typing import Iterator
+from collections.abc import Iterator
 
 from . import spcm  # type: ignore[attr-defined]
 

@@ -1,0 +1,82 @@
+# This file is part of pybhspc
+# Copyright 2024 Board of Regents of the University of Wisconsin System
+# SPDX-License-Identifier: MIT
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+
+jobs:
+  lint:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - uses: pre-commit/action@v3.0.1
+
+  # Unfortunately there is no easy way to run the tests on GitHub Actions
+  # because the SPCM-DLL appears to fail to load when the drivers are not
+  # installed (even with cvirte.dll provided, the DLL initialization routine
+  # fails). Documentation cannot be built for the same reason. We can, however,
+  # automate the build itself, which does not load the DLL.
+
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Workaround for checkout issues
+        # See https://github.com/actions/checkout/issues/1379 and
+        # https://github.com/actions/checkout/issues/748#issuecomment-1839575383
+        run: |
+          git config --global http.postBuffer 1048576000
+      - uses: actions/checkout@v4
+        with:
+          path: pybhspc
+          fetch-depth: 0  # Full history for setuptools_scm.
+      - uses: actions/checkout@v4
+        with:
+          repository: marktsuchida/spcm-dll
+          path: spcm-dll
+          ssh-key: ${{ secrets.SSH_READONLY_SPCM_DLL }}
+      - uses: fjwillemsen/setup-nox2@v3.0.0
+      - name: Set SPCM path in registry
+        run: |
+          New-Item -Path HKCU:\SOFTWARE -Name BH -Force
+          New-Item -Path HKCU:\SOFTWARE\BH -Name SPCM -Force
+          Set-ItemProperty -Path HKCU:\SOFTWARE\BH\SPCM -Name FilePath `
+              -Value "$Env:GITHUB_WORKSPACE\spcm-dll\spcm_64.exe"
+          Get-ItemProperty -Path HKCU:\SOFTWARE\BH\SPCM -Name FilePath
+      - run: |
+          cd $Env:GITHUB_WORKSPACE\pybhspc
+          nox -s build
+      - uses: actions/upload-artifact@v4
+        with:
+          path: pybhspc/dist/
+
+  release:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: [lint, build]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # PyPI trusted publishing
+      contents: write # Write GitHub release
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: artifact
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@release/v1
+      - uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+          files: ./dist/*
+
+  # Maintainer note: Documentation should be built locally and pushed to the
+  # gh-pages branch after each release (and as needed).
