@@ -6,6 +6,40 @@ SPDX-License-Identifier: MIT
 
 # Developing pybhspc
 
+## Code overview
+
+pybhspc uses Cython to generate Python bindings for the SPCM DLL functions and
+structs (`_spcm.pxd`, `spcm.pyx`). Enum constants are defined using the Python
+standard library `enum` package. A few Win32 API functions are also separately
+wrapped (`_win32_version.pxd`, `_file_version.pyx`) to detect the DLL version
+information.
+
+Loading the extension module `spcm` requires that the SPCM DLL be accessible.
+This is set up in the `__init__.py` of the `bh_spc` package.
+
+The build uses setuptools and is configured in `pyproject.toml` (and `setup.py`
+for building the extension modules).
+
+Tests are run using pytest, with the `spcm` extension module also using doctest
+(called by one of the pytest test cases).
+
+Documentation is built with MkDocs, with mkdocstrings used to include the
+docstrings for the API Reference. This requires a versions of the extension
+modules, because the docstrings for those are extracted from the imported
+modules. Usage examples use the mkdocs-jupyter plugin and are in jupytext
+format; they are executed as part of the documentation build.
+
+Nox is used to standardize and automate the "official" build and testing
+process (across all the supported versions of Python).
+
+A pre-commit hook is used to run linting, formatting, and type checking by
+mypy.
+
+At the moment mypy is unable to access the type annotations in the extension
+modules. Fixing this will require generating type stubs (`.pyi`) from the
+Cython source (`.pyx`) and/or the built extension modules; there does not
+appear to be a stable, ready-made, and fully automated way to do this.
+
 ## Building and testing
 
 ### Requirements
