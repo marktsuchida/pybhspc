@@ -59,3 +59,24 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           path: pybhspc/dist/
+
+  release:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: [lint, build]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # PyPI trusted publishing
+      contents: write # Write GitHub release
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: artifact
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@release/v1
+      - uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+          files: ./dist/*
+
+  # Maintainer note: Documentation should be built locally and pushed to the
+  # gh-pages branch after each release (and as needed).
