@@ -1,0 +1,5932 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../api/">
+      
+      
+        <link rel="next" href="../development/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.15">
+    
+    
+      
+        <title>bh_spc.spcm module - pybhspc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e359304.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the-bh_spcspcm-module" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="pybhspc" class="md-header__button md-logo" aria-label="pybhspc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            pybhspc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              bh_spc.spcm module
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="pybhspc" class="md-nav__button md-logo" aria-label="pybhspc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    pybhspc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            API Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    bh_spc package
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    bh_spc.spcm module
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    bh_spc.spcm module
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm" class="md-nav__link">
+    <span class="md-ellipsis">
+      spcm
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.AdjustPara" class="md-nav__link">
+    <span class="md-ellipsis">
+      AdjustPara
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AdjustPara">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.AdjustPara.as_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      as_dict
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.AdjustPara.items" class="md-nav__link">
+    <span class="md-ellipsis">
+      items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.DLLOperationMode" class="md-nav__link">
+    <span class="md-ellipsis">
+      DLLOperationMode
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.Data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.Data.as_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      as_dict
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.Data.diff_as_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      diff_as_dict
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.Data.diff_items" class="md-nav__link">
+    <span class="md-ellipsis">
+      diff_items
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.Data.items" class="md-nav__link">
+    <span class="md-ellipsis">
+      items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.EEPData" class="md-nav__link">
+    <span class="md-ellipsis">
+      EEPData
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="EEPData">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.EEPData.as_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      as_dict
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.EEPData.items" class="md-nav__link">
+    <span class="md-ellipsis">
+      items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.ErrorEnum" class="md-nav__link">
+    <span class="md-ellipsis">
+      ErrorEnum
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.FIFOInitVars" class="md-nav__link">
+    <span class="md-ellipsis">
+      FIFOInitVars
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.FIFOType" class="md-nav__link">
+    <span class="md-ellipsis">
+      FIFOType
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.InUseStatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      InUseStatus
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.InitStatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      InitStatus
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.MeasurementState" class="md-nav__link">
+    <span class="md-ellipsis">
+      MeasurementState
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.ModInfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      ModInfo
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ModInfo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.ModInfo.as_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      as_dict
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.ModInfo.items" class="md-nav__link">
+    <span class="md-ellipsis">
+      items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.ModuleType" class="md-nav__link">
+    <span class="md-ellipsis">
+      ModuleType
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.ParID" class="md-nav__link">
+    <span class="md-ellipsis">
+      ParID
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.RateValues" class="md-nav__link">
+    <span class="md-ellipsis">
+      RateValues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RateValues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.RateValues.as_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      as_dict
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.RateValues.items" class="md-nav__link">
+    <span class="md-ellipsis">
+      items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.SPCMError" class="md-nav__link">
+    <span class="md-ellipsis">
+      SPCMError
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.StreamType" class="md-nav__link">
+    <span class="md-ellipsis">
+      StreamType
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.SyncState" class="md-nav__link">
+    <span class="md-ellipsis">
+      SyncState
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.clear_rates" class="md-nav__link">
+    <span class="md-ellipsis">
+      clear_rates
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.close" class="md-nav__link">
+    <span class="md-ellipsis">
+      close
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_actual_coltime" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_actual_coltime
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_adjust_parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_adjust_parameters
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_break_time" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_break_time
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_eeprom_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_eeprom_data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_error_string" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_error_string
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_fifo_init_vars" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_fifo_init_vars
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_fifo_usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_fifo_usage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_init_status" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_init_status
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_mode
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_module_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_module_info
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_parameter
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_parameters
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_sync_state" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_sync_state
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_time_from_start" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_time_from_start
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_version" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_version
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.init" class="md-nav__link">
+    <span class="md-ellipsis">
+      init
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.measurement_state_bh_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      measurement_state_bh_name
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.read_fifo" class="md-nav__link">
+    <span class="md-ellipsis">
+      read_fifo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.read_fifo_to_array" class="md-nav__link">
+    <span class="md-ellipsis">
+      read_fifo_to_array
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.read_parameters_from_inifile" class="md-nav__link">
+    <span class="md-ellipsis">
+      read_parameters_from_inifile
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.read_rates" class="md-nav__link">
+    <span class="md-ellipsis">
+      read_rates
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.save_parameters_to_inifile" class="md-nav__link">
+    <span class="md-ellipsis">
+      save_parameters_to_inifile
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.set_mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_mode
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.set_parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_parameter
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.set_parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_parameters
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.start_measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      start_measurement
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.stop_measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      stop_measurement
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.test_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      test_id
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.test_state" class="md-nav__link">
+    <span class="md-ellipsis">
+      test_state
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm" class="md-nav__link">
+    <span class="md-ellipsis">
+      spcm
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.AdjustPara" class="md-nav__link">
+    <span class="md-ellipsis">
+      AdjustPara
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AdjustPara">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.AdjustPara.as_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      as_dict
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.AdjustPara.items" class="md-nav__link">
+    <span class="md-ellipsis">
+      items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.DLLOperationMode" class="md-nav__link">
+    <span class="md-ellipsis">
+      DLLOperationMode
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.Data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.Data.as_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      as_dict
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.Data.diff_as_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      diff_as_dict
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.Data.diff_items" class="md-nav__link">
+    <span class="md-ellipsis">
+      diff_items
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.Data.items" class="md-nav__link">
+    <span class="md-ellipsis">
+      items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.EEPData" class="md-nav__link">
+    <span class="md-ellipsis">
+      EEPData
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="EEPData">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.EEPData.as_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      as_dict
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.EEPData.items" class="md-nav__link">
+    <span class="md-ellipsis">
+      items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.ErrorEnum" class="md-nav__link">
+    <span class="md-ellipsis">
+      ErrorEnum
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.FIFOInitVars" class="md-nav__link">
+    <span class="md-ellipsis">
+      FIFOInitVars
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.FIFOType" class="md-nav__link">
+    <span class="md-ellipsis">
+      FIFOType
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.InUseStatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      InUseStatus
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.InitStatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      InitStatus
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.MeasurementState" class="md-nav__link">
+    <span class="md-ellipsis">
+      MeasurementState
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.ModInfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      ModInfo
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ModInfo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.ModInfo.as_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      as_dict
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.ModInfo.items" class="md-nav__link">
+    <span class="md-ellipsis">
+      items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.ModuleType" class="md-nav__link">
+    <span class="md-ellipsis">
+      ModuleType
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.ParID" class="md-nav__link">
+    <span class="md-ellipsis">
+      ParID
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.RateValues" class="md-nav__link">
+    <span class="md-ellipsis">
+      RateValues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RateValues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.RateValues.as_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      as_dict
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bh_spc.spcm.RateValues.items" class="md-nav__link">
+    <span class="md-ellipsis">
+      items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.SPCMError" class="md-nav__link">
+    <span class="md-ellipsis">
+      SPCMError
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.StreamType" class="md-nav__link">
+    <span class="md-ellipsis">
+      StreamType
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.SyncState" class="md-nav__link">
+    <span class="md-ellipsis">
+      SyncState
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.clear_rates" class="md-nav__link">
+    <span class="md-ellipsis">
+      clear_rates
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.close" class="md-nav__link">
+    <span class="md-ellipsis">
+      close
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_actual_coltime" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_actual_coltime
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_adjust_parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_adjust_parameters
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_break_time" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_break_time
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_eeprom_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_eeprom_data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_error_string" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_error_string
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_fifo_init_vars" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_fifo_init_vars
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_fifo_usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_fifo_usage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_init_status" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_init_status
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_mode
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_module_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_module_info
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_parameter
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_parameters
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_sync_state" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_sync_state
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_time_from_start" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_time_from_start
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.get_version" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_version
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.init" class="md-nav__link">
+    <span class="md-ellipsis">
+      init
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.measurement_state_bh_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      measurement_state_bh_name
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.read_fifo" class="md-nav__link">
+    <span class="md-ellipsis">
+      read_fifo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.read_fifo_to_array" class="md-nav__link">
+    <span class="md-ellipsis">
+      read_fifo_to_array
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.read_parameters_from_inifile" class="md-nav__link">
+    <span class="md-ellipsis">
+      read_parameters_from_inifile
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.read_rates" class="md-nav__link">
+    <span class="md-ellipsis">
+      read_rates
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.save_parameters_to_inifile" class="md-nav__link">
+    <span class="md-ellipsis">
+      save_parameters_to_inifile
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.set_mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_mode
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.set_parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_parameter
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.set_parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_parameters
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.start_measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      start_measurement
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.stop_measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      stop_measurement
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.test_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      test_id
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bh_spc.spcm.test_state" class="md-nav__link">
+    <span class="md-ellipsis">
+      test_state
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<!--
+This file is part of pybhspc
+Copyright 2024 Board of Regents of the University of Wisconsin System
+SPDX-License-Identifier: MIT
+-->
+
+<h1 id="the-bh_spcspcm-module">The <code>bh_spc.spcm</code> module</h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="bh_spc.spcm"></a>
+  <div class="doc doc-contents first">
+  
+      <p>Low-level wrappers of the SPCM DLL functions and data structures.</p>
+<p>This extension module aims to provide straightforward Python wrappers for the
+C functions, structs, and enums in the SPCM DLL. Currently, only the functions
+required to acquire data in FIFO mode are wrapped (excluding those that are
+specific to the DPC-230).</p>
+<p>Error codes returned by functions are converted to exceptions (SPCMError).
+Functions that take output arguments are wrapped so that they provide the data
+as a return value. A few other small changes are made to facilitate usage from
+Python. In some cases enum names have been changed for readability.</p>
+<p>A design goal of this module is to generally avoid artificially restricting
+user code from performing operations that the C functions allow, even if they
+are logically questionable or lead to unexpected return values. This is so that
+this module can be used to experiment with the C API and discover its behavior.
+A higher-level interface that guides the user toward correct usage can be built
+on top of this module.</p>
+<p>As such, to fully understand the correct usage of these functions and data
+types, you will need to refer to the Becker &amp; Hickl SPCM DLL documentation.</p>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bh_spc.spcm.AdjustPara" class="doc doc-heading">
+          <code>AdjustPara</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Adjustment parameters (wraps the <code>SPC_Adjust_Para</code> struct).</p>
+<p>Wraps the SPCM DLL <code>SPC_Adjust_Para</code> struct. Values of this type are
+returned by <code>get_adjust_parameters</code> and (as an attribute of <code>EEPData</code>) by
+<code>get_eeprom_data</code>.</p>
+<p>Instances have the attributes corresponding to the C struct fields. All are
+read-only.</p>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="bh_spc.spcm.AdjustPara.as_dict" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">as_dict</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return a dictionary containing the fields and values.</p>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>dict</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Every field and its value.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="bh_spc.spcm.AdjustPara.items" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">items</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]]</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return an iterable yielding the fields and values in fixed order.</p>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="collections.abc.Iterable">Iterable</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>An iterable yielding the pair (name, value) for every field.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bh_spc.spcm.DLLOperationMode" class="doc doc-heading">
+          <code>DLLOperationMode</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code>enum.Enum</code></p>
+
+  
+      <p>Enum for the operation mode of the SPCM DLL.</p>
+<p>Values of this type are returned by <code>get_mode</code> and are given to
+<code>set_mode</code>.</p>
+<p>Not to be confused with <code>ModuleType</code>, which has similar (but slightly
+different) values.</p>
+
+
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">DLLOperationMode</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+<span class="go">HARDWARE 0</span>
+<span class="go">SIMULATE_SPC_600 600</span>
+<span class="go">...</span>
+<span class="go">SIMULATE_SPC_150NX 152</span>
+<span class="go">SIMULATE_SPC_150NXX 153</span>
+<span class="go">...</span>
+</code></pre></div>
+    <p>Print a table of all the enum members.</p>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bh_spc.spcm.Data" class="doc doc-heading">
+          <code>Data</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>The collection of values for all SPC parameters.</p>
+<p>Wraps the SPCM DLL <code>SPCdata</code> struct. Values of this type are returned by
+<code>get_parameters</code> and are passed to <code>set_parameters</code>.</p>
+<p>Instances have attributes that match the <code>ParID</code> enum member names, but in
+lowercase. Attribute types match the <code>type</code> attribute of the corresponding
+<code>ParID</code> enum member.</p>
+<p>An instance created by calling <code>Data()</code> contains zero for every
+parameter.</p>
+<p>Instances can be duplicated using <code>copy.copy()</code> (or <code>copy.deepcopy()</code>),
+and can also be compared with <code>==</code> for (exact) equality (see Notes
+below).</p>
+
+
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">Data</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="go">cfd_limit_low = 0.0</span>
+<span class="go">cfd_limit_high = 0.0</span>
+<span class="go">...</span>
+<span class="go">mode = 0</span>
+<span class="go">...</span>
+</code></pre></div>
+    <p>Print the values of all parameters of a default instance (more interesting
+if you replace <code>Data()</code> with, say, <code>get_parameters(0)</code>).</p>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>ParID : Enum of SPC parameter ids.</p>
+</details>
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The C struct fields <code>base_adr</code>, <code>init</code>, <code>pci_card_no</code>, and
+<code>test_eep</code> are hidden from this Python wrapper. These fields are either
+not currently meaningful or are redundant with information that can be
+obtained from <code>get_module_info</code> or <code>get_eeprom_data</code>. However, these fields
+are included in the equality comparison, so an instance created as
+<code>Data()</code> may never compare equal to an instance returned by
+<code>get_parameters</code> even if all attributes are set to be equal. Usually it is
+best to avoid creating an instance from scratch except in special
+situations such as testing. Always obtain an instance from
+<code>get_parameters</code>.</p>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="bh_spc.spcm.Data.as_dict" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">as_dict</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return a dictionary containing the fields and values.</p>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>dict</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Every field and its value.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="bh_spc.spcm.Data.diff_as_dict" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">diff_as_dict</span><span class="p">(</span><span class="n">other</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return a dictionary containing the fields and their values where they
+differ from the given other instance.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>other</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.Data" href="#bh_spc.spcm.Data">Data</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The instance to compare to.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>dict</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Every field that differs from <code>other</code> and its value in this
+instance where the value differs from the other instance.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="bh_spc.spcm.Data.diff_items" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">diff_items</span><span class="p">(</span><span class="n">other</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]]</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return an iterable yielding the fields and values where they differ
+from the given other instance, in fixed order.</p>
+<p>The order matches with the <code>ParID</code> enum members.</p>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="collections.abc.Iterable">Iterable</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>An iterable yielding the pair (name, value) for every field in this
+instance where the value differs from the other instance.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="bh_spc.spcm.Data.items" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">items</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]]</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return an iterable yielding the fields and values in fixed order.</p>
+<p>The order matches with the <code>ParID</code> enum members.</p>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="collections.abc.Iterable">Iterable</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>An iterable yielding the pair (name, value) for every field.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bh_spc.spcm.EEPData" class="doc doc-heading">
+          <code>EEPData</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Information read from an SPC modules non-volatile memory.</p>
+<p>Wraps the SPCM DLL <code>SPC_EEP_Data</code> struct. Values of this type are
+returned by <code>get_eeprom_data</code>.</p>
+
+
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code><span title="bh_spc.spcm.EEPData.module_type">module_type</span></code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The module type as a string, such as <code>"SPC-180NX"</code> (read-only).</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code><span title="bh_spc.spcm.EEPData.serial_no">serial_no</span></code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The serial number (read-only).</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code><span title="bh_spc.spcm.EEPData.date">date</span></code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Production date, such as <code>"2024-03-26"</code> (read-only).</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code><span title="bh_spc.spcm.EEPData.adj_para">adj_para</span></code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.AdjustPara" href="#bh_spc.spcm.AdjustPara">AdjustPara</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Adjustment parameters (read-only).</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="bh_spc.spcm.EEPData.as_dict" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">as_dict</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return a dictionary containing the fields and values.</p>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>dict</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Every field and its value.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="bh_spc.spcm.EEPData.items" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">items</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return an iterable yielding the fields and values in fixed order.</p>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="collections.abc.Iterable">Iterable</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>An iterable yielding the pair (name, value) for every field.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bh_spc.spcm.ErrorEnum" class="doc doc-heading">
+          <code>ErrorEnum</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code>enum.Enum</code></p>
+
+  
+      <p>Enum of SPCM DLL error codes.</p>
+<p>The members' values are the SPCM DLL error codes (except for <code>UNKNOWN</code>).
+An additional member, <code>UNKNOWN</code>, which does not appear in the SPCM DLL,
+is used for any unknown error code that is encountered.</p>
+<p>Usually you will get a value of this type from the <code>enum</code> attribute of an
+<code>SPCMError</code> exception.</p>
+
+
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">ErrorEnum</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">get_error_string</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+<span class="go">0 NONE No error</span>
+<span class="go">-1 OPEN_FILE Can&#39;t open file</span>
+<span class="go">...</span>
+<span class="go">-32769 UNKNOWN Unknown SPCM error</span>
+</code></pre></div>
+    <p>Print a list of all enum members and the corresponding error message.</p>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>SPCMError : Exception class for SPCM DLL errors.</p>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bh_spc.spcm.FIFOInitVars" class="doc doc-heading">
+          <code>FIFOInitVars</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Dataclass aggregating the return values of <code>get_fifo_init_vars</code>.</p>
+
+
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code><span title="bh_spc.spcm.FIFOInitVars.fifo_type">fifo_type</span></code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.FIFOType" href="#bh_spc.spcm.FIFOType">FIFOType</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>FIFO data format.</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code><span title="bh_spc.spcm.FIFOInitVars.stream_type">stream_type</span></code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.StreamType" href="#bh_spc.spcm.StreamType">StreamType</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Stream properties.</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code><span title="bh_spc.spcm.FIFOInitVars.mt_clock">mt_clock</span></code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Macrotime clock units in units of 0.1 ns (or 1 fs in the case of
+DPC-230).</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code><span title="bh_spc.spcm.FIFOInitVars.spc_header">spc_header</span></code></td>
+          <td>
+                <code><span title="array.array">array</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>4-byte .spc file header. In the case of SPC-600/630 FIFO-48 format, two
+zero bytes should be appended to form the 6-byte file header.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bh_spc.spcm.FIFOType" class="doc doc-heading">
+          <code>FIFOType</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code>enum.Enum</code></p>
+
+  
+      <p>Enum of FIFO data formats.</p>
+<p>Values of this type are returned by <code>get_fifo_init_vars</code> as an attribute of
+<code>FIFOInitVars</code>.</p>
+
+
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">FIFOType</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+<span class="go">SPC_600_48BIT 2</span>
+<span class="go">SPC_600_32BIT 3</span>
+<span class="go">SPC_130 4</span>
+<span class="go">SPC_830 5</span>
+<span class="go">SPC_140 6</span>
+<span class="go">SPC_150 7</span>
+<span class="go">DPC_230 8</span>
+<span class="go">IMAGE 9</span>
+<span class="go">TDC 11</span>
+<span class="go">TDC_ABS 12</span>
+<span class="go">UNKNOWN 0</span>
+</code></pre></div>
+    <p>Print a table of all enum members.</p>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bh_spc.spcm.InUseStatus" class="doc doc-heading">
+          <code>InUseStatus</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code>enum.Enum</code></p>
+
+  
+      <p>Enum representing whether an SPC module is in use.</p>
+<p>Possible values are <code>NOT_IN_USE</code> (0), <code>IN_USE_HERE</code> (1), and
+<code>IN_USE_ELSEWHERE</code> (-1), "elsewhere" meaning by another program or process.</p>
+<p>Values of this type are returned (as an attribute of <code>ModInfo</code>) by
+<code>get_module_info</code>.</p>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bh_spc.spcm.InitStatus" class="doc doc-heading">
+          <code>InitStatus</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code>enum.Enum</code></p>
+
+  
+      <p>Enum for the initialization status of an SPC module.</p>
+<p>Values of this type are returned by <code>get_init_status</code> and (as an attribute
+of <code>ModInfo</code>) by <code>get_module_info</code>.</p>
+
+
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code><span title="bh_spc.spcm.InitStatus.message">message</span></code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Human-readable message string</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">InitStatus</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+<span class="go">OK 0 Initialized</span>
+<span class="go">NOT_DONE -1 Initialization not requested</span>
+<span class="go">...</span>
+<span class="go">XILINX_ERR -100 FPGA configuration error</span>
+</code></pre></div>
+    <p>Print a table of all the enum members and corresponding messages.</p>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The member <code>XILINX_ERR</code> is used for all possible Xilinx (FPGA
+configuration) errors (-100 through -199) returned by SPCM DLL functions.</p>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bh_spc.spcm.MeasurementState" class="doc doc-heading">
+          <code>MeasurementState</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code>enum.Flag</code></p>
+
+  
+      <p>Flag enum for measurement state.</p>
+<p>Values of this type are returned by <code>test_state</code>.</p>
+<p>For the sake of readability, the enum members are named differently from
+the SPCM DLL. See the example below for how to view the correspondence.</p>
+
+
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">MeasurementState</span><span class="o">.</span><span class="n">__members__</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">e</span> <span class="o">=</span> <span class="n">MeasurementState</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+<span class="go">STOPPED_ON_OVERFLOW 1</span>
+<span class="go">OVERFLOW 2</span>
+<span class="go">...</span>
+</code></pre></div>
+    <p>Print a table of all enum members, including aliases.</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">MeasurementState</span><span class="o">.</span><span class="n">__members__</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">e</span> <span class="o">=</span> <span class="n">MeasurementState</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">measurement_state_bh_name</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="si">:</span><span class="s2">16</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">value</span><span class="si">:</span><span class="s2"> 6</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="go">SPC_OVERFL            1 STOPPED_ON_OVERFLOW</span>
+<span class="go">SPC_OVERFLOW          2 OVERFLOW</span>
+<span class="go">SPC_TIME_OVER         4 STOPPED_ON_COLLECT_TIME</span>
+<span class="go">SPC_COLTIM_OVER       8 COLLECT_TIME_ELAPSED</span>
+<span class="go">SPC_CMD_STOP         16 STOPPED_ON_COMMAND</span>
+<span class="go">SPC_REPTIM_OVER      32 REPEAT_TIME_ELAPSED</span>
+<span class="go">SPC_ARMED           128 ARMED</span>
+<span class="go">SPC_COLTIM_2OVER    256 COLLECT_TIME_ELAPSED_2ND_TIME</span>
+<span class="go">SPC_REPTIM_2OVER    512 REPEAT_TIME_ELAPSED_2ND_TIME</span>
+<span class="go">SPC_FOVFL          1024 FIFO_OVERFLOW</span>
+<span class="go">SPC_FEMPTY         2048 FIFO_EMPTY</span>
+<span class="go">SPC_WAIT_FR        8192 WAITING_FOR_FRAME</span>
+<span class="go">SPC_MEASURE          64 MEASUREMENT_ACTIVE</span>
+<span class="go">SPC_FOVFL          1024 FIFO_OVERFLOW</span>
+<span class="go">SPC_FEMPTY         2048 FIFO_EMPTY</span>
+<span class="go">SPC_WAIT_TRG       4096 WAITING_FOR_TRIGGER</span>
+<span class="go">SPC_HFILL_NRDY    32768 HARDWARE_FILL_NOT_READY</span>
+<span class="go">SPC_SEQ_STOP      16384 STOPPED_BY_SEQUENCER</span>
+<span class="go">SPC_WAIT_FR        8192 WAITING_FOR_FRAME</span>
+<span class="go">SPC_MEASURE          64 MEASUREMENT_ACTIVE</span>
+<span class="go">SPC_ARMED           128 ARMED</span>
+<span class="go">SPC_COLTIM_OVER       8 COLLECT_TIME_ELAPSED</span>
+<span class="go">SPC_COLTIM_2OVER    256 COLLECT_TIME_ELAPSED_2ND_TIME</span>
+<span class="go">SPC_FOVFL          1024 FIFO_OVERFLOW</span>
+<span class="go">SPC_SEQ_STOP      16384 STOPPED_BY_SEQUENCER</span>
+<span class="go">SPC_REPTIM_OVER      32 REPEAT_TIME_ELAPSED</span>
+<span class="go">SPC_REPTIM_2OVER    512 REPEAT_TIME_ELAPSED_2ND_TIME</span>
+<span class="go">SPC_FEMPTY         2048 FIFO_EMPTY</span>
+</code></pre></div>
+    <p>Print the correspondence from SPCM DLL names to pybhspc names.</p>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>measurement_state_bh_name</p>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bh_spc.spcm.ModInfo" class="doc doc-heading">
+          <code>ModInfo</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>SPC module information.</p>
+<p>Wraps the SPCM DLL <code>SPCModInfo</code> struct. Values of this type are returned
+by <code>get_module_info</code>.</p>
+
+
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code><span title="bh_spc.spcm.ModInfo.module_type">module_type</span></code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.ModuleType" href="#bh_spc.spcm.ModuleType">ModuleType</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The module type (read-only).</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code><span title="bh_spc.spcm.ModInfo.bus_number">bus_number</span></code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The PCI bus number (read-only).</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code><span title="bh_spc.spcm.ModInfo.slot_number">slot_number</span></code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The PCI slot number (read-only).</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code><span title="bh_spc.spcm.ModInfo.in_use">in_use</span></code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.InUseStatus" href="#bh_spc.spcm.InUseStatus">InUseStatus</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Whether the module is in use (read-only).</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code><span title="bh_spc.spcm.ModInfo.init">init</span></code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.InitStatus" href="#bh_spc.spcm.InitStatus">InitStatus</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Whether the module is initialized, and the reason why if not
+(read-only).</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="bh_spc.spcm.ModInfo.as_dict" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">as_dict</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return a dictionary containing the fields and values.</p>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>dict</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Every field and its value.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="bh_spc.spcm.ModInfo.items" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">items</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return an iterable yielding the fields and values in fixed order.</p>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="collections.abc.Iterable">Iterable</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>An iterable yielding the pair (name, value) for every field.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bh_spc.spcm.ModuleType" class="doc doc-heading">
+          <code>ModuleType</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code>enum.Enum</code></p>
+
+  
+      <p>Enum for the module type (model number) of an SPC module.</p>
+<p>Values of this type are returned by <code>test_id</code> and (as an attribute of
+<code>ModInfo</code>) by <code>get_module_info</code>.</p>
+<p>Not to be confused with <code>DLLOperationMode</code>, which has similar (but slightly
+different) values.</p>
+
+
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">ModuleType</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+<span class="go">SPC_600 600</span>
+<span class="go">SPC_630 630</span>
+<span class="go">...</span>
+<span class="go">SPC_150NX_OR_150NXX 152</span>
+<span class="go">...</span>
+</code></pre></div>
+    <p>Print a table of all the enum members.</p>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bh_spc.spcm.ParID" class="doc doc-heading">
+          <code>ParID</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code>enum.Enum</code></p>
+
+  
+      <p>Enum of SPC parameter ids.</p>
+<p>The members' values are the SPCM DLL parameter ids. Members also have an
+attribute <code>type</code> which is either <code>int</code> or <code>float</code>.</p>
+<p>Values of this type are passed to <code>get_parameter</code> and <code>set_parameter</code>. The
+attributes of the <code>Data</code> class match the lowercased version of the enum
+member names.</p>
+<p>C language parameter types <code>short</code>, <code>unsigned short</code>, and <code>unsigned
+long</code> all map to Python <code>int</code>. C language <code>float</code> maps to Python
+<code>float</code>.</p>
+
+
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code><span title="bh_spc.spcm.ParID.type">type</span></code></td>
+          <td>
+                <code>type</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The parameter type: <code>int</code> or <code>float</code>.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">ParID</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="go">0 CFD_LIMIT_LOW float</span>
+<span class="go">1 CFD_LIMIT_HIGH float</span>
+<span class="go">...</span>
+<span class="go">27 MODE int</span>
+<span class="go">...</span>
+</code></pre></div>
+    <p>Print a list of all parameter ids, their names, and types.</p>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>Data : Aggregate object of all the parameters and their values.</p>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bh_spc.spcm.RateValues" class="doc doc-heading">
+          <code>RateValues</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Rate counter values.</p>
+<p>Wraps the SPCM DLL <code>rate_values</code> struct. Values of this type are returned
+by <code>read_rates</code>.</p>
+
+
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code><span title="bh_spc.spcm.RateValues.sync_rate">sync_rate</span></code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SYNC rate (counts/s, read-only).</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code><span title="bh_spc.spcm.RateValues.cfd_rate">cfd_rate</span></code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The CFD rate (counts/s, read-only).</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code><span title="bh_spc.spcm.RateValues.tac_rate">tac_rate</span></code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The TAC rate (counts/s, read-only).</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code><span title="bh_spc.spcm.RateValues.adc_rate">adc_rate</span></code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The ADC rate (counts/s, read-only).</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="bh_spc.spcm.RateValues.as_dict" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">as_dict</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return a dictionary containing the fields and values.</p>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>dict</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Every field and its value.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="bh_spc.spcm.RateValues.items" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">items</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return an iterable yielding the fields and values in fixed order.</p>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="collections.abc.Iterable">Iterable</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>An iterable yielding the pair (name, value) for every field.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bh_spc.spcm.SPCMError" class="doc doc-heading">
+          <code>SPCMError</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code>builtins.RuntimeError</code></p>
+
+  
+      <p>Exception raised when an SPCM function returns an error.</p>
+
+
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code><span title="bh_spc.spcm.SPCMError.enum">enum</span></code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.ErrorEnum" href="#bh_spc.spcm.ErrorEnum">ErrorEnum</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The error enum (read-only).</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code><span title="bh_spc.spcm.SPCMError.code">code</span></code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The raw error code, a negative value (read-only). This is usually
+redundant with the <code>enum</code> attribute but provided so that the code for
+an unknown (to pybhspc) error can be retrieved when <code>enum</code> is
+<code>ErrorEnum.UNKNOWN</code>.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>ErrorEnum : Enum of SPCM DLL error codes.</p>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bh_spc.spcm.StreamType" class="doc doc-heading">
+          <code>StreamType</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code>enum.Flag</code></p>
+
+  
+      <p>Flag enum for properties of SPCM DLL streams.</p>
+<p>Values of this type are returned by <code>get_fifo_init_vars</code> as an attribute of
+<code>FIFOInitVars</code>.</p>
+
+
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">StreamType</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+<span class="go">HAS_SPC_HEADER 1</span>
+<span class="go">HAS_MARKERS 512</span>
+<span class="go">RAW_DATA 1024</span>
+<span class="go">SPC_QC 2048</span>
+<span class="go">BUFFERED 4096</span>
+<span class="go">AUTOFREE_BUFFER 8192</span>
+<span class="go">RING_BUFFER 16384</span>
+<span class="go">DPC_TDC1_RAW_DATA 2</span>
+<span class="go">DPC_TDC2_RAW_DATA 4</span>
+<span class="go">DPC_TDC_TTL_RAW_DATA 8</span>
+<span class="go">DPC 256</span>
+</code></pre></div>
+    <p>Print a table of all flag members.</p>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>pybhspc does not support the SPCM DLL stream functions.</p>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bh_spc.spcm.SyncState" class="doc doc-heading">
+          <code>SyncState</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code>enum.Flag</code></p>
+
+  
+      <p>Flag enum for sync state.</p>
+<p>Values of this type are returned by <code>get_sync_state</code>.</p>
+<p>There are two flags: <code>SYNC_OK</code> (bit 0) and <code>SYNC_OVERLOAD</code> (bit 1). When
+the <code>SYNC_OVERLOAD</code> bit is set, the <code>SYNC_OK</code> bit is invalid.</p>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.clear_rates" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">clear_rates</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Initialize and clear the rate counters and start a count cycle.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.close" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">close</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Uninitialize the SPCM DLL.</p>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.get_actual_coltime" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_actual_coltime</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get the remaining time to the end of the measurement, taking dead time
+compensation into account.</p>
+<p>Under some conditions (e.g., in FIFO mode with STOP_ON_TIME disabled), the
+return value counts up similarly to <code>get_time_from_start</code>.</p>
+<p><code>test_state</code> must be called periodically for this function to work
+correctly during measurements that exceed 80 seconds.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>float</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Remaining or elapsed collection time, in seconds.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.get_adjust_parameters" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_adjust_parameters</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AdjustPara</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get adjustment parameters of an SPC module.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.AdjustPara" href="#bh_spc.spcm.AdjustPara">AdjustPara</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Adjustment parameters of the module.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.get_break_time" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_break_time</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get the time from measurement start to stop or pause.</p>
+<p>The return value may not be valid in FIFO mode (to be investigated).</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>float</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Duration of measurement in seconds.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.get_eeprom_data" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_eeprom_data</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EEPData</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get EEPROM data of an SPC module.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.EEPData" href="#bh_spc.spcm.EEPData">EEPData</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>EEPROM data of the module.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.get_error_string" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_error_string</span><span class="p">(</span><span class="n">error_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">ErrorEnum</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return the error message for the given SPCM error code.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>error_id</code></td>
+          <td>
+                <code>int or <a class="autorefs autorefs-internal" title="bh_spc.spcm.ErrorEnum" href="#bh_spc.spcm.ErrorEnum">ErrorEnum</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The error code</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The error message</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.get_fifo_init_vars" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_fifo_init_vars</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FIFOInitVars</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get format information on the currently set FIFO mode.</p>
+<p>The return value is only meaningful if the module is set to a FIFO mode.</p>
+<p>For SPC-600/630, the number of routing bits in the SPCHeader may always be
+zero (in both FIFO formats).</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.FIFOInitVars" href="#bh_spc.spcm.FIFOInitVars">FIFOInitVars</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The FIFO format information.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.get_fifo_usage" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_fifo_usage</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get the used fraction of the FIFO.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>float</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The fraction of the FIFO occupied (0.0 to 1.0).</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.get_init_status" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_init_status</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InitStatus</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get the initialization status of the given SPC module.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.InitStatus" href="#bh_spc.spcm.InitStatus">InitStatus</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Whether the module is initialized, or the reason why if not.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.get_mode" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_mode</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">DLLOperationMode</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get the operation mode of the SPCM DLL.</p>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.DLLOperationMode" href="#bh_spc.spcm.DLLOperationMode">DLLOperationMode</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The mode, either hardware or simulation of a module type.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Raises:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.SPCMError" href="#bh_spc.spcm.SPCMError">SPCMError</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If there was an error (e.g., if the DLL is not initialized).</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.get_module_info" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_module_info</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModInfo</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get information about an SPC module.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.ModInfo" href="#bh_spc.spcm.ModInfo">ModInfo</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Basic information about the module.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.get_parameter" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_parameter</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">par_id</span><span class="p">:</span> <span class="n">ParID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get one parameter's value.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>par_id</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.ParID" href="#bh_spc.spcm.ParID">ParID</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The parameter to read.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>float or int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The parameter value.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.get_parameters" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_parameters</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get all parameter values of an SPC module.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.Data" href="#bh_spc.spcm.Data">Data</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The parameter values.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.get_sync_state" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_sync_state</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SyncState</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get the state of the SYNC input.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.SyncState" href="#bh_spc.spcm.SyncState">SyncState</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Whether the SYNC signal is triggering and whether it is overloaded.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.get_time_from_start" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_time_from_start</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get the time since measurement start.</p>
+<p><code>test_state</code> must be called periodically for this function to work
+correctly during measurements that exceed 80 seconds.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>float</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Elapsed time since measurement start, in seconds.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.get_version" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_version</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get the FPGA version of an SPC module.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The FPGA version (4 hex digits).</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.init" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">init</span><span class="p">(</span><span class="n">ini_file</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Initialize the SPCM DLL and one or all of the available SPC modules.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>ini_file</code></td>
+          <td>
+                <code>bytes or str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Filename of the .ini file used to specify parameters.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Raises:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.SPCMError" href="#bh_spc.spcm.SPCMError">SPCMError</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If initialization fails or there were no available SPC modules.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.measurement_state_bh_name" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">measurement_state_bh_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Map <code>MeasurementState</code> enum member names to their SPCM DLL names.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>name</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The pybhspc <code>MeasurementState</code> enum member name.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The corresponding SPCM DLL constant name.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>MeasurementState</p>
+</details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.read_fifo" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">read_fifo</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Read data from a FIFO mode measurement.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>data</code></td>
+          <td>
+                <code>array_like</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The destination buffer for the data read. The object must implement the
+buffer protocol, be typed unsigned short (uint16), be 1-dimentional,
+and be C-contiguous. For example, <code>np.empty(65536, dtype=np.uint16)</code>.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The number of 16-bit words read. Thus, if the return value is <code>r</code>,
+<code>data[:r]</code> contains valid data.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.read_fifo_to_array" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">read_fifo_to_array</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_words</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">array</span><span class="o">.</span><span class="n">array</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Convenience wrapper around <code>read_fifo</code> that allocates an array for the
+output.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>max_words</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Maximum number of 16-bit words to read.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>array.array of unsigned short</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The FIFO data read. The length of the array is between 0 and
+<code>max_words</code>.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.read_parameters_from_inifile" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">read_parameters_from_inifile</span><span class="p">(</span><span class="n">inifile</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Read an .ini file in the spcm.ini format.</p>
+<p>The .ini file must contain a first-line comment starting with (whitespace
+followed by) <code>SPCM</code>, an <code>[spc_base]</code> section, and an <code>[spc_module]</code>
+section. The sections may be empty but the section headers need to be
+terminated with a newline.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>inifile</code></td>
+          <td>
+                <code>bytes or str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Filename of the .ini file.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.Data" href="#bh_spc.spcm.Data">Data</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The parameters read from the .ini file.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.read_rates" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">read_rates</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RateValues</span> <span class="o">|</span> <span class="kc">None</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Read the rate counters and start a new count cycle.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.RateValues" href="#bh_spc.spcm.RateValues">RateValues</a> or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The rate counts, or None if a count cycle has not yet completed.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.save_parameters_to_inifile" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">save_parameters_to_inifile</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">dest_inifile</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">source_inifile</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">with_comments</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Save parameters to an .ini file in the spcm.ini format.</p>
+<p>A source .ini file is required for this function to work, optionally given
+by <code>source_inifile</code>. If not given, the filename previously passed to <code>init</code>
+is used. Either way, this file must exist and must contain a first-line
+comment starting with (whitespace followed by) <code>SPCM</code>, an <code>[spc_base]</code>
+section, and an <code>[spc_module]</code> section. The sections may be empty but the
+section headers need to be terminated with a newline.</p>
+<p>When <code>with_comments</code> is True, it appears that there need to be at least 2
+fields set in the <code>[spc_module]</code> section of the <code>source_inifile</code>. The
+precise requirements have not been determined.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>data</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.Data" href="#bh_spc.spcm.Data">Data</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The parameters to save.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>dest_inifile</code></td>
+          <td>
+                <code>bytes or str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Filename of the .ini file to write.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>source_inifile</code></td>
+          <td>
+                <code>bytes or str or None</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Filename of an .ini file from which to copy initial comment lines and
+the <code>[spc_base]</code> section. If None, the .ini file passed to <code>init()</code>
+is used.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>with_comments</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, also copy parameter comments from <code>source_inifile</code>.</p>
+            </div>
+          </td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.set_mode" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">set_mode</span><span class="p">(</span><span class="n">mode</span><span class="p">:</span> <span class="n">DLLOperationMode</span><span class="p">,</span> <span class="n">force_use</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">use</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Set the operation mode of the SPCM DLL and activate or deactivate each of
+the SPC modules.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mode</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.DLLOperationMode" href="#bh_spc.spcm.DLLOperationMode">DLLOperationMode</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The operation mode specifying hardware or simulation module type.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>force_use</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If true, try to obtain control of the requested modules even if they
+are in use by another process.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>use</code></td>
+          <td>
+                <code>sequence of bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Which SPC modules to activate. Currently up to 8 are supported. If
+fewer are given, the remaining modules will be deactivated.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Raises:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.SPCMError" href="#bh_spc.spcm.SPCMError">SPCMError</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If there was an error or if no modules were activated.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.set_parameter" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">set_parameter</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">par_id</span><span class="p">:</span> <span class="n">ParID</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Set one parameter's value.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>par_id</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.ParID" href="#bh_spc.spcm.ParID">ParID</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The parameter to write.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>value</code></td>
+          <td>
+                <code>float or int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The parameter value.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.set_parameters" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">set_parameters</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Set all parameter values of an SPC module.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>data</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.Data" href="#bh_spc.spcm.Data">Data</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The parameter values.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.start_measurement" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">start_measurement</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Start a measurement.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.stop_measurement" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">stop_measurement</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Stop any ongoing measurement.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.test_id" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">test_id</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModuleType</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return the module type (model number) of the given SPC module.</p>
+<p>The return value is not accurate if called before <code>init</code>.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.ModuleType" href="#bh_spc.spcm.ModuleType">ModuleType</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The module type enum.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="bh_spc.spcm.test_state" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">test_state</span><span class="p">(</span><span class="n">mod_no</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MeasurementState</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-method descriptor"><code>method descriptor</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get various status flags for the last-started measurement.</p>
+<p>This function should be called periodically during a measurement in order
+to detect when the measurement is stopped (among other things).</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mod_no</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SPC module index.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="bh_spc.spcm.MeasurementState" href="#bh_spc.spcm.MeasurementState">MeasurementState</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Flags indicating timer and FIFO states, reason for measurement stop,
+etc.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.bd41221c.min.js"></script>
+      
+    
+  </body>
+</html>
