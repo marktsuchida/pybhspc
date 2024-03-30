@@ -92,17 +92,20 @@ for par, val in params.items():
 # Note that not all of these parameters have meaning in every SPC model, and
 # many don't apply at all to FIFO mode.
 #
-# In an actual FIFO acquisition with hardware, you would probably want to
-# adjust some or all of these: `cfd_*`, `sync_*`, `tac_*`, `ext_latch_delay`,
-# `dither_range`, `routing_mode`, `trigger`, and `macro_time_clk`. See the BH
-# documentation and TCSPC Handbook for details.
-#
-# Just to demonstrate, let's set the dither range to 1/16, which is encoded as
-# 128:
+# In an actual FIFO acquisition with hardware, you will almost certainly need
+# to adjust some or all of these: `cfd_*`, `sync_*`, `tac_*`,
+# `ext_latch_delay`, `collect_time`, `stop_on_time`, `dither_range`,
+# `routing_mode`, `trigger`, and `macro_time_clk`. See the BH documentation and
+# TCSPC Handbook for details.
 
 # %%
-params.dither_range = 128
-# Could also set other parameter values here.
+# For this demonstration, we will turn off `stop_on_time`, mostly because it
+# does not appear to work in simulation mode. By turning it off, running this
+# example on real hardware should behave the same way.
+params.stop_on_time = 0
+
+# (Set other parameters here!)
+
 spcm.set_parameters(mod_no, params)
 
 # %% [md]
