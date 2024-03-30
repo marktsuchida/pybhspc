@@ -1496,10 +1496,10 @@ class MeasurementState(enum.Flag):
 
     Print a table of all enum members, including aliases.
 
-    >>> for n in MeasurementState.__members__:
-    ...     e = MeasurementState[n]
+    >>> for name in MeasurementState.__members__:
+    ...     e = MeasurementState[name]
     ...     print(
-    ...         f"{measurement_state_bh_name(e.name):16} {e.value: 6} {e.name}"
+    ...         f"{measurement_state_bh_name(name):16} {e.value: 6} {name}"
     ...     )
     SPC_OVERFL            1 STOPPED_ON_OVERFLOW
     SPC_OVERFLOW          2 OVERFLOW
@@ -1514,21 +1514,21 @@ class MeasurementState(enum.Flag):
     SPC_FEMPTY         2048 FIFO_EMPTY
     SPC_WAIT_FR        8192 WAITING_FOR_FRAME
     SPC_MEASURE          64 MEASUREMENT_ACTIVE
-    SPC_FOVFL          1024 FIFO_OVERFLOW
-    SPC_FEMPTY         2048 FIFO_EMPTY
+    SPC_SCRDY          1024 SCAN_READY
+    SPC_FBRDY          2048 SCAN_FLOWBACK_READY
     SPC_WAIT_TRG       4096 WAITING_FOR_TRIGGER
     SPC_HFILL_NRDY    32768 HARDWARE_FILL_NOT_READY
     SPC_SEQ_STOP      16384 STOPPED_BY_SEQUENCER
-    SPC_WAIT_FR        8192 WAITING_FOR_FRAME
-    SPC_MEASURE          64 MEASUREMENT_ACTIVE
-    SPC_ARMED           128 ARMED
-    SPC_COLTIM_OVER       8 COLLECT_TIME_ELAPSED
-    SPC_COLTIM_2OVER    256 COLLECT_TIME_ELAPSED_2ND_TIME
-    SPC_FOVFL          1024 FIFO_OVERFLOW
-    SPC_SEQ_STOP      16384 STOPPED_BY_SEQUENCER
-    SPC_REPTIM_OVER      32 REPEAT_TIME_ELAPSED
-    SPC_REPTIM_2OVER    512 REPEAT_TIME_ELAPSED_2ND_TIME
-    SPC_FEMPTY         2048 FIFO_EMPTY
+    SPC_SEQ_GAP150     8192 SEQUENCER_GAP_150
+    SPC_SEQ_GAP          64 SEQUENCER_GAP
+    SPC_ARMED1          128 TDC1_ARMED
+    SPC_CTIM_OVER1        8 TDC1_COLLECT_TIME_ELAPSED
+    SPC_FEMPTY1         256 TDC1_FIFO_EMPTY
+    SPC_FOVFL1         1024 TDC1_FIFO_OVERFLOW
+    SPC_ARMED2        16384 TDC2_ARMED
+    SPC_CTIM_OVER2       32 TDC2_COLLECT_TIME_ELAPSED
+    SPC_FEMPTY2         512 TDC2_FIFO_EMPTY
+    SPC_FOVFL2         2048 TDC2_FIFO_OVERFLOW
 
     Print the correspondence from SPCM DLL names to pybhspc names.
 
