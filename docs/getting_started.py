@@ -187,8 +187,8 @@ len(photons)
 max_12bit = (1 << 12) - 1  # 4095
 microtimes = np.bitwise_and(np.right_shift(photons, 16), max_12bit)
 
-# Reverse the macrotimes by subtracting from the max value, because microtime
-# is measured from photon to SYNC, not SYNC to photon.
+# Reverse the microtimes by subtracting from the max value, because the raw
+# microtime is measured from photon to SYNC, not SYNC to photon.
 microtimes = max_12bit - microtimes
 
 h = plt.hist(microtimes, bins=64)
