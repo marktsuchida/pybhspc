@@ -12,6 +12,7 @@ nav:
   - Development: development.md
 watch:
   - src
+repo_url: https://github.com/marktsuchida/pybhspc
 theme:
   name: material
 plugins:
