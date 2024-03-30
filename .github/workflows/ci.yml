@@ -53,7 +53,8 @@ jobs:
           Set-ItemProperty -Path HKCU:\SOFTWARE\BH\SPCM -Name FilePath `
               -Value "$Env:GITHUB_WORKSPACE\spcm-dll\spcm_64.exe"
           Get-ItemProperty -Path HKCU:\SOFTWARE\BH\SPCM -Name FilePath
-      - run: |
+      - name: Build wheels
+        run: |
           cd $Env:GITHUB_WORKSPACE\pybhspc
           nox -s build
       - uses: actions/upload-artifact@v4
