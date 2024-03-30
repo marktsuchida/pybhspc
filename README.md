@@ -6,11 +6,9 @@ SPDX-License-Identifier: MIT
 
 # pybhspc: Control Becker & Hickl SPC modules from Python
 
-<!-- (uncomment when ready)
 ```sh
 pip install pybhspc
 ```
--->
 
 ```py
 import bh_spc
