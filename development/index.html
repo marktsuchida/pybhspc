@@ -644,12 +644,15 @@ Cython source (<code>.pyx</code>) and/or the built extension modules; there does
 appear to be a stable, ready-made, and fully automated way to do this.</p>
 <h2 id="building-and-testing">Building and testing</h2>
 <h3 id="requirements">Requirements</h3>
-<ul>
-<li>Windows, 64-bit Intel.</li>
-<li>Python 3.10+.</li>
-<li>Becker &amp; Hickl TCSPC Package with SPCM DLL 5.1.0 (Dec 2022) or later (note
-  that the required version is greater than at run time).</li>
-</ul>
+<p>Windows 10+, 64-bit Intel.</p>
+<p>Visual Studio 2017+ (latest version recommended) with <code>C++ Desktop Development</code>
+workload. Alternatively, Build Tools for Visual Studio (2017+) should also
+work, but this has not been tested.</p>
+<p>Python 3.10+.</p>
+<p>Becker &amp; Hickl TCSPC Package with SPCM DLL 5.2.0 (Sep 2023, TCSPC Package 7.0)
+or later (note that a more recent version is required than at run time). SPCM
+DLL 5.1.0 (Dec 2022) is the theoretical minimum requirement, but its header
+file <code>Spcm_def.h</code> may need to have trailing whitespace removed to compile.</p>
 <h3 id="pre-commit-hook">Pre-commit hook</h3>
 <p>Activate the <a href="https://pre-commit.com/">pre-commit</a> hook with <code>pre-commit
 install</code>.</p>
