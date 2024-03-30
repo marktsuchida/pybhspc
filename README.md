@@ -17,6 +17,8 @@ import bh_spc
 from bh_spc import spcm
 ```
 
+[Full Documentation](https://marktsuchida.github.io/pybhspc/)
+
 <!-- begin-intro-docs -->
 
 ## Overview
@@ -103,3 +105,9 @@ copy it or set any environment variables.
 The pybhspc package is distributed under the MIT license.
 
 <!-- end-intro-docs -->
+
+## Getting Started
+
+Check out the
+[example](https://marktsuchida.github.io/pybhspc/getting_started/) in the
+documentation.
