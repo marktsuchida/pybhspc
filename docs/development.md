@@ -44,10 +44,18 @@ appear to be a stable, ready-made, and fully automated way to do this.
 
 ### Requirements
 
-- Windows, 64-bit Intel.
-- Python 3.10+.
-- Becker & Hickl TCSPC Package with SPCM DLL 5.1.0 (Dec 2022) or later (note
-  that the required version is greater than at run time).
+Windows 10+, 64-bit Intel.
+
+Visual Studio 2017+ (latest version recommended) with `C++ Desktop Development`
+workload. Alternatively, Build Tools for Visual Studio (2017+) should also
+work, but this has not been tested.
+
+Python 3.10+.
+
+Becker & Hickl TCSPC Package with SPCM DLL 5.2.0 (Sep 2023, TCSPC Package 7.0)
+or later (note that a more recent version is required than at run time). SPCM
+DLL 5.1.0 (Dec 2022) is the theoretical minimum requirement, but its header
+file `Spcm_def.h` may need to have trailing whitespace removed to compile.
 
 ### Pre-commit hook
 

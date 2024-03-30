@@ -84,19 +84,19 @@ scope for the pybhspc package (but BH
 
 ## Software Requirements
 
-Windows (64-bit Intel) only.
+Windows 10+ (64-bit Intel).
 
 Python 3.10+ (64-bit).
 
 The Becker & Hickl SPCM DLL (part of their [TCSPC
 Package](https://www.becker-hickl.com/products/tcspc-package/) installer) must
 be installed on the system. The most recent version is usually recommended;
-absolute minimum is version 4.0 (Apr 2014; but versions below 5.2 have not been
+absolute minimum is version 4.0 (Apr 2014; but versions below 5.1 have not been
 tested). Note that these are version numbers of the SPCM DLL, not of the TCSPC
 Package or the SPCM application.
 
-The SPCM DLL is usually found in its installed location; there is no need to
-copy it or set any environment variables.
+The SPCM DLL is automatically found at its installed location; there is no need
+to copy it or set any environment variables.
 
 ## License
 
