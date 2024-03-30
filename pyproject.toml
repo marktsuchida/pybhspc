@@ -2,6 +2,14 @@
 # Copyright 2024 Board of Regents of the University of Wisconsin System
 # SPDX-License-Identifier: MIT
 
+[build-system]
+requires = [
+    "Cython",
+    "setuptools >= 64",
+    "setuptools_scm >= 8",
+]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "pybhspc"
 description = "Control Becker & Hickl SPC modules from Python"
@@ -19,14 +27,6 @@ readme = "README.md"
 dynamic = ["version"]
 requires-python = ">= 3.10"
 dependencies = []
-
-[build-system]
-requires = [
-    "Cython",
-    "setuptools >= 64",
-    "setuptools_scm >= 8",
-]
-build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
 # All development tools:
@@ -49,6 +49,11 @@ dev = [
 testing = [
     "pytest >= 8.0",
 ]
+
+[project.urls]
+Documentation = "https://marktsuchida.github.io/pybhspc/"
+Repository = "https://github.com/marktsuchida/pybhspc"
+Issues = "https://github.com/marktsuchida/pybhspc/issues"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
