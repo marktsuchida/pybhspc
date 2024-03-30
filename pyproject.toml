@@ -53,7 +53,6 @@ testing = [
 [project.urls]
 Documentation = "https://marktsuchida.github.io/pybhspc/"
 Repository = "https://github.com/marktsuchida/pybhspc"
-Issues = "https://github.com/marktsuchida/pybhspc/issues"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
