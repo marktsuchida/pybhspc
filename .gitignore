@@ -10,6 +10,7 @@
 /site/
 *.egg-info/
 __pycache__/
+.nox/
 
 # Generated/built
 /src/bh_spc/*.c
