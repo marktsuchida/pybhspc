@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.15">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.16">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.7e359304.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.bcfcd587.min.css">
       
       
 
@@ -44,6 +44,8 @@
     
     
       <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
     
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -1614,9 +1616,9 @@ SPDX-License-Identifier: MIT
 <a id="bh_spc.spcm"></a>
   <div class="doc doc-contents first">
   
-      <p>Low-level wrappers of the SPCM DLL functions and data structures.</p>
+      <p>Low-level wrappers of SPCM-DLL functions and data structures.</p>
 <p>This extension module aims to provide straightforward Python wrappers for the
-C functions, structs, and enums in the SPCM DLL. Currently, only the functions
+C functions, structs, and enums in SPCM-DLL. Currently, only the functions
 required to acquire data in FIFO mode are wrapped (excluding those that are
 specific to the DPC-230).</p>
 <p>Error codes returned by functions are converted to exceptions (SPCMError).
@@ -1630,7 +1632,7 @@ this module can be used to experiment with the C API and discover its behavior.
 A higher-level interface that guides the user toward correct usage can be built
 on top of this module.</p>
 <p>As such, to fully understand the correct usage of these functions and data
-types, you will need to refer to the Becker &amp; Hickl SPCM DLL documentation.</p>
+types, you will need to refer to the Becker &amp; Hickl SPCM-DLL documentation.</p>
 
   
 
@@ -1658,7 +1660,7 @@ types, you will need to refer to the Becker &amp; Hickl SPCM DLL documentation.<
 
   
       <p>Adjustment parameters (wraps the <code>SPC_Adjust_Para</code> struct).</p>
-<p>Wraps the SPCM DLL <code>SPC_Adjust_Para</code> struct. Values of this type are
+<p>Wraps the SPCM-DLL <code>SPC_Adjust_Para</code> struct. Values of this type are
 returned by <code>get_adjust_parameters</code> and (as an attribute of <code>EEPData</code>) by
 <code>get_eeprom_data</code>.</p>
 <p>Instances have the attributes corresponding to the C struct fields. All are
@@ -1796,7 +1798,7 @@ read-only.</p>
             Bases: <code>enum.Enum</code></p>
 
   
-      <p>Enum for the operation mode of the SPCM DLL.</p>
+      <p>Enum for the operation mode of SPCM-DLL.</p>
 <p>Values of this type are returned by <code>get_mode</code> and are given to
 <code>set_mode</code>.</p>
 <p>Not to be confused with <code>ModuleType</code>, which has similar (but slightly
@@ -1853,7 +1855,7 @@ different) values.</p>
 
   
       <p>The collection of values for all SPC parameters.</p>
-<p>Wraps the SPCM DLL <code>SPCdata</code> struct. Values of this type are returned by
+<p>Wraps the SPCM-DLL <code>SPCdata</code> struct. Values of this type are returned by
 <code>get_parameters</code> and are passed to <code>set_parameters</code>.</p>
 <p>Instances have attributes that match the <code>ParID</code> enum member names, but in
 lowercase. Attribute types match the <code>type</code> attribute of the corresponding
@@ -2156,7 +2158,7 @@ instance where the value differs from the other instance.</p>
 
   
       <p>Information read from an SPC modules non-volatile memory.</p>
-<p>Wraps the SPCM DLL <code>SPC_EEP_Data</code> struct. Values of this type are
+<p>Wraps the SPCM-DLL <code>SPC_EEP_Data</code> struct. Values of this type are
 returned by <code>get_eeprom_data</code>.</p>
 
 
@@ -2350,10 +2352,10 @@ returned by <code>get_eeprom_data</code>.</p>
             Bases: <code>enum.Enum</code></p>
 
   
-      <p>Enum of SPCM DLL error codes.</p>
-<p>The members' values are the SPCM DLL error codes (except for <code>UNKNOWN</code>).
-An additional member, <code>UNKNOWN</code>, which does not appear in the SPCM DLL,
-is used for any unknown error code that is encountered.</p>
+      <p>Enum of SPCM-DLL error codes.</p>
+<p>The members' values are SPCM-DLL error codes (except for <code>UNKNOWN</code>). An
+additional member, <code>UNKNOWN</code>, which does not appear in SPCM-DLL, is used
+for any unknown error code that is encountered.</p>
 <p>Usually you will get a value of this type from the <code>enum</code> attribute of an
 <code>SPCMError</code> exception.</p>
 
@@ -2371,7 +2373,7 @@ is used for any unknown error code that is encountered.</p>
 
 <details class="see-also" open>
   <summary>See Also</summary>
-  <p>SPCMError : Exception class for SPCM DLL errors.</p>
+  <p>SPCMError : Exception class for SPCM-DLL errors.</p>
 </details>
 
   
@@ -2660,7 +2662,7 @@ of <code>ModInfo</code>) by <code>get_module_info</code>.</p>
 <details class="note" open>
   <summary>Notes</summary>
   <p>The member <code>XILINX_ERR</code> is used for all possible Xilinx (FPGA
-configuration) errors (-100 through -199) returned by SPCM DLL functions.</p>
+configuration) errors (-100 through -199) returned by SPCM-DLL functions.</p>
 </details>
 
   
@@ -2703,7 +2705,7 @@ configuration) errors (-100 through -199) returned by SPCM DLL functions.</p>
       <p>Flag enum for measurement state.</p>
 <p>Values of this type are returned by <code>test_state</code>.</p>
 <p>For the sake of readability, the enum members are named differently from
-the SPCM DLL. See the example below for how to view the correspondence.</p>
+SPCM-DLL. See the example below for how to view the correspondence.</p>
 
 
 
@@ -2750,7 +2752,7 @@ the SPCM DLL. See the example below for how to view the correspondence.</p>
 <span class="go">SPC_FEMPTY2         512 TDC2_FIFO_EMPTY</span>
 <span class="go">SPC_FOVFL2         2048 TDC2_FIFO_OVERFLOW</span>
 </code></pre></div>
-    <p>Print the correspondence from SPCM DLL names to pybhspc names.</p>
+    <p>Print the correspondence from SPCM-DLL names to pybhspc names.</p>
 
 <details class="see-also" open>
   <summary>See Also</summary>
@@ -2793,7 +2795,7 @@ the SPCM DLL. See the example below for how to view the correspondence.</p>
 
   
       <p>SPC module information.</p>
-<p>Wraps the SPCM DLL <code>SPCModInfo</code> struct. Values of this type are returned
+<p>Wraps the SPCM-DLL <code>SPCModInfo</code> struct. Values of this type are returned
 by <code>get_module_info</code>.</p>
 
 
@@ -3057,7 +3059,7 @@ different) values.</p>
 
   
       <p>Enum of SPC parameter ids.</p>
-<p>The members' values are the SPCM DLL parameter ids. Members also have an
+<p>The members' values are the SPCM-DLL parameter ids. Members also have an
 attribute <code>type</code> which is either <code>int</code> or <code>float</code>.</p>
 <p>Values of this type are passed to <code>get_parameter</code> and <code>set_parameter</code>. The
 attributes of the <code>Data</code> class match the lowercased version of the enum
@@ -3146,7 +3148,7 @@ long</code> all map to Python <code>int</code>. C language <code>float</code> ma
 
   
       <p>Rate counter values.</p>
-<p>Wraps the SPCM DLL <code>rate_values</code> struct. Values of this type are returned
+<p>Wraps the SPCM-DLL <code>rate_values</code> struct. Values of this type are returned
 by <code>read_rates</code>.</p>
 
 
@@ -3384,7 +3386,7 @@ an unknown (to pybhspc) error can be retrieved when <code>enum</code> is
 
 <details class="see-also" open>
   <summary>See Also</summary>
-  <p>ErrorEnum : Enum of SPCM DLL error codes.</p>
+  <p>ErrorEnum : Enum of SPCM-DLL error codes.</p>
 </details>
 
   
@@ -3424,7 +3426,7 @@ an unknown (to pybhspc) error can be retrieved when <code>enum</code> is
             Bases: <code>enum.Flag</code></p>
 
   
-      <p>Flag enum for properties of SPCM DLL streams.</p>
+      <p>Flag enum for properties of SPCM-DLL streams.</p>
 <p>Values of this type are returned by <code>get_fifo_init_vars</code> as an attribute of
 <code>FIFOInitVars</code>.</p>
 
@@ -3449,7 +3451,7 @@ an unknown (to pybhspc) error can be retrieved when <code>enum</code> is
 
 <details class="note" open>
   <summary>Notes</summary>
-  <p>pybhspc does not support the SPCM DLL stream functions.</p>
+  <p>pybhspc does not support SPCM-DLL stream functions.</p>
 </details>
 
   
@@ -3587,7 +3589,7 @@ the <code>SYNC_OVERLOAD</code> bit is set, the <code>SYNC_OK</code> bit is inval
 
   <div class="doc doc-contents ">
   
-      <p>Uninitialize the SPCM DLL.</p>
+      <p>Uninitialize SPCM-DLL.</p>
 
   </div>
 
@@ -4235,7 +4237,7 @@ zero (in both FIFO formats).</p>
 
   <div class="doc doc-contents ">
   
-      <p>Get the operation mode of the SPCM DLL.</p>
+      <p>Get the operation mode of SPCM-DLL.</p>
 
 
 
@@ -4278,7 +4280,7 @@ zero (in both FIFO formats).</p>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>If there was an error (e.g., if the DLL is not initialized).</p>
+              <p>If there was an error (e.g., if SPCM-DLL is not initialized).</p>
             </div>
           </td>
         </tr>
@@ -4784,7 +4786,7 @@ correctly during measurements that exceed 80 seconds.</p>
 
   <div class="doc doc-contents ">
   
-      <p>Initialize the SPCM DLL and one or all of the available SPC modules.</p>
+      <p>Initialize SPCM-DLL and one or all of the available SPC modules.</p>
 
 
 
@@ -4861,7 +4863,7 @@ correctly during measurements that exceed 80 seconds.</p>
 
   <div class="doc doc-contents ">
   
-      <p>Map <code>MeasurementState</code> enum member names to their SPCM DLL names.</p>
+      <p>Map <code>MeasurementState</code> enum member names to their SPCM-DLL names.</p>
 
 
 
@@ -4910,7 +4912,7 @@ correctly during measurements that exceed 80 seconds.</p>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>The corresponding SPCM DLL constant name.</p>
+              <p>The corresponding SPCM-DLL constant name.</p>
             </div>
           </td>
         </tr>
@@ -5393,8 +5395,8 @@ is used.</p>
 
   <div class="doc doc-contents ">
   
-      <p>Set the operation mode of the SPCM DLL and activate or deactivate each of
-the SPC modules.</p>
+      <p>Set the operation mode of SPCM-DLL and activate or deactivate each of the
+SPC modules.</p>
 
 
 

@@ -14,7 +14,7 @@
       
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.15">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.16">
     
     
       
@@ -22,7 +22,7 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.7e359304.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.bcfcd587.min.css">
       
       
 
@@ -42,6 +42,8 @@
     
     
       <link rel="stylesheet" href="assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="stylesheets/extra.css">
     
     <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -536,15 +538,16 @@ SPDX-License-Identifier: MIT
 <!-- BEGIN INCLUDE ../README.md '&lt;!-- begin-intro-docs --&gt;' '&lt;!-- end-intro-docs --&gt;' -->
 
 <h2 id="overview">Overview</h2>
-<p>The pybhspc package provides Python bindings to the Becker &amp; Hickl SPCM DLL,
-which is the control and acquisition interface for SPC modules. (SPC moduels
-are PCI/PCIe boards that perform TCSPC (time-correlated single photon counting)
-or time-tagging.)</p>
+<p>The pybhspc package allows Python programs to control, and acquire data from,
+<a href="https://www.becker-hickl.com/">Becker &amp; Hickl</a> <a href="https://www.becker-hickl.com/products/category/tscpc-flim-time-tagging/">SPC modules</a>, which are PCI/PCIe boards that
+perform TCSPC (time-correlated single photon counting) or time-tagging. It does
+so by providing Python bindings to the C API provided by BH, namely
+<a href="https://www.becker-hickl.com/products/dll-for-spc-and-dpc-modules/">SPCM-DLL</a>.</p>
 <p>Note: The author of this package is not affiliated with Becker &amp; Hickl GmbH.</p>
 <p>The main package <code>bh_spc</code> provides a few utility functions. The module
 <code>bh_spc.spcm</code> provides Python bindings to the SPCM functions and data types.</p>
 <p>To use the relatively direct bindings in <code>bh_spc.spcm</code>, you will need to
-understand the underlying SPCM DLL interface, provided and documented by BH.
+understand the underlying SPCM-DLL interface, provided and documented by BH.
 (I plan to add a higher-level interface that simplifies device enumeration and
 FIFO acquisition, but this is not yet available.)</p>
 <p>Access to all of the functions that are required for FIFO (time tag stream)
@@ -564,8 +567,8 @@ backward-incompatible changes will be documented following the first release
 (version 0.1.0).</p>
 <h2 id="hardware-requirements">Hardware Requirements</h2>
 <p>An effort has been made to avoid making unnecessary assumptions about the SPC
-module type (i.e., device model). pybhspc also allows testing with the SPCM DLL
-set to simulation modes.</p>
+module type (i.e., device model). pybhspc also allows testing with SPCM-DLL set
+to simulation modes.</p>
 <p>It should be possible to operate most of the SPC boards supported by the SPCM
 DLL: SPC-600, 630, 130, 830, 140, 930, 150, 130EM, 150N (NX, NXX), 130EMN, 160
 (X, PCIE), 180N (NX, NXX), and 130IN (INX, INXX). Recent versions of SPCM do
@@ -584,14 +587,13 @@ scope for the pybhspc package (but BH
 <h2 id="software-requirements">Software Requirements</h2>
 <p>Windows 10+ (64-bit Intel).</p>
 <p>Python 3.10+ (64-bit).</p>
-<p>The Becker &amp; Hickl SPCM DLL (part of their <a href="https://www.becker-hickl.com/products/tcspc-package/">TCSPC
-Package</a> installer) must
-be installed on the system. The most recent version is usually recommended;
-absolute minimum is version 4.0 (Apr 2014; but versions below 5.1 have not been
-tested). Note that these are version numbers of the SPCM DLL, not of the TCSPC
-Package or the SPCM application.</p>
-<p>The SPCM DLL is automatically found at its installed location; there is no need
-to copy it or set any environment variables.</p>
+<p>The Becker &amp; Hickl <a href="https://www.becker-hickl.com/products/dll-for-spc-and-dpc-modules/">SPCM-DLL</a> (part of their <a href="https://www.becker-hickl.com/products/tcspc-package/">TCSPC
+Package</a> installer) must be installed on the system. The most
+recent version is usually recommended; the theoretical minimum is version 4.0
+(Apr 2014; but versions below 5.1 have not been tested). Note that these are
+version numbers of SPCM-DLL, not of the TCSPC Package or the SPCM application.</p>
+<p>The DLL is automatically found at its installed location; there is no need to
+copy it or set any environment variables.</p>
 <h2 id="license">License</h2>
 <p>The pybhspc package is distributed under the MIT license.</p>
 <!-- END INCLUDE -->

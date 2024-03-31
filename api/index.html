@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.15">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.16">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.7e359304.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.bcfcd587.min.css">
       
       
 
@@ -44,6 +44,8 @@
     
     
       <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
     
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -565,7 +567,7 @@ SPDX-License-Identifier: MIT
   <div class="doc doc-contents first">
   
       <p>The root package of pybhspc.</p>
-<p>For low-level control of the SPCM DLL, see the <code>spcm</code> module. Some utility
+<p>For low-level control of SPCM-DLL, see the <code>spcm</code> module. Some utility
 functions are provided here in the root package.</p>
 
   
@@ -660,7 +662,7 @@ functions are provided here in the root package.</p>
   
       <p>Print (to standard output) the status SPC modules.</p>
 <p>This is a utility intended mostly for troubleshooting.</p>
-<p>The SPCM DLL must have been initialized (<code>spcm.init</code>).</p>
+<p>SPCM-DLL must have been initialized (<code>spcm.init</code>).</p>
 
 
 
@@ -829,8 +831,8 @@ source .ini file with <code>spcm.save_parameters_to_ini_file</code>.</p>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>The mode in which to initialize the SPCM DLL. Use 0 for hardware;
-special constants for simulation.</p>
+              <p>The mode in which to initialize SPCM-DLL. Use 0 for hardware; special
+constants for simulation.</p>
             </div>
           </td>
           <td>
@@ -890,8 +892,9 @@ special constants for simulation.</p>
 
   <div class="doc doc-contents ">
   
-      <p>Return the file version number of the SPCM DLL.</p>
-<p>The information is read from the Windows version resource of the file.</p>
+      <p>Return the version number of SPCM-DLL.</p>
+<p>The information is read from the Windows file version resource of the DLL
+file.</p>
 
 
 
