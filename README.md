@@ -21,10 +21,15 @@ from bh_spc import spcm
 
 ## Overview
 
-The pybhspc package provides Python bindings to the Becker & Hickl SPCM-DLL,
-which is the control and acquisition interface for SPC modules. (SPC moduels
-are PCI/PCIe boards that perform TCSPC (time-correlated single photon counting)
-or time-tagging.)
+The pybhspc package allows Python programs to control, and acquire data from,
+[Becker & Hickl][bh] [SPC modules][bh-tcspc], which are PCI/PCIe boards that
+perform TCSPC (time-correlated single photon counting) or time-tagging. It does
+so by providing Python bindings to the C API provided by BH, namely
+[SPCM-DLL][bh-spcm-dll].
+
+[bh]: https://www.becker-hickl.com/
+[bh-tcspc]: https://www.becker-hickl.com/products/category/tscpc-flim-time-tagging/
+[bh-spcm-dll]: https://www.becker-hickl.com/products/dll-for-spc-and-dpc-modules/
 
 Note: The author of this package is not affiliated with Becker & Hickl GmbH.
 
@@ -88,12 +93,13 @@ Windows 10+ (64-bit Intel).
 
 Python 3.10+ (64-bit).
 
-The Becker & Hickl SPCM-DLL (part of their [TCSPC
-Package](https://www.becker-hickl.com/products/tcspc-package/) installer) must
-be installed on the system. The most recent version is usually recommended;
-absolute minimum is version 4.0 (Apr 2014; but versions below 5.1 have not been
-tested). Note that these are version numbers of SPCM-DLL, not of the TCSPC
-Package or the SPCM application.
+The Becker & Hickl [SPCM-DLL][bh-spcm-dll] (part of their [TCSPC
+Package][bh-tcspc-package] installer) must be installed on the system. The most
+recent version is usually recommended; the theoretical minimum is version 4.0
+(Apr 2014; but versions below 5.1 have not been tested). Note that these are
+version numbers of SPCM-DLL, not of the TCSPC Package or the SPCM application.
+
+[bh-tcspc-package]: https://www.becker-hickl.com/products/tcspc-package/
 
 The DLL is automatically found at its installed location; there is no need to
 copy it or set any environment variables.
