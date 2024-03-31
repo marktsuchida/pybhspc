@@ -24,8 +24,8 @@ def minimal_spcm_ini(mode: int | spcm.DLLOperationMode = 0) -> str:
     Parameters
     ----------
     mode : int or spcm.DLLOperationMode
-        The mode in which to initialize the SPCM DLL. Use 0 for hardware;
-        special constants for simulation.
+        The mode in which to initialize SPCM-DLL. Use 0 for hardware; special
+        constants for simulation.
 
     Returns
     -------
@@ -41,7 +41,7 @@ def minimal_spcm_ini(mode: int | spcm.DLLOperationMode = 0) -> str:
         mode = mode.value
 
     # The first line must be a comment starting with (whitespace followed by)
-    # "SPCM", or the DLL rejects it ("Not valid configuration file"). The
+    # "SPCM", or SPCM-DLL rejects it ("Not valid configuration file"). The
     # [spc_module] section heading is not needed for spcm.init(), but it is
     # needed for the file to serve as a source_inifile for
     # spcm.save_parameters_to_inifile(), or to be read by

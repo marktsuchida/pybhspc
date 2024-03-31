@@ -21,7 +21,7 @@ from bh_spc import spcm
 
 ## Overview
 
-The pybhspc package provides Python bindings to the Becker & Hickl SPCM DLL,
+The pybhspc package provides Python bindings to the Becker & Hickl SPCM-DLL,
 which is the control and acquisition interface for SPC modules. (SPC moduels
 are PCI/PCIe boards that perform TCSPC (time-correlated single photon counting)
 or time-tagging.)
@@ -32,7 +32,7 @@ The main package `bh_spc` provides a few utility functions. The module
 `bh_spc.spcm` provides Python bindings to the SPCM functions and data types.
 
 To use the relatively direct bindings in `bh_spc.spcm`, you will need to
-understand the underlying SPCM DLL interface, provided and documented by BH.
+understand the underlying SPCM-DLL interface, provided and documented by BH.
 (I plan to add a higher-level interface that simplifies device enumeration and
 FIFO acquisition, but this is not yet available.)
 
@@ -58,8 +58,8 @@ backward-incompatible changes will be documented following the first release
 ## Hardware Requirements
 
 An effort has been made to avoid making unnecessary assumptions about the SPC
-module type (i.e., device model). pybhspc also allows testing with the SPCM DLL
-set to simulation modes.
+module type (i.e., device model). pybhspc also allows testing with SPCM-DLL set
+to simulation modes.
 
 It should be possible to operate most of the SPC boards supported by the SPCM
 DLL: SPC-600, 630, 130, 830, 140, 930, 150, 130EM, 150N (NX, NXX), 130EMN, 160
@@ -88,15 +88,15 @@ Windows 10+ (64-bit Intel).
 
 Python 3.10+ (64-bit).
 
-The Becker & Hickl SPCM DLL (part of their [TCSPC
+The Becker & Hickl SPCM-DLL (part of their [TCSPC
 Package](https://www.becker-hickl.com/products/tcspc-package/) installer) must
 be installed on the system. The most recent version is usually recommended;
 absolute minimum is version 4.0 (Apr 2014; but versions below 5.1 have not been
-tested). Note that these are version numbers of the SPCM DLL, not of the TCSPC
+tested). Note that these are version numbers of SPCM-DLL, not of the TCSPC
 Package or the SPCM application.
 
-The SPCM DLL is automatically found at its installed location; there is no need
-to copy it or set any environment variables.
+The DLL is automatically found at its installed location; there is no need to
+copy it or set any environment variables.
 
 ## License
 

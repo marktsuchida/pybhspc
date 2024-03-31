@@ -37,7 +37,7 @@ def _spcm_dll_dir() -> str:
     ret = os.path.join(os.path.dirname(exe_path), "DLL")
     if not os.path.isdir(ret):
         raise RuntimeError(
-            f"The SPCM DLL install directory ({ret}) does not exist"
+            f"The SPCM-DLL install directory ({ret}) does not exist"
         )
     return ret
 

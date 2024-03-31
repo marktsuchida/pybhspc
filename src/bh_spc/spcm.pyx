@@ -5,10 +5,10 @@
 # cython: language_level=3
 
 """
-Low-level wrappers of the SPCM DLL functions and data structures.
+Low-level wrappers of SPCM-DLL functions and data structures.
 
 This extension module aims to provide straightforward Python wrappers for the
-C functions, structs, and enums in the SPCM DLL. Currently, only the functions
+C functions, structs, and enums in SPCM-DLL. Currently, only the functions
 required to acquire data in FIFO mode are wrapped (excluding those that are
 specific to the DPC-230).
 
@@ -25,7 +25,7 @@ A higher-level interface that guides the user toward correct usage can be built
 on top of this module.
 
 As such, to fully understand the correct usage of these functions and data
-types, you will need to refer to the Becker & Hickl SPCM DLL documentation.
+types, you will need to refer to the Becker & Hickl SPCM-DLL documentation.
 """
 
 import array
@@ -42,11 +42,11 @@ from . cimport _spcm
 
 class ErrorEnum(enum.Enum):
     """
-    Enum of SPCM DLL error codes.
+    Enum of SPCM-DLL error codes.
 
-    The members' values are the SPCM DLL error codes (except for ``UNKNOWN``).
-    An additional member, ``UNKNOWN``, which does not appear in the SPCM DLL,
-    is used for any unknown error code that is encountered.
+    The members' values are SPCM-DLL error codes (except for ``UNKNOWN``). An
+    additional member, ``UNKNOWN``, which does not appear in SPCM-DLL, is used
+    for any unknown error code that is encountered.
 
     Usually you will get a value of this type from the ``enum`` attribute of an
     `SPCMError` exception.
@@ -64,7 +64,7 @@ class ErrorEnum(enum.Enum):
 
     See Also
     --------
-    SPCMError : Exception class for SPCM DLL errors.
+    SPCMError : Exception class for SPCM-DLL errors.
     """
 
     NONE = 0
@@ -147,7 +147,7 @@ class SPCMError(RuntimeError):
 
     See Also
     --------
-    ErrorEnum : Enum of SPCM DLL error codes.
+    ErrorEnum : Enum of SPCM-DLL error codes.
     """
 
     def __init__(self, code: int, message: str) -> None:
@@ -169,7 +169,7 @@ class SPCMError(RuntimeError):
 
 class DLLOperationMode(enum.Enum):
     """
-    Enum for the operation mode of the SPCM DLL.
+    Enum for the operation mode of SPCM-DLL.
 
     Values of this type are returned by `get_mode` and are given to
     `set_mode`.
@@ -252,7 +252,7 @@ class InitStatus(enum.Enum):
     Notes
     -----
     The member `XILINX_ERR` is used for all possible Xilinx (FPGA
-    configuration) errors (-100 through -199) returned by SPCM DLL functions.
+    configuration) errors (-100 through -199) returned by SPCM-DLL functions.
     """
 
     OK = (0, "Initialized")
@@ -363,7 +363,7 @@ cdef class ModInfo:
     """
     SPC module information.
 
-    Wraps the SPCM DLL ``SPCModInfo`` struct. Values of this type are returned
+    Wraps the SPCM-DLL ``SPCModInfo`` struct. Values of this type are returned
     by `get_module_info`.
 
     Attributes
@@ -448,7 +448,7 @@ class ParID(enum.Enum):
     """
     Enum of SPC parameter ids.
 
-    The members' values are the SPCM DLL parameter ids. Members also have an
+    The members' values are the SPCM-DLL parameter ids. Members also have an
     attribute `type` which is either `int` or `float`.
 
     Values of this type are passed to `get_parameter` and `set_parameter`. The
@@ -561,7 +561,7 @@ cdef class Data:
     """
     The collection of values for all SPC parameters.
 
-    Wraps the SPCM DLL ``SPCdata`` struct. Values of this type are returned by
+    Wraps the SPCM-DLL ``SPCdata`` struct. Values of this type are returned by
     `get_parameters` and are passed to `set_parameters`.
 
     Instances have attributes that match the `ParID` enum member names, but in
@@ -607,7 +607,7 @@ cdef class Data:
     """
 
     # We shouldn't hit this assertion because the build should have failed (due
-    # to missing struct fields) if old headers (SPCM DLL < 5.1) were used. This
+    # to missing struct fields) if old headers (SPCM-DLL < 5.1) were used. This
     # is mostly to document our assumption (and report any unexpected changes
     # in the future).
     assert sizeof(_spcm.SPCdata) == 256, \
@@ -710,7 +710,7 @@ cdef class Data:
     # order they appear in the C struct. Not only does this hide the
     # superficial inconsistency, but it also puts the fields in a more logical
     # order, probably because the ParID order is the original order (the struct
-    # fields were reordered in SPCM DLL 4.0).
+    # fields were reordered in SPCM-DLL 4.0).
 
     # (I would love to avoid writing out the getter and setter for every field,
     # but cannot think of a way to do so, other than nasty external codegen.
@@ -1210,7 +1210,7 @@ cdef class AdjustPara:
     """
     Adjustment parameters (wraps the ``SPC_Adjust_Para`` struct).
 
-    Wraps the SPCM DLL ``SPC_Adjust_Para`` struct. Values of this type are
+    Wraps the SPCM-DLL ``SPC_Adjust_Para`` struct. Values of this type are
     returned by `get_adjust_parameters` and (as an attribute of `EEPData`) by
     `get_eeprom_data`.
 
@@ -1328,7 +1328,7 @@ cdef class EEPData:
     """
     Information read from an SPC modules non-volatile memory.
 
-    Wraps the SPCM DLL ``SPC_EEP_Data`` struct. Values of this type are
+    Wraps the SPCM-DLL ``SPC_EEP_Data`` struct. Values of this type are
     returned by `get_eeprom_data`.
 
     Attributes
@@ -1405,7 +1405,7 @@ cdef class RateValues:
     """
     Rate counter values.
 
-    Wraps the SPCM DLL ``rate_values`` struct. Values of this type are returned
+    Wraps the SPCM-DLL ``rate_values`` struct. Values of this type are returned
     by `read_rates`.
 
     Attributes
@@ -1483,7 +1483,7 @@ class MeasurementState(enum.Flag):
     Values of this type are returned by `test_state`.
 
     For the sake of readability, the enum members are named differently from
-    the SPCM DLL. See the example below for how to view the correspondence.
+    SPCM-DLL. See the example below for how to view the correspondence.
 
     Examples
     --------
@@ -1530,7 +1530,7 @@ class MeasurementState(enum.Flag):
     SPC_FEMPTY2         512 TDC2_FIFO_EMPTY
     SPC_FOVFL2         2048 TDC2_FIFO_OVERFLOW
 
-    Print the correspondence from SPCM DLL names to pybhspc names.
+    Print the correspondence from SPCM-DLL names to pybhspc names.
 
     See Also
     --------
@@ -1618,7 +1618,7 @@ _measurement_state_to_bh_name = {
 
 def measurement_state_bh_name(name: str) -> str:
     """
-    Map `MeasurementState` enum member names to their SPCM DLL names.
+    Map `MeasurementState` enum member names to their SPCM-DLL names.
 
     Parameters
     ----------
@@ -1628,7 +1628,7 @@ def measurement_state_bh_name(name: str) -> str:
     Returns
     -------
     str
-        The corresponding SPCM DLL constant name.
+        The corresponding SPCM-DLL constant name.
 
     See Also
     --------
@@ -1697,7 +1697,7 @@ class FIFOType(enum.Enum):
 
 class StreamType(enum.Flag):
     """
-    Flag enum for properties of SPCM DLL streams.
+    Flag enum for properties of SPCM-DLL streams.
 
     Values of this type are returned by `get_fifo_init_vars` as an attribute of
     `FIFOInitVars`.
@@ -1722,7 +1722,7 @@ class StreamType(enum.Flag):
 
     Notes
     -----
-    pybhspc does not support the SPCM DLL stream functions.
+    pybhspc does not support SPCM-DLL stream functions.
     """
 
     HAS_SPC_HEADER = 1 << 0
@@ -1804,7 +1804,7 @@ def _raise_spcm_error(err: int) -> None:
 
 def init(ini_file: bytes | str) -> None:
     """
-    Initialize the SPCM DLL and one or all of the available SPC modules.
+    Initialize SPCM-DLL and one or all of the available SPC modules.
 
     Parameters
     ----------
@@ -1823,7 +1823,7 @@ def init(ini_file: bytes | str) -> None:
 
 def close() -> None:
     """
-    Uninitialize the SPCM DLL.
+    Uninitialize SPCM-DLL.
     """
     _raise_spcm_error(_spcm.SPC_close())
 
@@ -1850,7 +1850,7 @@ def get_init_status(mod_no: int) -> InitStatus:
 
 def get_mode() -> DLLOperationMode:
     """
-    Get the operation mode of the SPCM DLL.
+    Get the operation mode of SPCM-DLL.
 
     Returns
     -------
@@ -1860,7 +1860,7 @@ def get_mode() -> DLLOperationMode:
     Raises
     ------
     SPCMError
-        If there was an error (e.g., if the DLL is not initialized).
+        If there was an error (e.g., if SPCM-DLL is not initialized).
     """
     ret = _spcm.SPC_get_mode()
     # Not mentioned in the docs, but the return value can be an error code.
@@ -1872,8 +1872,8 @@ def set_mode(
     mode: DLLOperationMode, force_use: bool, use: Sequence[bool]
 ) -> None:
     """
-    Set the operation mode of the SPCM DLL and activate or deactivate each of
-    the SPC modules.
+    Set the operation mode of SPCM-DLL and activate or deactivate each of the
+    SPC modules.
 
     Parameters
     ----------
@@ -1891,11 +1891,11 @@ def set_mode(
     SPCMError
         If there was an error or if no modules were activated.
     """
-    # BH increased MAX_NO_OF_SPC from 8 to 32 in 2018 (SPCM DLL 4.4.1), and
+    # BH increased MAX_NO_OF_SPC from 8 to 32 in 2018 (SPCM-DLL 4.4.1), and
     # SPC_set_mode() does indeed access 32 elements of 'use' (despite the
     # documentation still mentioning 8 modules).
     # Note that we always use 32 elements, which is safe for any (currently
-    # known) version of the DLL. If the DLL only reads 8 elements, user code
+    # known) version of SPCM-DLL. If SPCM-DLL only reads 8 elements, user code
     # will just get errors from other functions when trying to access the 9th
     # module and beyond.
     max_mods = 32
@@ -1962,10 +1962,9 @@ def get_version(mod_no: int) -> str:
     str
         The FPGA version (4 hex digits).
     """
-    # SPC_get_version() is not fully documented but it is mentioned in the SPCM
-    # DLL documentation as a method to check the FPGA version.
-    # The version number is shown in hex in BH literature, so use unsigned
-    # short.
+    # SPC_get_version() is not fully documented but it is mentioned in the
+    # SPCM-DLL documentation as a method to check the FPGA version. The version
+    # number is shown in hex in BH literature, so use unsigned short.
     cdef unsigned short version = 0
     _raise_spcm_error(_spcm.SPC_get_version(mod_no, <short *>&version))
     return f"{version:X}"

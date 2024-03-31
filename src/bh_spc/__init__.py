@@ -8,7 +8,7 @@
 """
 The root package of pybhspc.
 
-For low-level control of the SPCM DLL, see the `spcm` module. Some utility
+For low-level control of SPCM-DLL, see the `spcm` module. Some utility
 functions are provided here in the root package.
 """
 
@@ -64,9 +64,10 @@ def _spcm_dll_dir() -> str:
 @functools.cache
 def spcm_dll_version() -> tuple[int, int, int, int]:
     """
-    Return the file version number of the SPCM DLL.
+    Return the version number of SPCM-DLL.
 
-    The information is read from the Windows version resource of the file.
+    The information is read from the Windows file version resource of the DLL
+    file.
 
     Returns
     -------
@@ -76,8 +77,8 @@ def spcm_dll_version() -> tuple[int, int, int, int]:
     return _dll_file_version(os.path.join(_spcm_dll_dir(), "spcm64.dll"))
 
 
-# Reject ancient versions of the SPCM DLL. Structure layouts changed (and
-# functions were added) in 4.00 (Apr 2014). Not actually tested with 4.00.
+# Reject ancient versions of SPCM-DLL. Structure layouts changed (and functions
+# were added) in 4.00 (Apr 2014). Not actually tested with 4.00.
 if spcm_dll_version() < (4, 0, 0, 0):
     vers = ".".join(str(n) for n in spcm_dll_version())
     raise RuntimeError(

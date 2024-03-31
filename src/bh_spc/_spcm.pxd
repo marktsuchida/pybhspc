@@ -72,13 +72,13 @@ cdef extern from "Spcm_def.h":
         unsigned long chan_slope
         unsigned long chan_spec_no
 
-        # The following fields were added in SPCM DLL v5.1.0. Note that listing
+        # The following fields were added in SPCM-DLL v5.1.0. Note that listing
         # these fields means that v5.1+ is required for building, which is
         # intended.
         unsigned long tdc_control  # Overlaps former short x_axis_type
         float[4] tdc_offset
 
-        # In SPCM DLL v5.1+, the size of the struct is padded to 256. However,
+        # In SPCM-DLL v5.1+, the size of the struct is padded to 256. However,
         # do not include the 'reserve' field so that we can compile with future
         # versions of the header that may add fields (and shrink 'reserve').
         # char[56] reserve

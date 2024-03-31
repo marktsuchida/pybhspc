@@ -9,9 +9,8 @@
 #
 # # Getting Started
 #
-# At the moment pybhspc only provides low-level bindings to the SPCM DLL
-# functions. Using these requires familiarizing yourself with the SPCM DLL
-# documentation.
+# At the moment pybhspc only provides low-level bindings to SPCM-DLL functions.
+# Using these requires familiarizing yourself with the SPCM-DLL documentation.
 #
 # Here we demonstrate a basic FIFO (time tag stream) mode acquisition.
 
@@ -52,7 +51,7 @@ with bh_spc.ini_file(
 # with `HARDWARE`.
 
 # %% [md]
-# The SPCM DLL distinguishes multiple installed SPC boards ("modules") using a
+# SPCM-DLL distinguishes multiple installed SPC boards ("modules") using a
 # module number ranging from 0 to 31. In simulation mode, all of these numbers
 # are valid. In hardware mode, if you have a single SPC board, it should be
 # module number 0. Since we will be specifying this many times, let's define a

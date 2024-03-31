@@ -23,9 +23,9 @@ jobs:
       - uses: pre-commit/action@v3.0.1
 
   # Unfortunately there is no easy way to run the tests on GitHub Actions
-  # because the SPCM-DLL appears to fail to load when the drivers are not
-  # installed (even with cvirte.dll provided, the DLL initialization routine
-  # fails). Documentation cannot be built for the same reason. We can, however,
+  # because spcm64.dll fail to load when the drivers are not installed (even
+  # with cvirte.dll provided, the DLL initialization routine fails).
+  # Documentation cannot be built for the same reason. We can, however,
   # automate the build itself, which does not load the DLL.
 
   build:

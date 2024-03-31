@@ -132,7 +132,7 @@ def dump_state(
 
     This is a utility intended mostly for troubleshooting.
 
-    The SPCM DLL must have been initialized (`spcm.init`).
+    SPCM-DLL must have been initialized (`spcm.init`).
 
     Parameters
     ----------

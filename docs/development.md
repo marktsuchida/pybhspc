@@ -8,13 +8,13 @@ SPDX-License-Identifier: MIT
 
 ## Code overview
 
-pybhspc uses Cython to generate Python bindings for the SPCM DLL functions and
+pybhspc uses Cython to generate Python bindings for SPCM-DLL functions and
 structs (`_spcm.pxd`, `spcm.pyx`). Enum constants are defined using the Python
 standard library `enum` package. A few Win32 API functions are also separately
 wrapped (`_win32_version.pxd`, `_file_version.pyx`) to detect the DLL version
 information.
 
-Loading the extension module `spcm` requires that the SPCM DLL be accessible.
+Loading the extension module `spcm` requires that `spcm64.dll` be accessible.
 This is set up in the `__init__.py` of the `bh_spc` package.
 
 The build uses setuptools and is configured in `pyproject.toml` (and `setup.py`
@@ -52,7 +52,7 @@ work, but this has not been tested.
 
 Python 3.10+.
 
-Becker & Hickl TCSPC Package with SPCM DLL 5.2.0 (Sep 2023, TCSPC Package 7.0)
+Becker & Hickl TCSPC Package with SPCM-DLL 5.2.0 (Sep 2023, TCSPC Package 7.0)
 or later (note that a more recent version is required than at run time). SPCM
 DLL 5.1.0 (Dec 2022) is the theoretical minimum requirement, but its header
 file `Spcm_def.h` may need to have trailing whitespace removed to compile.
@@ -124,6 +124,6 @@ If you plan to propose a significant change, it is a good idea to first create
 an issue to discuss the design and scope of the change.
 
 New code should be accompanied with unit tests where practical (but this should
-focus on testing pybhspc, not the behavior of the SPCM DLL). Also, new or
-changed APIs should be documented. Generally, please follow the existing style
-and structure of code and documentation when there is no reason not to.
+focus on testing pybhspc, not the behavior of SPCM-DLL). Also, new or changed
+APIs should be documented. Generally, please follow the existing style and
+structure of code and documentation when there is no reason not to.
