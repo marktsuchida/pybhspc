@@ -16,7 +16,7 @@ py_versions = ["3.10", "3.11", "3.12", "3.13"]
 @nox.session(python=py_versions)
 def test(session):
     """Run the tests."""
-    session.install(".[testing]")
+    session.install("-e", ".[testing]")
     session.run("pytest")
 
 
@@ -30,6 +30,6 @@ def build(session):
 @nox.session
 def docs(session):
     """Build the documentation."""
-    session.install(".[dev]")
+    session.install("-e", ".[dev]")
     session.run("python", "setup.py", "build_ext", "--inplace")
     session.run("mkdocs", "build")
