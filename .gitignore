@@ -12,6 +12,9 @@
 __pycache__/
 .nox/
 
+# Library package doesn't need lockfile
+uv.lock
+
 # Generated/built
 /src/bh_spc/*.c
 /src/bh_spc/*.pyd

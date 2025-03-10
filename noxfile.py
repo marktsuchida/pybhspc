@@ -8,7 +8,9 @@ import nox
 
 nox.options.sessions = ["test"]
 
-py_versions = ["3.10", "3.11", "3.12"]
+nox.options.default_venv_backend = "uv|virtualenv"
+
+py_versions = ["3.10", "3.11", "3.12", "3.13"]
 
 
 @nox.session(python=py_versions)
