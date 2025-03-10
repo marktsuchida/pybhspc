@@ -97,3 +97,7 @@ convention = "numpy"
 
 [tool.setuptools_scm]
 version_file = "src/bh_spc/_version.py"
+
+[tool.uv]
+# Ensure Nox doesn't use stale cached build
+reinstall-package = ["pybhspc"]
