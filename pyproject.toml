@@ -97,3 +97,7 @@ convention = "numpy"
 
 [tool.setuptools_scm]
 version_file = "src/bh_spc/_version.py"
+
+[tool.uv]
+# setuptools_scm compatibility
+cache-keys = [{file = "pyproject.toml"}, {git = {commit = true, tags = true}}]
