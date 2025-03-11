@@ -7,6 +7,7 @@ import copy
 import doctest
 
 import pytest
+
 from bh_spc import dump_state, ini_file, minimal_spcm_ini, spcm
 
 

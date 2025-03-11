@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 import pytest
+
 from bh_spc import ini_file, minimal_spcm_ini, spcm
 
 

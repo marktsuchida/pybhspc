@@ -5,6 +5,7 @@
 import io
 
 import pytest
+
 from bh_spc import dump_module_state, dump_state, spcm
 
 
