@@ -1,0 +1,9 @@
+# This file is part of pybhspc
+# Copyright 2024-2025 Board of Regents of the University of Wisconsin System
+# SPDX-License-Identifier: MIT
+
+option('spcm_dll_dir',
+    type: 'string',
+    value: 'C:/Program Files (x86)/BH/SPCM/DLL',
+    description: 'Path to the SPCM DLL installation',
+)

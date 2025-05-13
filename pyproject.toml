@@ -3,23 +3,23 @@
 # SPDX-License-Identifier: MIT
 
 [build-system]
+build-backend = "mesonpy"
 requires = [
     "Cython",
-    "setuptools >= 64",
-    "setuptools_scm >= 8",
+    "meson-python",
 ]
-build-backend = "setuptools.build_meta"
 
 [project]
 name = "pybhspc"
 description = "Control Becker & Hickl SPC modules from Python"
+license = "MIT"
+license-files = ["LICENSES/*.txt"]
 keywords = [
     "TCSPC", "time tagger", "BH", "Becker & Hickl", "SPC", "SPCM",
     "photon counting", "fluorescence lifetime", "FLIM", "FCS"
 ]
 classifiers = [
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: Microsoft :: Windows",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: Implementation :: CPython",
@@ -36,17 +36,16 @@ dependencies = []
 dev = [
     "Cython",
     "matplotlib",
+    "meson-python",
     "mkdocs",
     "mkdocs-include-markdown-plugin",
     "mkdocs-jupyter",
     "mkdocs-material",
     "mkdocstrings[python] >= 0.19",
+    "ninja",
     "nox",
     "numpy",
     "pytest",
-    "setuptools",
-    "setuptools_scm",
-    "wheel",  # Needed for 'pip install --no-build-isolation .'
 ]
 # Minimal requirements for testing (in nox isolated environment):
 testing = [
@@ -95,9 +94,5 @@ ignore = [
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
-[tool.setuptools_scm]
-version_file = "src/bh_spc/_version.py"
-
-[tool.uv]
-# setuptools_scm compatibility
-cache-keys = [{file = "pyproject.toml"}, {git = {commit = true, tags = true}}]
+[tool.meson-python.args]
+install = ["--tags=python-runtime,runtime"]
