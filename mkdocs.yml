@@ -26,7 +26,7 @@ plugins:
       default_handler: python
       handlers:
         python:
-          paths: ["src"]
+          # Do not set 'paths'; that prevents Cython modules from being found.
           options:
             show_source: false
             filters:

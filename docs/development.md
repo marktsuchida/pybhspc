@@ -69,7 +69,7 @@ Run this once:
 ```sh
 python -m venv venv                    # Create virtual environment 'venv'.
 echo '*' >venv/.gitignore              # Git should ignore 'venv'.
-pip install .[dev]
+pip install .[dev]                     # Prepare build tools.
 pip install --no-build-isolation -e .  # Editable install.
 ```
 
@@ -79,13 +79,12 @@ requirements to be pre-installed.)
 Then, to iterate on the code and documentation run these commands as needed:
 
 ```sh
-python setup.py build_ext --inplace    # Must run if .pyx files changed.
 pytest                                 # Run the tests.
 mkdocs serve                           # Build and serve the docs.
 ```
 
-(You could rerun the editable install instead of invoking `setup.py` to rebuild
-the extension modules, but that takes longer.)
+(The meson-python build backend automatically rebuilds the Cython module upon
+import, when using an editable install.)
 
 ### Testing in isolated environments
 
