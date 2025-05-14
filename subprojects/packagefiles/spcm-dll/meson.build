@@ -4,6 +4,10 @@
 
 project('spcm-dll', 'c')
 
+# This build file simply wraps the headers and import library (.lib) binary as
+# a dependency, as suggested in
+# https://mesonbuild.com/Shipping-prebuilt-binaries-as-wraps.html
+
 if host_machine.system() != 'windows' or host_machine.cpu_family() != 'x86_64'
     error('Only supports Windows x64')
 endif

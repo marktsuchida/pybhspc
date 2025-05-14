@@ -2,9 +2,13 @@
 # Copyright 2024-2025 Board of Regents of the University of Wisconsin System
 # SPDX-License-Identifier: MIT
 
+# This is for use by automated builds on GitHub; it won't work unless you have
+# access to the private spcm-dll repository. Install SPCM DLL on your system
+# instead.
+
 [wrap-git]
 url = https://github.com/marktsuchida/spcm-dll.git
-revision = v5.3.0
+revision = v5.4.0
 depth = 1
 patch_directory = spcm-dll
 

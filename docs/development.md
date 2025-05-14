@@ -54,8 +54,12 @@ Python 3.10+.
 
 Becker & Hickl TCSPC Package with SPCM-DLL 5.2.0 (Sep 2023, TCSPC Package 7.0)
 or later (note that a more recent version is required than at run time). SPCM
-DLL 5.1.0 (Dec 2022) is the theoretical minimum requirement, but its header
-file `Spcm_def.h` may need to have trailing whitespace removed to compile.
+DLL 5.1.0 (Dec 2022) is the theoretical minimum requirement for building, but
+its header file `Spcm_def.h` may need to have trailing whitespace removed in
+order to compile.
+
+Becker & Hickl SPCM Data Acquisition Software 9.91.0 (SPCM DLL 5.4.0) or later
+should also work instead of the larger TCSPC Package.
 
 ### Pre-commit hook
 

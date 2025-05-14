@@ -4,6 +4,5 @@
 
 option('spcm_dll_dir',
     type: 'string',
-    value: 'C:/Program Files (x86)/BH/SPCM/DLL',
-    description: 'Path to the SPCM DLL installation',
+    description: 'Path to the SPCM DLL installation (try default locations if empty)',
 )
