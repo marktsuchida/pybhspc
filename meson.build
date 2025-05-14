@@ -28,24 +28,35 @@ python = import('python').find_installation(pure: false)
 
 spcm64_found = false
 
-spcm64_dir = get_option('spcm_dll_dir')
-if fs.is_dir(spcm64_dir)
-    spcm64_inc = include_directories(fs.relative_to(spcm64_dir, '.'))
-    spcm64_lib = cc.find_library(
-        'spcm64',
-        dirs: [spcm64_dir / 'LIB/MSVC64'],
-        has_headers: ['Spcm_def.h'],
-        header_include_directories: spcm64_inc,
-        required: false,
-    )
-    if spcm64_lib.found()
-        spcm64_dep = declare_dependency(
-            dependencies: [spcm64_lib],
-            include_directories: [spcm64_inc],
-        )
-        spcm64_found = true
-    endif
+spcm64_dir_candidates = [
+    get_option('spcm_dll_dir'),
+]
+if spcm64_dir_candidates.get(0) == ''
+    spcm64_dir_candidates = [
+        'C:/Program Files/Becker-Hickl/SPCM/DLL',  # Since 5.4.0
+        'C:/Program Files (x86)/BH/SPCM/DLL',      # Up to 5.3.0
+    ]
 endif
+foreach spcm64_dir : spcm64_dir_candidates
+    if fs.is_dir(spcm64_dir)
+        spcm64_inc = include_directories(fs.relative_to(spcm64_dir, '.'))
+        spcm64_lib = cc.find_library(
+            'spcm64',
+            dirs: [spcm64_dir / 'LIB/MSVC64'],
+            has_headers: ['Spcm_def.h'],
+            header_include_directories: spcm64_inc,
+            required: false,
+        )
+        if spcm64_lib.found()
+            spcm64_dep = declare_dependency(
+                dependencies: [spcm64_lib],
+                include_directories: [spcm64_inc],
+            )
+            spcm64_found = true
+            break
+        endif
+    endif
+endforeach
 
 if not spcm64_found # Fall back to wrap (used for CI)
     spcm64_dep = dependency('spcm-dll')
