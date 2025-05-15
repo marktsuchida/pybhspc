@@ -21,6 +21,7 @@ __all__ = [
     "spcm_dll_version",
 ]
 
+import contextlib
 import functools
 import os
 import os.path
@@ -37,28 +38,37 @@ if platform.machine() != "AMD64":
 @functools.cache
 def _spcm_dll_dir() -> str:
     candidates = []
-    try:
-        with winreg.OpenKey(
-            winreg.HKEY_CURRENT_USER, "SOFTWARE\\BH\\SPCM"
-        ) as spcm_key:
-            exe_path, _ = winreg.QueryValueEx(spcm_key, "FilePath")
-        candidates.append(os.path.join(os.path.dirname(exe_path), "DLL"))
-    except OSError:
-        pass
 
-    # Fallback in case registry key missing for some reason.
-    fixed_dir = "C:/Program Files (x86)/BH/SPCM/DLL"
-    if fixed_dir not in candidates:
-        candidates.append(fixed_dir)
+    # Try location recorded in registry by installer first:
+    registry_keys = [
+        (winreg.HKEY_LOCAL_MACHINE, "SOFTWARE\\WOW6432Node\\BH\\SPCM"),
+        (winreg.HKEY_CURRENT_USER, "SOFTWARE\\BH\\SPCM"),
+    ]
+    for registry_key in registry_keys:
+        with contextlib.suppress(OSError):
+            with winreg.OpenKey(*registry_key) as spcm_key:
+                exe_path, _ = winreg.QueryValueEx(spcm_key, "FilePath")
+            path = os.path.join(os.path.dirname(exe_path), "DLL")
+            candidates.append(path)
+
+    # Default paths, in case the registry method fails:
+    default_paths = [
+        "C:\\Program Files\\Becker-Hickl\\SPCM\\DLL",
+        "C:\\Program Files (x86)\\BH\\SPCM\\DLL",
+    ]
+    candidates.extend(default_paths)
+
+    # Remove duplicates (Python 3.7+).
+    candidates = list(dict.fromkeys(candidates))
 
     for dll_dir in candidates:
         if os.path.isdir(dll_dir) and os.path.exists(
             os.path.join(dll_dir, "spcm64.dll")
         ):
             return dll_dir
-    raise RuntimeError(
-        f"Cannot find spcm64.dll in its expected install location (tried: {candidates})"
-    )
+
+    trial_list = ", ".join(candidates)
+    raise RuntimeError(f"Cannot find spcm64.dll (tried: {trial_list})")
 
 
 @functools.cache
